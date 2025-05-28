@@ -1,3 +1,5 @@
+import { UserLevel } from "../enums/UserLevel.enum"
+
 export interface IUser {
     id: number,
     nome: string,
@@ -18,9 +20,4 @@ export interface IUserListFilters {
     nome?: string,
     email?: string,
     cpf?: string
-}
-
-export enum UserLevel {
-    COMMON = 0,
-    ADMIN = 1
 }
