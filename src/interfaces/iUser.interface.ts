@@ -11,10 +11,16 @@ export interface IUser {
     rua?: string,
     numero?: number,
     complemento?: string
+    nivel: UserLevel
 }
 
 export interface IUserListFilters {
     nome?: string,
     email?: string,
     cpf?: string
+}
+
+export enum UserLevel {
+    COMMON = 0,
+    ADMIN = 1
 }

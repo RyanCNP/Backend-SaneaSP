@@ -40,9 +40,11 @@ export const getUserByCPF = async (userCPF: string) => {
 export const createUser = async (user: IUser): Promise<IApiResponse<IUser>> => {
     const userFound = await UserModel.findOne({
         where: {
-            email: { [Op.like]: `${user.email}` },
-            cpf: { [Op.like]: `${user.cpf}` },
-            nome: { [Op.like]: `${user.nome}` }
+            [Op.or]: [
+                { email: user.email },
+                { cpf: user.cpf },
+                { nome: user.nome }
+            ]
         }
     });
 
