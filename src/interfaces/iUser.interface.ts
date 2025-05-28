@@ -21,3 +21,5 @@ export interface IUserListFilters {
     email?: string,
     cpf?: string
 }
+
+export { UserLevel }
