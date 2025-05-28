@@ -133,11 +133,10 @@ router.post("/", async (req: Request, res: Response) => {
     try {
         const {
             nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento } = req.body;
+            rua, numero, complemento, nivel } = req.body;
         const result = await createUser({
             nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento,
-            id: 0
+            rua, numero, complemento, id: 0, nivel
         });
 
         if (result.error) {
@@ -162,10 +161,10 @@ router.put("/:id", async (req: Request, res: Response) => {
         const id = Number(req.params.id);
         const {
             nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento } = req.body;
+            rua, numero, complemento, nivel } = req.body;
         const result = await updateUser({
             id, nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento
+            rua, numero, complemento, nivel
         });
 
         if (result.error) {
