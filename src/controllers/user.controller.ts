@@ -1,8 +1,8 @@
-import { IUser, IUserListFilters } from "../interfaces/IUser.interface";
 import { UserModel } from "../models/user.model";
 import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
+import { IUser, IUserListFilters } from "../interfaces/iUser.interface";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };
@@ -37,13 +37,13 @@ export const getUserByCPF = async (userCPF: string) => {
     return foundUser;
 }
 
-export const createUser = async (user: IUser): Promise<IApiResponse<IUser>> => {
+export const createUser = async (newUser: IUser): Promise<IApiResponse<IUser>> => {
     const userFound = await UserModel.findOne({
         where: {
             [Op.or]: [
-                { email: user.email },
-                { cpf: user.cpf },
-                { nome: user.nome }
+                { email: newUser.email },
+                { cpf: newUser.cpf },
+                { nome: newUser.nome }
             ]
         }
     });
@@ -56,7 +56,7 @@ export const createUser = async (user: IUser): Promise<IApiResponse<IUser>> => {
         }
     }
 
-    const createdUser = await UserModel.create(user);
+    const createdUser = await UserModel.create(newUser);
     return {
         error: false,
         message: "Usuário cadastrado com sucesso",

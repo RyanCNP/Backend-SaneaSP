@@ -1,6 +1,5 @@
 import express from "express";
 import { Request, Response } from "express";
-import { IUserListFilters } from "../interfaces/IUser.interface";
 import {
     getUserList,
     getUserByCPF,
@@ -11,6 +10,8 @@ import {
     updateUser,
     deleteUser
 } from "../controllers/user.controller"
+import { IUserListFilters } from "../interfaces/iUser.interface";
+import { AutoIncrement } from "sequelize-typescript";
 
 const router = express.Router();
 
@@ -134,10 +135,10 @@ router.post("/", async (req: Request, res: Response) => {
         const {
             nome, telefone, email, senha, cpf, cep, cidade, bairro,
             rua, numero, complemento, nivel } = req.body;
-        const result = await createUser({
+        const result = await createUser(
             nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento, id: 0, nivel
-        });
+            rua, numero, complemento, nivel
+        )
 
         if (result.error) {
             res.status(Number(result.httpError)).json({

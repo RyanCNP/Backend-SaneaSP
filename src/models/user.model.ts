@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import { IUser, UserLevel } from "../interfaces/IUser.interface";
+
 import sequelize from "../config/database";
+import { IUser, UserLevel } from "../interfaces/iUser.interface";
 
 type IUserCreationAttributes = Optional<IUser, 'id'>;
 
@@ -89,7 +90,7 @@ UserModel.init({
         type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: UserLevel.COMMON,
-        field: 'nivel_usuario'
+        field: 'nivel'
     }
 }, {
     tableName: 'Usuarios',
