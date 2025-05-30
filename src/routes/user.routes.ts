@@ -10,8 +10,9 @@ import {
     updateUser,
     deleteUser
 } from "../controllers/user.controller"
-import { IUserListFilters } from "../interfaces/iUser.interface";
+import { IUserListFilters } from "../interfaces/IUser.interface";
 import { AutoIncrement } from "sequelize-typescript";
+import { IUserCreationAttributes } from "../models/user.model";
 
 const router = express.Router();
 
@@ -132,13 +133,9 @@ router.get("/email/:email", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const {
-            nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento, nivel } = req.body;
-        const result = await createUser(
-            nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento, nivel
-        )
+        const userToCreate = req.body as IUserCreationAttributes;
+
+        const result = await createUser(userToCreate);
 
         if (result.error) {
             res.status(Number(result.httpError)).json({
