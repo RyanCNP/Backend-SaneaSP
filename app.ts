@@ -9,6 +9,7 @@ import imgRoutes from "./src/routes/img.routes";
 import fonteRoutes from "./src/routes/fonte.routes";
 import doencaRoutes from "./src/routes/doenca.routes";
 import userRoutes from "./src/routes/user.routes";
+import { authRoutes } from "./src/routes/auth.routes";
 
 const app = express();
 app.use(cors()) //Habilita o CORS Cross-Origin resource sharing
@@ -23,6 +24,7 @@ app.use("/img", imgRoutes);
 app.use("/fonte", fonteRoutes);
 app.use("/doenca", doencaRoutes);
 app.use("/user", userRoutes)
+app.use("/auth", authRoutes)
 
 app.listen(3000, () => {
     console.log("Backend do SaneaSP está rodando na porta 3000");
