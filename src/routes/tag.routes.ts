@@ -10,13 +10,17 @@ import {
   updateTag,
 } from "../controllers/tag.controller";
 import { ITagListFilter } from "../interfaces/ITagListFilter.interface";
+import { ITag } from "../interfaces/ITag.interface";
+import { authorize } from "../middlewares/authorize.middleware"
 
 const router = express.Router();
+
+router.use(authorize)
 
 router.get("/", async (req: Request, res: Response) => {
   try {
     const tagFilter = req.query as unknown as ITagListFilter;
-    const foundTags = await getTagList(tagFilter);
+    const foundTags : ITag[] = await getTagList(tagFilter);
 
     res.status(200).json({
       data : foundTags,
