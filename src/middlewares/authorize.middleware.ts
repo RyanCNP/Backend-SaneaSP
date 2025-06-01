@@ -10,7 +10,11 @@ export const authorize = (req : Request, res : Response, next : NextFunction) =>
     
     jwt.verify(authorization || "", secret, (err) => {
         if (err) {
-        return res.status(401).json({ message: "Invalid token" + err});
+            return res.status(401).json({
+                message : 'Você não tem acesso a este recurso',
+                error : true,
+                log : err
+            });
         }
         next();
     });
