@@ -2,7 +2,7 @@ import { UserModel, IUserCreationAttributes } from "../models/user.model";
 import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
-import { IUser, IUserListFilters } from "../interfaces/IUser.interface";
+import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUser.interface";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };
@@ -38,15 +38,19 @@ export const getUserByCPF = async (userCPF: string) => {
 }
 
 export const createUser = async (newUser: IUserCreationAttributes): Promise<IApiResponse<IUser>> => {
-    const userFound = await UserModel.findOne({
+    const query : IUserExists = {
         where: {
             [Op.or]: [
                 { email: newUser.email },
-                { cpf: newUser.cpf },
                 { nome: newUser.nome }
             ]
         }
-    });
+    };
+
+    if(newUser.cpf)
+        query.where[Op.or].push({ cpf: newUser.cpf });
+    
+    const userFound = await UserModel.findOne(query);
 
     if (userFound) {
         return {

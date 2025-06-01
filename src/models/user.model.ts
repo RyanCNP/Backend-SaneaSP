@@ -1,7 +1,8 @@
 import { DataTypes, Model, Optional } from "sequelize";
 
 import sequelize from "../config/database";
-import { IUser, UserLevel } from "../interfaces/IUser.interface";
+import { UserLevel } from "../enums/UserLevel.enum";
+import { IUser } from "../interfaces/IUser.interface";
 
 export type IUserCreationAttributes = Optional<IUser, 'id'>;
 

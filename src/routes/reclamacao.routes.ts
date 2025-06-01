@@ -1,7 +1,10 @@
 import express, { Request, Response } from "express";
 import { deleteReclamacao, getAllReclamacoes, getById, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
 import { IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
+import { authorize } from "../middlewares/authorize.middleware";
 const router = express.Router()
+
+router.use(authorize)
 
 router.get('/', async (req: Request, res: Response) => {
     try {
