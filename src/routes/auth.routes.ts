@@ -25,8 +25,7 @@ authRoutes.post("/", async (req: Request, res: Response) => {
         const secret = process.env.SECRET_KEY || "";
         const token = jwt.sign(
             { 
-                nome: user.nome,
-                nivel : user.nivel
+                id: user.id,
             }, 
             secret
         );
