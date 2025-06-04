@@ -1,22 +1,19 @@
-import { DataType, DataTypes, Model, Optional } from "sequelize";
-import { IUser } from "../interfaces/IUser.interface";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
+import { IEndereco } from "../interfaces/IEndereco.interface";
+import { IUser, UserLevel } from "../interfaces/iUser.interface";
 
-type IUserCreationAttributes = Optional<IUser, 'id'>;
+export type IUserCreationAttributes = Optional<IUser, 'id'>;
 
-export class UserModel extends Model<IUser, IUserCreationAttributes>{
+export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public id!: number;
     public nome!: string;
     public telefone?: string;
     public email!: string;
     public senha!: string;
     public cpf!: string;
-    public cep?: string;
-    public cidade?: string;
-    public bairro?: string;
-    public rua?: string;
-    public numero?: number;
-    public complemento?: string;
+    public endereco?: IEndereco;
+    public nivel!: UserLevel;
 }
 
 UserModel.init({
@@ -37,55 +34,35 @@ UserModel.init({
         allowNull: true,
         field: 'telefone'
     },
-    email:{
+    email: {
         type: DataTypes.STRING(40),
         allowNull: false,
         unique: true,
         field: 'email'
     },
-    senha:{
+    senha: {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'senha'
     },
-    cpf:{
+    cpf: {
         type: DataTypes.CHAR(11),
         allowNull: true,
         unique: true,
         field: 'cpf'
     },
-    cep:{
-        type: DataTypes.CHAR(8),
+    endereco: {
+        type: DataTypes.JSON,
         allowNull: true,
-        field: 'cep'
+        field: 'endereco'
     },
-    cidade:{
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'cidade'
-    },
-    bairro:{
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'bairro'
-    },
-    rua:{
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'rua'
-    },
-    numero:{
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'numero'
-    },
-    complemento:{
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'complemento'
+    nivel: {
+        type: DataTypes.ENUM('comum', 'admin'),
+        allowNull: false,
+        defaultValue: UserLevel.COMMON,
+        field: 'nivel_usuario'
     }
-    
-},{
+}, {
     tableName: 'Usuarios',
     sequelize,
     timestamps: false

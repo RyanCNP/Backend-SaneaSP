@@ -1,3 +1,7 @@
+import { Op } from "sequelize"
+import { UserLevel } from "../enums/UserLevel.enum"
+import { IEndereco } from "./IEndereco.interface"
+
 export interface IUser {
     id: number,
     nome: string,
@@ -5,12 +9,8 @@ export interface IUser {
     email: string,
     senha: string,
     cpf: string,
-    cep?: string,
-    cidade?: string,
-    bairro?: string,
-    rua?: string,
-    numero?: number,
-    complemento?: string
+    endereco?: IEndereco,
+    nivel: UserLevel
 }
 
 export interface IUserListFilters {
@@ -18,3 +18,11 @@ export interface IUserListFilters {
     email?: string,
     cpf?: string
 }
+
+export interface IUserExists {
+    where: {
+        [Op.or]: Array<Partial<Record<keyof IUserListFilters, string>>>; //Array com as chaves
+    }
+}
+
+export { UserLevel }
