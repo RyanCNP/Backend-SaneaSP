@@ -1,6 +1,10 @@
 // API REST de Usuários
 @baseURL = http://localhost:3000/user
 @id = 1
+@name = 'UserTest2'
+@email = 'usertest2email@gmail.com'
+@cpf = '123.456.789-02'
+
 ###
 // GET 
 GET {{baseURL}}
@@ -9,6 +13,21 @@ Content-Type: application/json
 ###
 // GET - By id
 GET {{baseURL}}/{{id}}
+Content-Type: application/json
+
+###
+// GET - By name
+GET {{baseURL}}/nome/{{name}}
+Content-Type: application/json
+
+###
+// GET - By e email
+GET {{baseURL}}/email/{{email}}
+Content-Type: application/json
+
+###
+// GET - By cpf
+GET {{baseURL}}/cpf/{{cpf}}
 Content-Type: application/json
 
 ###
@@ -23,11 +42,7 @@ Content-Type: application/json
     "senha": "user1password1234",
     "cpf": "123.456.789-02",
     "cep": "121345-678",
-    "cidade": "USer1 City TestCityName",
-    "bairro": "User1 Neigborhood TestNeigborhoodName",
-    "rua": "User1 Rua TestRuaName",
-    "numero": 123,
-    "complemento": " ",
+    "endereco": "Rua Carmelina Garcia, 303, Votorantim - SP",
     "nivel": 0
 }
 
@@ -39,16 +54,12 @@ Content-Type: application/json
 {
     "nome": "UserTes123t2",
     "telefone": "(12) 34567-8901",
-    "email": "usertestasd1email@gmail.com",
+    "email": "usertest2email@gmail.com",
     "senha": "user1password1234",
     "cpf": "123.456.789-02",
     "cep": "121345-678",
-    "cidade": "USer1 City TestCityName",
-    "bairro": "User1 Neigborhood TestNeigborhoodName",
-    "rua": "User1 Rua TestRuaName",
-    "numero": 123,
-    "complemento": " ",
-    "nivel": 1
+    "endereco": "Rua Carmelina Garcia, 303, Votorantim - SP",
+    "nivel": 0
 }
 
 ###

@@ -10,8 +10,7 @@ import {
     updateUser,
     deleteUser
 } from "../controllers/user.controller"
-import { IUserCreationAttributes } from "../models/user.model";
-import { IUserListFilters } from "../interfaces/IUser.interface";
+import { IUserListFilters } from "../interfaces/iUser.interface";
 
 const router = express.Router();
 
@@ -55,28 +54,34 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.get("/nome/:nome", async (req: Request, res: Response) => {
     try {
         const { nome } = req.params;
-        const userFound = await getUserByName(nome);
+        console.log("Parametro recebido:", nome);
 
-        if (!userFound) {
+        const userFound = await getUserByName(nome);
+        console.log("Usuário encontrado:", nome);
+
+        if (!nome) {
             res.status(404).json({
                 error: true,
                 message: "Nenhum usuário foi encontrado"
-            })
+            });
             return;
         }
+
         res.status(200).json({
             error: false,
             message: "Usuário encontrado",
             data: userFound
         });
+
     } catch (error) {
-        console.log(`Ocorreu um erro de servidor ${error}`);
+        console.log(`Ocorreu um erro de servidor:`, error);
         res.status(500).json({
             error: true,
             message: `Ocorreu um erro de servidor ${error}`
         });
     }
 });
+
 
 router.get("/cpf/:cpf", async (req: Request, res: Response) => {
     try {
@@ -132,9 +137,8 @@ router.get("/email/:email", async (req: Request, res: Response) => {
 
 router.post("/", async (req: Request, res: Response) => {
     try {
-        const userToCreate = req.body as IUserCreationAttributes;
-
-        const result = await createUser(userToCreate);
+        const body = req.body;
+        const result = await createUser(body);
 
         if (result.error) {
             res.status(Number(result.httpError)).json({
@@ -157,11 +161,9 @@ router.put("/:id", async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);
         const {
-            nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento, nivel } = req.body;
+            nome, telefone, email, senha, cpf, endereco, nivel } = req.body;
         const result = await updateUser({
-            id, nome, telefone, email, senha, cpf, cep, cidade, bairro,
-            rua, numero, complemento, nivel
+            id, nome, telefone, email, senha, cpf, endereco, nivel
         });
 
         if (result.error) {

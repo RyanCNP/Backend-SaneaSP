@@ -23,6 +23,7 @@ export const getUserById = async (userId: number) => {
 }
 
 export const getUserByName = async (userName: string) => {
+    console.log(userName);
     const foundUser = await UserModel.findOne({ where: { nome: userName } });
     return foundUser;
 }
