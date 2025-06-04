@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
-
 import sequelize from "../config/database";
+import { IEndereco } from "../interfaces/IEndereco.interface";
 import { IUser, UserLevel } from "../interfaces/iUser.interface";
 
 type IUserCreationAttributes = Optional<IUser, 'id'>;
@@ -12,12 +12,7 @@ export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public email!: string;
     public senha!: string;
     public cpf!: string;
-    public cep?: string;
-    public cidade?: string;
-    public bairro?: string;
-    public rua?: string;
-    public numero?: number;
-    public complemento?: string;
+    public endereco?: IEndereco;
     public nivel!: UserLevel;
 }
 
@@ -56,38 +51,13 @@ UserModel.init({
         unique: true,
         field: 'cpf'
     },
-    cep: {
-        type: DataTypes.CHAR(8),
+    endereco: {
+        type: DataTypes.JSON,
         allowNull: true,
-        field: 'cep'
-    },
-    cidade: {
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'cidade'
-    },
-    bairro: {
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'bairro'
-    },
-    rua: {
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'rua'
-    },
-    numero: {
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'numero'
-    },
-    complemento: {
-        type: DataTypes.STRING(30),
-        allowNull: true,
-        field: 'complemento'
+        field: 'endereco'
     },
     nivel: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.ENUM('comum', 'admin'),
         allowNull: false,
         defaultValue: UserLevel.COMMON,
         field: 'nivel'

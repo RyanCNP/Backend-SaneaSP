@@ -1,4 +1,5 @@
 import { UserLevel } from "../enums/UserLevel.enum"
+import { IEndereco } from "./IEndereco.interface"
 
 export interface IUser {
     id: number,
@@ -7,12 +8,7 @@ export interface IUser {
     email: string,
     senha: string,
     cpf: string,
-    cep?: string,
-    cidade?: string,
-    bairro?: string,
-    rua?: string,
-    numero?: number,
-    complemento?: string
+    endereco?: IEndereco,
     nivel: UserLevel
 }
 
