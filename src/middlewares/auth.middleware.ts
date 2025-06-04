@@ -5,16 +5,24 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const authorize = (req : Request, res : Response, next : NextFunction) => {
-    const { authorization } = req.headers;
+    const token = req.headers['authorization']
     const secret = process.env.SECRET_KEY || "";
     
-    jwt.verify(authorization || "", secret, (err) => {
+    if(!token){
+        res.status(401).json({
+            message : 'Acesso negado, é obrigatório o envio do token JWT'
+        })
+        return;
+    }
+
+    jwt.verify(token, secret, (err) => {
         if (err) {
-            return res.status(401).json({
-                message : 'Você não tem acesso a este recurso',
+            res.status(403).json({
+                message : 'Token inválido',
                 error : true,
                 log : err
             });
+            return;
         }
         next();
     });

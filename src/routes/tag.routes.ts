@@ -11,7 +11,7 @@ import {
 } from "../controllers/tag.controller";
 import { ITagListFilter } from "../interfaces/ITagListFilter.interface";
 import { ITag } from "../interfaces/ITag.interface";
-import { authorize } from "../middlewares/authorize.middleware"
+import { authorize } from "../middlewares/auth.middleware"
 
 const router = express.Router();
 
