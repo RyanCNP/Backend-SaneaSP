@@ -10,7 +10,7 @@ import {
     updateUser,
     deleteUser
 } from "../controllers/user.controller"
-import { IUserListFilters } from "../interfaces/iUser.interface";
+import { IUserListFilters } from "../interfaces/IUser.interface";
 
 const router = express.Router();
 
