@@ -1,4 +1,4 @@
 export enum UserLevel {
-    COMMON = "COMUM",
-    ADMIN = "ADMIN"
+    COMMON = 0,
+    ADMIN = 1
 }
