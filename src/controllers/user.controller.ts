@@ -2,7 +2,7 @@ import { UserModel, IUserCreationAttributes } from "../models/user.model";
 import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
-import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUser.interface";
+import { IUserListFilters, IUser, IUserExists } from "../interfaces/iUser.interface";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };
@@ -23,8 +23,8 @@ export const getUserById = async (userId: number) => {
 }
 
 export const getUserByName = async (userName: string) => {
-    console.log(userName);
     const foundUser = await UserModel.findOne({ where: { nome: userName } });
+    console.log('Usuario procurado: ' +foundUser)
     return foundUser;
 }
 
