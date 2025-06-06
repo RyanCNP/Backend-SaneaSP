@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
-import jwt from "jsonwebtoken";
-
+import jwt from "jsonwebtoken"
 import dotenv from "dotenv";
 import { autenticar, login } from "../controllers/auth.controller";
 dotenv.config();
@@ -10,7 +9,6 @@ export const authRoutes = express.Router();
 authRoutes.post("/", async (req: Request, res: Response) => {
   try {
     const { email, senha } = req.body;
-    //TODO: Criptografia/descriptografia de senha
 
     const user = await autenticar(email, senha);
 

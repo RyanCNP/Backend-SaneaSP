@@ -2,6 +2,7 @@ import { UserModel, IUserCreationAttributes } from "../models/user.model";
 import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
+import bcrypt from "bcryptjs"; 
 import { IUserListFilters, IUser, IUserExists } from "../interfaces/iUser.interface";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
@@ -39,6 +40,8 @@ export const getUserByCPF = async (userCPF: string) => {
 }
 
 export const createUser = async (newUser: IUserCreationAttributes): Promise<IApiResponse<IUser>> => {
+    const salt = await bcrypt.genSalt(10);
+    newUser.senha = await bcrypt.hash(newUser.senha, salt);
     const query : IUserExists = {
         where: {
             [Op.or]: [
