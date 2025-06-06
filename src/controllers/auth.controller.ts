@@ -21,9 +21,9 @@ export const autenticar = async (email: string, password: string) => {
     throw new ApiError('Email ou senha estão incorretos', 401)
   };
    
-  const secret = process.env.SECRET_KEY || "";
-  if(secret == ""){
-    console.error('❌ Secret Key deve ser definida no .env')
+  const secretKey = process.env.SECRET_KEY || "";
+  if(secretKey == ""){
+    console.warn('❌ Secret Key deve ser definida no .env')
     throw new ApiError('Erro interno de servidor')
   }
 
@@ -31,7 +31,8 @@ export const autenticar = async (email: string, password: string) => {
     {
       id: user.id,
     },
-    secret
+    secretKey, 
+    {expiresIn : '7 days'}
   );
 
   return token;
