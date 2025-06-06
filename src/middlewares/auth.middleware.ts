@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -21,7 +21,7 @@ export const validateToken = (req : Request, res : Response, next : NextFunction
             message : 'Erro interno de servidor',
             error : true
         })
-        console.error('❌ Secret Key deve ser definida no .env')
+        console.warn('❌ Secret Key deve ser definida no .env')
         return;
     }
 
@@ -29,9 +29,21 @@ export const validateToken = (req : Request, res : Response, next : NextFunction
         jwt.verify(token, secret)
         next()
     } catch (error) {
-        res.status(403).json({
-            message : 'Token inválido',
-            error : true,
-        });
+        if(error instanceof JsonWebTokenError){
+            res.status(403).json({
+                message : error.name == 'TokenExpiredError' 
+                    ? 'Sua sessão expirou, faça login novamente' 
+                    : 'Não conseguimos verificar seu acesso. Tente fazer login novamente',
+                error : true
+            });
+        }
+        else{
+            console.warn('❌ Erro:' + error)
+            res.status(500).json({
+                message : 'Algo deu errado, tente novamente mais tarde',
+                error : true
+            });
+        }
+        return;
     }
 }
