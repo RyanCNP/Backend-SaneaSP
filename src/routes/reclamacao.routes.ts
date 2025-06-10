@@ -1,7 +1,11 @@
 import express, { Request, Response } from "express";
-import { deleteReclamacao, getAllReclamacoes, getById, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
+import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
+import { login } from "../controllers/auth.controller";
 import { IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
-import { authorize } from "../middlewares/auth.middleware";
+import { validateToken } from "../middlewares/auth.middleware";
+import { ITokenDecode } from "../interfaces/ITokenDecode.interface";
+import { jwtDecode } from "jwt-decode";
+import { IUser } from "../interfaces/iUser.interface";
 const router = express.Router()
 
 //router.use(authorize)
@@ -40,6 +44,7 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
+router.use(validateToken);
 router.post('/', async (req: Request, res: Response) =>{
     try {
         const body = req.body;
@@ -88,6 +93,25 @@ router.delete('/:id',async(req:Request,res:Response)=>{
         else{
             res.status(200).json(result)
         }
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: `Ocorreu um erro de servidor ${error} `,
+        });
+    }
+});
+router.get('/minhas-reclamacoes', async (req: Request, res: Response)=>{
+    try {
+        const token = req.headers['Authorization'] as string;
+        console.log(token)
+        const Usuario: IUser | null = login(token)
+        console.log(Usuario)
+        if(Usuario){
+            const reclamacoes = await getByUsuario;
+        }
+        
+        console.log("oi")
+        res.status(200).json({});
     } catch (error) {
         res.status(500).json({
             error: true,

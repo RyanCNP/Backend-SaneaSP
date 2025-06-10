@@ -12,6 +12,10 @@ GET {{baseURL}}/{{id}}
 Content-Type: application/json
 
 ###
+//GET - By Usuario
+
+
+###
 //POST
 POST {{baseURL}}
 Content-Type: application/json
