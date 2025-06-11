@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { autenticar, login } from "../controllers/auth.controller";
+import { autenticar} from "../controllers/auth.controller";
 import { ApiError } from "../errors/ApiError.error";
 import { validateToken } from "../middlewares/auth.middleware";
 dotenv.config();
@@ -31,9 +31,7 @@ authRoutes.post("/", async (req: Request, res: Response) => {
 
 authRoutes.get("/me", validateToken, async (req: Request, res: Response) => {
   try {
-    const token = req.headers["authorization"] as string;
-    const user = await login(token);
-    res.status(200).json(user);
+    res.status(200).json(req.user)
   } catch (error) {
     if(error instanceof ApiError){
       res.status(error.httpStatus).json({

@@ -38,10 +38,3 @@ export const autenticar = async (email: string, password: string) => {
   return token;
 };
 
-export const login = async (token: string) : Promise<IUser | null> =>  {
-    const decoded : ITokenDecode = jwtDecode(token)
-    const user = await UserModel.findByPk(decoded.id);
-    if(!user)
-      throw new ApiError('Usuário não encontrado', 404)
-    return user;
-};
