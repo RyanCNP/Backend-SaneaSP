@@ -6,6 +6,7 @@ dotenv.config();
 
 export const validateToken = (req : Request, res : Response, next : NextFunction) => {
     const token = req.headers['authorization']
+    console.log(token)
     const secret = process.env.SECRET_KEY || "";
 
     if(!token){
@@ -26,7 +27,8 @@ export const validateToken = (req : Request, res : Response, next : NextFunction
     }
 
     try {
-        jwt.verify(token, secret)
+        jwt.verify(token, secret);
+
         next()
     } catch (error) {
         if(error instanceof JsonWebTokenError){
