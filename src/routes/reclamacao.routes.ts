@@ -1,10 +1,9 @@
 import express, { Request, Response } from "express";
-import { deleteReclamacao, getAllReclamacoes, getById, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
+import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
 import { IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
-import { authorize } from "../middlewares/auth.middleware";
+import { validateToken } from "../middlewares/auth.middleware";
 const router = express.Router()
 
-//router.use(authorize)
 
 router.get('/', async (req: Request, res: Response) => {
     try {
@@ -18,6 +17,19 @@ router.get('/', async (req: Request, res: Response) => {
         });
     }
 });
+
+router.get('/usuario',validateToken, async (req: Request, res: Response)=>{
+    try {
+        const idUsuario = req.user.id as number;
+        const reclamacoes = await getByUsuario(idUsuario);
+        res.status(200).json(reclamacoes);
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: `Ocorreu um erro de servidor ${error} `,
+        });
+    }
+})
 router.get('/:id', async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);
@@ -39,6 +51,8 @@ router.get('/:id', async (req: Request, res: Response) => {
         });
     }
 })
+
+router.use(validateToken);
 
 router.post('/', async (req: Request, res: Response) =>{
     try {
@@ -94,5 +108,5 @@ router.delete('/:id',async(req:Request,res:Response)=>{
             message: `Ocorreu um erro de servidor ${error} `,
         });
     }
-})
+});
 export default router

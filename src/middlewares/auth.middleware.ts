@@ -1,11 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import jwt, { JsonWebTokenError } from "jsonwebtoken";
-
+import jwt from 'jsonwebtoken';
 import dotenv from "dotenv";
+import { ITokenDecode } from "../interfaces/ITokenDecode.interface";
+import { jwtDecode } from "jwt-decode";
+import { UserModel } from "../models/user.model";
+import { JsonWebTokenError } from "jsonwebtoken";
 dotenv.config();
 
-export const validateToken = (req : Request, res : Response, next : NextFunction) => {
-    const token = req.headers['authorization']
+export const validateToken = async (req : Request, res : Response, next : NextFunction) => {
+    const token = req.headers['authorization'];
+
     const secret = process.env.SECRET_KEY || "";
 
     if(!token){
@@ -26,7 +30,25 @@ export const validateToken = (req : Request, res : Response, next : NextFunction
     }
 
     try {
-        jwt.verify(token, secret)
+        jwt.verify(token, secret);
+
+        const decoded : ITokenDecode = jwtDecode(token)
+        const user : UserModel | null = await UserModel.findByPk(decoded.id);
+
+        if(!user){
+            res.status(401).json({
+                message: "Não autorizado. Usuário não encontrado",
+                error : true
+            })
+            return;
+        }
+
+        const plainUser = user.get({plain:true})
+        const {senha : senha, ...loggedUser } = plainUser
+
+        
+        req.user = loggedUser
+
         next()
     } catch (error) {
         if(error instanceof JsonWebTokenError){
