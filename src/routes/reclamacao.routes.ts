@@ -20,13 +20,9 @@ router.get('/', async (req: Request, res: Response) => {
 
 router.get('/usuario',validateToken, async (req: Request, res: Response)=>{
     try {
-        const token = req.headers['Authorization'] as string;
-        // console.log(Usuario)
-        // if(Usuario){
-        //     const reclamacoes = await getByUsuario;
-        // }
-
-        res.status(200).json(token);
+        const idUsuario = req.user.id as number;
+        const reclamacoes = await getByUsuario(idUsuario);
+        res.status(200).json(reclamacoes);
     } catch (error) {
         res.status(500).json({
             error: true,
@@ -56,8 +52,8 @@ router.get('/:id', async (req: Request, res: Response) => {
     }
 })
 
+router.use(validateToken);
 
-//router.use(validateToken);
 router.post('/', async (req: Request, res: Response) =>{
     try {
         const body = req.body;

@@ -49,8 +49,6 @@ export const validateToken = async (req : Request, res : Response, next : NextFu
         
         req.user = loggedUser
 
-        console.log(req.user)
-
         next()
     } catch (error) {
         if(error instanceof JsonWebTokenError){
