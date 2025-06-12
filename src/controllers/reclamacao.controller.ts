@@ -64,6 +64,9 @@ export const getAllReclamacoes = async (filtros : IFilterListReclamacao): Promis
         //         [Op.like]: `%${filtros.data}%`
         //     };
         // }
+        if(filtros.Tags){
+            query.where.Tags = filtros.Tags
+        }
         if(filtros.pontuacao){
             query.where.pontuacao = {
                 [Op.like]: `${filtros.pontuacao}`

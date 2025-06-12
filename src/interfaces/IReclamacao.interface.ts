@@ -30,7 +30,8 @@ export interface IFilterListReclamacao{
     bairro ?: string,
     rua ?: string,
     numero ?: string,
-    complemento ?: string
+    complemento ?: string,
+    Tags ?: number[]
 }
 
 export interface ICreateReclamacao{
