@@ -1,5 +1,6 @@
 import { IEndereco } from './IEndereco.interface';
 import { StatusReclamacao } from "../enums/statusReclamacao.enum";
+import { ITag } from './ITag.interface';
 
 export interface IReclamacao{
     id : number,
@@ -30,8 +31,7 @@ export interface IFilterListReclamacao{
     bairro ?: string,
     rua ?: string,
     numero ?: string,
-    complemento ?: string,
-    Tags ?: number[]
+    complemento ?: string
 }
 
 export interface ICreateReclamacao{

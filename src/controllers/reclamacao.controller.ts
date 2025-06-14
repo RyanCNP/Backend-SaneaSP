@@ -1,5 +1,5 @@
 import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interfaces/IReclamacao.interface";
-import { Op, where } from "sequelize";
+import { Model, Op, where } from "sequelize";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import { HttpError } from "../enums/HttpError.enum";
 import { ImagemReclamacaoModel, ReclamacaoModel, TagModel, TagReclamacaoModel } from "../models";
@@ -64,9 +64,6 @@ export const getAllReclamacoes = async (filtros : IFilterListReclamacao): Promis
         //         [Op.like]: `%${filtros.data}%`
         //     };
         // }
-        if(filtros.Tags){
-            query.where.Tags = filtros.Tags
-        }
         if(filtros.pontuacao){
             query.where.pontuacao = {
                 [Op.like]: `${filtros.pontuacao}`
@@ -84,6 +81,34 @@ export const getById = async (idReclamacao: number): Promise<IReclamacao | null>
         include: reclamacaoFindIncludes
     });
     return reclamacao;
+}
+export const getByTag = async(tags:number[])=>{
+    let query: any = {
+        where : {},
+        include: [
+    {
+        model: TagModel,
+        as: 'tagsSelecionadas',  
+        through: { attributes: [] },
+        where:{id:tags},
+        require:true
+    },
+    {
+        model: TagModel,
+        as: 'Tags',
+        through: { attributes: [] },
+
+    },
+    {
+        //Trazer as imagens da reclamação
+        model: ImagemReclamacaoModel,
+        as: 'Imagens',
+        attributes: {exclude : ['id_reclamacao']},
+    }
+]
+    };
+    const reclamacoes = await ReclamacaoModel.findAll(query);
+    return reclamacoes
 }
 export const getByUsuario = async(fkUsuario: number)=>{
     const reclamacoes = await ReclamacaoModel.findAll({where:{idUsuario:fkUsuario}})
