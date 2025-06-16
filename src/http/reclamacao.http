@@ -12,6 +12,10 @@ GET {{baseURL}}/{{id}}
 Content-Type: application/json
 
 ###
+//GET - By Usuario
+
+
+###
 //POST
 POST {{baseURL}}
 Content-Type: application/json
@@ -20,7 +24,7 @@ Content-Type: application/json
       "titulo": "Falta de abastecimento de água",
       "descricao": "Há três dias o bairro está sem água, afetando diversas famílias. A situação está insustentável, pois as pessoas não conseguem realizar atividades básicas como cozinhar, tomar banho ou lavar roupas. Entramos em contato com a companhia de saneamento, mas até agora não houve retorno sobre o motivo da interrupção ou previsão de normalização.",
       "data": "2024-11-28",
-      "objTag": "Abastecimento",
+      "Tags": [],
       "objImagem": "img/paginas/reclamacoes/user1.jpg",
       "idUsuario": 1,
       "cep": "18075718",
@@ -48,7 +52,9 @@ Content-Type: application/json
   "rua": "Rua Alonco Muchon",
   "numero": "334",
   "complemento": "casa 27",
-  "idUsuario": 2
+  "idUsuario": 2,
+  "Tags": [4,5,9],
+  "Imagens": ["esgoto.jpg","image-not-found.svg"]
 }
 
 ###

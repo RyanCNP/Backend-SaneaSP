@@ -11,11 +11,11 @@ import {
 } from "../controllers/tag.controller";
 import { ITagListFilter } from "../interfaces/ITagListFilter.interface";
 import { ITag } from "../interfaces/ITag.interface";
-import { authorize } from "../middlewares/authorize.middleware"
+import { validateToken } from "../middlewares/auth.middleware"
 
 const router = express.Router();
 
-router.use(authorize)
+router.use(validateToken)
 
 router.get("/", async (req: Request, res: Response) => {
   try {

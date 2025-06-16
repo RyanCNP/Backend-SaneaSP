@@ -60,7 +60,7 @@ UserModel.init({
         type: DataTypes.ENUM('comum', 'admin'),
         allowNull: false,
         defaultValue: UserLevel.COMMON,
-        field: 'nivel_usuario'
+        field: 'nivel'
     }
 }, {
     tableName: 'Usuarios',

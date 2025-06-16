@@ -57,9 +57,9 @@ router.get("/nome/:nome", async (req: Request, res: Response) => {
         console.log("Parametro recebido:", nome);
 
         const userFound = await getUserByName(nome);
-        console.log("Usuário encontrado:", nome);
+        console.log("Usuário encontrado:", userFound);
 
-        if (!nome) {
+        if (!userFound) {
             res.status(404).json({
                 error: true,
                 message: "Nenhum usuário foi encontrado"
