@@ -1,6 +1,6 @@
 // API REST de Usuários
 @baseURL = http://localhost:3000/user
-@id = 1
+@id = 2
 @name = 'UserTest2'
 @email = 'usertest2email@gmail.com'
 @cpf = '123.456.789-02'
@@ -59,7 +59,7 @@ Content-Type: application/json
     "cpf": "123.456.789-02",
     "cep": "121345-678",
     "endereco": "Rua Carmelina Garcia, 303, Votorantim - SP",
-    "nivel": 0
+    "nivel": 1
 }
 
 ###
