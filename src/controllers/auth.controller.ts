@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken"
 import { jwtDecode } from 'jwt-decode';
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs"; 
-import { IUser } from "../interfaces/iUser.interface";
+import { IUser } from "../interfaces/IUser.interface";
 import { ApiError } from "../errors/ApiError.error";
 import { ITokenDecode } from "../interfaces/ITokenDecode.interface";
 dotenv.config();
