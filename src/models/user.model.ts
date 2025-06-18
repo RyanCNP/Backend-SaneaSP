@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database";
 import { IEndereco } from "../interfaces/IEndereco.interface";
-import { IUser, UserLevel } from "../interfaces/iUser.interface";
+import { IUser, UserLevel } from "../interfaces/IUser.interface";
 
 type IUserCreationAttributes = Optional<IUser, 'id'>;
 

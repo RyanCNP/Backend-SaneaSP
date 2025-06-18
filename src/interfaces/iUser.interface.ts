@@ -2,7 +2,7 @@ import { UserLevel } from "../enums/UserLevel.enum"
 import { IEndereco } from "./IEndereco.interface"
 
 export interface IUser {
-    id: number,
+    id?: number,
     nome: string,
     telefone?: string,
     email: string,

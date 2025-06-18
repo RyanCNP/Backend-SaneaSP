@@ -2,7 +2,7 @@ import { UserModel } from "../models/user.model";
 import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
-import { IUser, IUserListFilters } from "../interfaces/iUser.interface";
+import { IUser, IUserListFilters } from "../interfaces/IUser.interface";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };
