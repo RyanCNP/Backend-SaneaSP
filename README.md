@@ -4,11 +4,32 @@
 
 ## Comandos:
 
-Iniciando a aplicação:
-`npm run start` 
 
-Cria uma nova migration `npm run migration-create <nome>`
+#### Iniciando a aplicação
+```
+npm run start
+``` 
 
-Realiza as migrações `npm run migrate`
+#### Criando a documentação Swagger
 
-Desfaz as migrações `npm run migrate:undo`
+```
+npm run doc
+```
+
+#### Migrações
+
+Criar
+
+```
+npm run migration-create <nome>
+``` 
+
+Fazer migrations
+```
+npm run migrate
+```
+
+Desfazer migrations 
+```
+npm run migrate:undo
+```
