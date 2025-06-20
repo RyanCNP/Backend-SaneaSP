@@ -1,11 +1,10 @@
 import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interfaces/IReclamacao.interface";
-import { Op, where } from "sequelize";
+import { Op } from "sequelize";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import { HttpError } from "../enums/HttpError.enum";
 import { ImagemReclamacaoModel, ReclamacaoModel, TagModel, TagReclamacaoModel } from "../models";
 import { postTagReclamacoes, updateTagReclamacoes } from "./tag-reclamacao.controller";
 import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
-import { IImagemReclamacao } from "../interfaces/IImagemReclamacao.interface";
 
 const reclamacaoFindIncludes = [
     {

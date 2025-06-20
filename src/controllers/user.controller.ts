@@ -3,7 +3,7 @@ import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import bcrypt from "bcryptjs"; 
-import { IUserListFilters, IUser, IUserExists } from "../interfaces/iUser.interface";
+import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUsuario.interface";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };

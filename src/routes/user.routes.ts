@@ -8,7 +8,7 @@ import {
     updateUser,
     deleteUser
 } from "../controllers/user.controller"
-import { IUserListFilters } from "../interfaces/IUser.interface";
+import { IUserListFilters } from "../interfaces/IUsuario.interface";
 
 const router = express.Router();
 
