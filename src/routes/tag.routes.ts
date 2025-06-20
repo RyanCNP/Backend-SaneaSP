@@ -17,7 +17,6 @@ const router = express.Router();
 
 router.use(validateToken)
 
-// #swagger.tags = ['Usuário']
 router.get("/", async (req: Request, res: Response) => {
   try {
     const tagFilter = req.query as unknown as ITagListFilter;
