@@ -8,11 +8,18 @@
 - Ryan Carlo Negretti Pereira
 
 ## Hospedagem
-O backend do SaneaSP está hospedado no link abaixo:
+O backend do SaneaSP está hospedado no link abaixo, com conexão ao banco de dados Postgree fornecido pela plataforma Render
+Todas as migrations foram feitas para o banco de dados com inclusão de alguns dados
 
+#### Backend do projeto
 - https://backend-saneasp.onrender.com
+Rotas possíveis:
 
-## Documentação Swagger
+/reclamacao
+/tag (protegida)
+/user
+
+#### Documentação Swagger
 [Link para a documentação Swagger do projeto](https://backend-saneasp.onrender.com/api-docs)
 
 ## FrontEnd do projeto
@@ -42,6 +49,13 @@ Para iniciar o projeto em desenvolvimento
 ``` bash
 npm run dev
 ```
+
+Para ter acesso à páginas do site
+
+| Email do usuário | Senha | Nível de acesso |
+|------------------|-------|-----------------|
+| pedro@gmail.com  | pedro | 0               |
+| gueff@gmail.com  | math  | 1               |
 
 ## Comandos:
 
