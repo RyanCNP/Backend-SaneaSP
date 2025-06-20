@@ -57,13 +57,13 @@ UserModel.init({
         field: 'endereco'
     },
     nivel: {
-        type: DataTypes.ENUM('comum', 'admin'),
+        type: DataTypes.INTEGER,
         allowNull: false,
         defaultValue: UserLevel.COMMON,
         field: 'nivel'
     }
 }, {
-    tableName: 'Usuarios',
+    tableName: 'usuario',
     sequelize,
     timestamps: false
 })
