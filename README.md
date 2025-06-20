@@ -13,11 +13,12 @@ Todas as migrations foram feitas para o banco de dados com inclusão de alguns d
 
 #### Backend do projeto
 - https://backend-saneasp.onrender.com
-Rotas possíveis:
+  
+##### Rotas possíveis:
 
-/reclamacao
-/tag (protegida)
-/user
+- https://backend-saneasp.onrender.com/reclamacao
+- https://backend-saneasp.onrender.com/tag (protegida)
+- https://backend-saneasp.onrender.com/user
 
 #### Documentação Swagger
 [Link para a documentação Swagger do projeto](https://backend-saneasp.onrender.com/api-docs)
