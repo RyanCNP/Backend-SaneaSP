@@ -2,8 +2,6 @@ import express from "express";
 import { Request, Response } from "express";
 import {
     getUserList,
-    getUserByCPF,
-    getUserByEmail,
     getUserByName,
     getUserById,
     createUser,
@@ -82,58 +80,57 @@ router.get("/nome/:nome", async (req: Request, res: Response) => {
     }
 });
 
+// router.get("/cpf/:cpf", async (req: Request, res: Response) => {
+//     try {
+//         const { cpf } = req.params;
+//         const userFound = await getUserByCPF(cpf);
 
-router.get("/cpf/:cpf", async (req: Request, res: Response) => {
-    try {
-        const { cpf } = req.params;
-        const userFound = await getUserByCPF(cpf);
+//         if (!userFound) {
+//             res.status(404).json({
+//                 error: true,
+//                 message: "Nenhum usuário foi encontrado"
+//             })
+//             return;
+//         }
+//         res.status(200).json({
+//             error: false,
+//             message: "Usuário encontrado",
+//             data: userFound
+//         });
+//     } catch (error) {
+//         console.log(`Ocorreu um erro de servidor ${error}`);
+//         res.status(500).json({
+//             error: true,
+//             message: `Ocorreu um erro de servidor ${error}`
+//         });
+//     }
+// });
 
-        if (!userFound) {
-            res.status(404).json({
-                error: true,
-                message: "Nenhum usuário foi encontrado"
-            })
-            return;
-        }
-        res.status(200).json({
-            error: false,
-            message: "Usuário encontrado",
-            data: userFound
-        });
-    } catch (error) {
-        console.log(`Ocorreu um erro de servidor ${error}`);
-        res.status(500).json({
-            error: true,
-            message: `Ocorreu um erro de servidor ${error}`
-        });
-    }
-});
+// router.get("/email/:email", async (req: Request, res: Response) => {
+//     try {
+//         const { email } = req.params;
+//         const userFound = await getUserByEmail(email);
 
-router.get("/email/:email", async (req: Request, res: Response) => {
-    try {
-        const { email } = req.params;
-        const userFound = await getUserByEmail(email);
-
-        if (!userFound) {
-            res.status(404).json({
-                error: true,
-                message: "Nenhum usuário foi encontrado"
-            })
-            return;
-        }
-        res.status(200).json({
-            error: false,
-            message: "Usuário encontrado",
-            data: userFound
-        });
-    } catch (error) {
-        console.log(`Ocorreu um erro de servidor ${error}`);
-        res.status(500).json({
-            error: true,
-            message: `Ocorreu um erro de servidor ${error}`
-        });
-    }
-});
+//         if (!userFound) {
+//             res.status(404).json({
+//                 error: true,
+//                 message: "Nenhum usuário foi encontrado"
+//             })
+//             return;
+//         }
+//         res.status(200).json({
+//             error: false,
+//             message: "Usuário encontrado",
+//             data: userFound
+//         });
+//     } catch (error) {
+//         console.log(`Ocorreu um erro de servidor ${error}`);
+//         res.status(500).json({
+//             error: true,
+//             message: `Ocorreu um erro de servidor ${error}`
+//         });
+//     }
+// });
 
 router.post("/", async (req: Request, res: Response) => {
     try {
