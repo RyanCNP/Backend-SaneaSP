@@ -10,12 +10,13 @@ import fonteRoutes from "./src/routes/fonte.routes";
 import doencaRoutes from "./src/routes/doenca.routes";
 import userRoutes from "./src/routes/user.routes";
 import { authRoutes } from "./src/routes/auth.routes";
+import swaggerUi from 'swagger-ui-express';
+const swaggerDocument = require('./swagger/swagger_output.json')
 
 const app = express();
 app.use(cors()) //Habilita o CORS Cross-Origin resource sharing
 app.use(express.json());
 
-//app.use("/user", userRoutes);
 app.use("/tag", tagRoutes);
 app.use("/sintoma", sintomaRoutes);
 app.use("/reclamacao", reclamacaoRoutes);
@@ -25,6 +26,7 @@ app.use("/fonte", fonteRoutes);
 app.use("/doenca", doencaRoutes);
 app.use("/user", userRoutes)
 app.use("/auth", authRoutes)
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(3000, () => {
     console.log("Backend do SaneaSP está rodando na porta 3000");
