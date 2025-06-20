@@ -11,7 +11,7 @@
     }
   },
   "production": {
-    "url": "postgresql://saneasp_admin:EDyRW8MfV5VFJx1gwPndyeLBEg9AIozm@dpg-d1aq5duuk2gs7391r2b0-a/saneasp",
+    "url": "postgresql://saneasp_admin:EDyRW8MfV5VFJx1gwPndyeLBEg9AIozm@dpg-d1aq5duuk2gs7391r2b0-a.oregon-postgres.render.com/saneasp",
     "dialect": "postgres",
     "protocol": "postgres",
     "dialectOptions": {
