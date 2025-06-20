@@ -28,6 +28,8 @@ app.use("/doenca", doencaRoutes);
 app.use("/user", userRoutes)
 app.use("/auth", authRoutes)
 
-app.listen(3000, () => {
-    console.log("Backend do SaneaSP está rodando na porta 3000");
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+    console.log(`Backend do SaneaSP está rodando na porta ${PORT}`);
 });
