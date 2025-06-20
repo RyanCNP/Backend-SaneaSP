@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "doc": "node ./swagger/swagger.ts",
-    "start": "ts-node-dev --respawn --transpile-only ./app.ts",
+    "dev": "ts-node-dev --respawn --transpile-only ./app.ts",
+    "start": "node dist/app.js",
+    "build" : "tsc",
     "migration-create": "npx sequelize-cli migration:generate --name",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo"
@@ -18,7 +20,6 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "node": "^23.11.0",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
