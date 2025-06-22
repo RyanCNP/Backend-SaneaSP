@@ -82,7 +82,10 @@ export const getById = async (idReclamacao: number): Promise<IReclamacao | null>
     return reclamacao;
 }
 export const getByUsuario = async(fkUsuario: number)=>{
-    const reclamacoes = await ReclamacaoModel.findAll({where:{idUsuario:fkUsuario}})
+    const reclamacoes = await ReclamacaoModel.findAll({
+        where:{idUsuario:fkUsuario},
+        include: reclamacaoFindIncludes
+    })
     return reclamacoes;
 }
 export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamacao | null> => {
