@@ -35,6 +35,8 @@ router.get('/tags', async (req: Request, res: Response)=>{
     try {
         let listTagId : number[] = [];
         let listaQuery !: string[];
+        let idUsuario : number | undefined;
+
         if(!req.query.tags){
             res.status(400).json({
                 error: true,
@@ -42,6 +44,7 @@ router.get('/tags', async (req: Request, res: Response)=>{
             });
             return;
         }
+
         if(Array.isArray(req.query.tags)){
             listaQuery = req.query.tags as string[];
             listTagId = listaQuery.map(id => Number(id));
@@ -49,7 +52,11 @@ router.get('/tags', async (req: Request, res: Response)=>{
         else{
             listTagId.push(Number(req.query.tags as string));
         }
-        const reclamacoes = await getByTag(listTagId);
+
+        if(req.query.idUsuario){
+            idUsuario = Number(req.query.idUsuario);
+        }
+        const reclamacoes = await getByTag(listTagId,idUsuario);
         res.json(reclamacoes);
         return;
     } catch (error) {

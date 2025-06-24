@@ -81,7 +81,7 @@ export const getById = async (idReclamacao: number): Promise<IReclamacao | null>
     });
     return reclamacao;
 }
-export const getByTag = async(tags:number[])=>{
+export const getByTag = async(tags:number[], idUsuario?: number)=>{
     let query: any = {
         where : {},
         include: [
@@ -106,6 +106,9 @@ export const getByTag = async(tags:number[])=>{
     }
 ]
     };
+    if(idUsuario){
+        query.where.idUsuario = idUsuario
+    }
     const reclamacoes = await ReclamacaoModel.findAll(query);
     return reclamacoes
 }
