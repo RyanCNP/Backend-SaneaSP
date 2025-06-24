@@ -10,6 +10,7 @@ import doencaRoutes from "./src/routes/doenca.routes";
 import userRoutes from "./src/routes/user.routes";
 import { authRoutes } from "./src/routes/auth.routes";
 import { setupSwagger } from "./src/swagger/swagger";
+import { errorHandler } from "./src/middlewares/errorHandler.middleware";
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use("/fonte", fonteRoutes);
 app.use("/doenca", doencaRoutes);
 app.use("/user", userRoutes)
 app.use("/auth", authRoutes)
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3000
 
