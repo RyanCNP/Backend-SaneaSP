@@ -9,6 +9,9 @@ ReclamacaoModel.belongsToMany(TagModel,
 TagModel.belongsToMany(ReclamacaoModel, 
     {through: TagReclamacaoModel, foreignKey: 'id_tag', as: 'reclamacoes'})
 
+ReclamacaoModel.belongsToMany(TagModel,
+    {through: TagReclamacaoModel, foreignKey:'id_reclamacao', as: "tagsSelecionadas"})
+
 //Adicionando associação entre Imagem e Reclamações
 ReclamacaoModel.hasMany(ImagemReclamacaoModel, 
     {foreignKey: 'id_reclamacao', as: 'Imagens'})

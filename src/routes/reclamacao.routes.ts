@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
-import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
+import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao,getByTag } from "../controllers/reclamacao.controller";
 import { ICreateReclamacao, IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
 import { validateToken } from "../middlewares/auth.middleware";
+
 const router = express.Router()
 
 
@@ -23,6 +24,41 @@ router.get('/usuario',validateToken, async (req: Request, res: Response)=>{
         const idUsuario = req.user.id as number;
         const reclamacoes = await getByUsuario(idUsuario);
         res.status(200).json(reclamacoes);
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: `Ocorreu um erro de servidor ${error} `,
+        });
+    }
+})
+router.get('/tags', async (req: Request, res: Response)=>{
+    try {
+        let listTagId : number[] = [];
+        let listaQuery !: string[];
+        let idUsuario : number | undefined;
+
+        if(!req.query.tags){
+            res.status(400).json({
+                error: true,
+                message: `Não foi passado parâmetro tags`,
+            });
+            return;
+        }
+
+        if(Array.isArray(req.query.tags)){
+            listaQuery = req.query.tags as string[];
+            listTagId = listaQuery.map(id => Number(id));
+        }
+        else{
+            listTagId.push(Number(req.query.tags as string));
+        }
+
+        if(req.query.idUsuario){
+            idUsuario = Number(req.query.idUsuario);
+        }
+        const reclamacoes = await getByTag(listTagId,idUsuario);
+        res.json(reclamacoes);
+        return;
     } catch (error) {
         res.status(500).json({
             error: true,
