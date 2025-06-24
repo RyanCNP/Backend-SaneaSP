@@ -1,23 +1,28 @@
 import { ITag } from "../interfaces/ITag.interface";
 import { ITagListFilter } from "../interfaces/ITagListFilter.interface";
-import { IApiResponse } from "../interfaces/IApiResponse.interface";
-import { HttpError } from "../enums/HttpError.enum";
 import { TagModel } from "../models/tag.model";
-import { Op } from "sequelize";
+import { FindOptions, Op } from "sequelize";
+import { ApiError } from "../errors/ApiError.error";
 
 export const getTagList = async (tagFilter : ITagListFilter) : Promise<ITag[]> => {
-  const query : any = {
-    where : {}
-  }
+  const where : any = {};
+
   if(tagFilter.nome){
-    query.where.nome = {
+    where.nome = {
       [Op.like]: `%${tagFilter.nome}%`
     };
   }
-  if(tagFilter.limit){
-    query.limit = tagFilter.limit
+
+  const query : FindOptions = {
+    where,
+    order : [['id', 'ASC']]
   }
-  const tags = await TagModel.findAll(query);
+
+  if(tagFilter.limit){
+    query.limit = Number(tagFilter.limit)
+  }
+
+  const tags = await TagModel.findAll(query)
   return tags;
 }
 
@@ -36,43 +41,27 @@ export const getTagByName = async (nameFilter : string) => {
   return tagFound;
 }
 
-export const createTag = async (newTagName : string) : Promise<IApiResponse<ITag>> => {
+export const createTag = async (newTagName : string) : Promise<ITag> => {
   const tagFound = await TagModel.findOne({where : {nome : {[Op.like] : `${newTagName}`}}})
+
   if(tagFound){
-    return {
-      error:true,
-      message:"Já existe uma tag com esse nome",
-      httpError: HttpError.Conflict
-    }
+    throw new ApiError(`Já existe uma tag com o nome ${newTagName}`, 409)
   }
 
   const createdTag = await TagModel.create({nome : newTagName})
 
-  return {
-    error:false,
-    message:"Tag cadastrada com sucesso",
-    data : createdTag
-  }
+  return createdTag;
 };
 
-export const updateTag = async (tagData : ITag) : Promise<IApiResponse<ITag>> => {
+export const updateTag = async (tagData : ITag) : Promise<ITag> => {
   const tagFound = await TagModel.findOne({where : {id: tagData.id}})
 
-  if(tagFound == null){
-    return {
-      error:true,
-      message:"Nenhuma tag encontrada",
-      httpError: HttpError.NotFound
-    }
-  }
+  if(tagFound == null)
+    throw new ApiError('Nenhuma categoria encontrada', 404)
+  
 
-  if(tagFound.nome === tagData.nome){
-    return {
-      error: true,
-      message: "O nome da tag não pode ser igual ao seu nome anterior",
-      httpError: HttpError.BadRequest
-    }
-  }
+  if(tagFound.nome === tagData.nome)
+    throw new ApiError('Digite um novo nome para a categoria', 400)
 
   const tagNameExists = await TagModel.findOne({
     where: {
@@ -81,39 +70,19 @@ export const updateTag = async (tagData : ITag) : Promise<IApiResponse<ITag>> =>
     }
   })
 
-  if(tagNameExists){
-    return {
-      error:true,
-      message:"Já existe uma tag com esse nome",
-      httpError: HttpError.Conflict
-    }
-  }
+  if(tagNameExists)
+    throw new ApiError('Uma categoria já foi cadastrada com esse nome')
 
   const updatedTag = await tagFound.update(tagData)
 
-  return {
-    error:false,
-    message:"Tag atualizada",
-    data: updatedTag
-  }
+  return updatedTag
 };
 
-export const deleteTag = async (tagId : number) : Promise<IApiResponse> => {
+export const deleteTag = async (tagId : number) => {
   const tagFound = await TagModel.findByPk(tagId)
 
-  if(!tagFound){
-    return {
-      message: 'Nenhuma tag foi encontrada',
-      error : true,
-      httpError : HttpError.NotFound
-    };
-  }
+  if(!tagFound)
+    throw new ApiError('Nenhuma categoria foi encontrada', 404)
 
   await tagFound.destroy();
-
-  return {
-    message: 'Tag excluída com sucesso',
-    error : false,
-    data : tagFound
-  };
 };

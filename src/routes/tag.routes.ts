@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import express from "express";
 import {
   countAllTags,
@@ -12,162 +12,114 @@ import {
 import { ITagListFilter } from "../interfaces/ITagListFilter.interface";
 import { ITag } from "../interfaces/ITag.interface";
 import { validateToken } from "../middlewares/auth.middleware"
+import { ApiError } from "../errors/ApiError.error";
 
 const router = express.Router();
 
 router.use(validateToken)
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response, next : NextFunction) => {
   try {
-    const tagFilter = req.query as unknown as ITagListFilter;
+    const tagFilter : ITagListFilter = req.query;
     const foundTags : ITag[] = await getTagList(tagFilter);
 
     res.status(200).json({
       data : foundTags,
       pagination : {
-        limit : tagFilter.limit || 0,
+        limit : Number(tagFilter.limit) || 0,
         total : foundTags.length
       }
     });
   } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
-    });
+    next(error)
   }
 });
 
-router.get("/total", async (req: Request, res: Response) => {
+router.get("/total", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const count = await countAllTags();
     res.status(200).json(count);
   } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
-    });
+    next(error)
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { id } = req.params;
 
     const tagFound = await getTagById(Number(id));
 
     if (!tagFound) {
-      res.status(404).json({
-        error: true,
-        message: "Não foi possível encontrar uma tag com esse ID",
-      });
-      return;
+      throw new ApiError('Nenhuma categoria foi encontrada com esse ID', 404)
     }
+
     res.status(200).json(tagFound);
   } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
-    });
+   next(error)
   }
 });
 
-router.get("/nome/:nome", async (req: Request, res: Response) => {
+router.get("/nome/:nome", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { nome } = req.params;
     const tagFound = await getTagByName(nome);
 
     if (!tagFound) {
-      res.status(404).json({
-        error: true,
-        message: "Nenhuma tag foi encontrada",
-      });
-      return;
+      throw new ApiError('Nenhuma categoria foi encontrada com esse nome', 404)
     }
 
     res.status(200).json({
       error: false,
-      message: "Tag encontrada",
+      message: "Categoria encontrada com sucesso",
       data: tagFound,
     });
   } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
-    });
+    next(error)
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { nome } = req.body;
 
     const result = await createTag(nome);
 
-    if (result.error) {
-      res.status(Number(result.httpError)).json({
-        error: true,
-        message: result.message,
-      });
-      return;
-    }
-
-    res.status(201).json(result);
-  } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
+    res.status(201).json({
+      error: false,
+      message : 'Categoria criada com sucesso',
+      categoria : result
     });
+  } catch (error) {
+    next(error);
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const id = Number(req.params.id);
     const { nome } = req.body;
 
     const result = await updateTag({ id, nome });
 
-    if (result.error) {
-      res
-        .status(Number(result.httpError))
-        .json({ error: true, message: result.message });
-      return;
-    }
-
     res.status(200).json(result);
   } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
-    });
+    next(error)
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { id } = req.params;
-    const result = await deleteTag(Number(id));
+    
+    await deleteTag(Number(id));
 
-    if (result.error) {
-      res
-        .status(Number(result.httpError))
-        .json({ error: true, message: result.message });
-      return;
-    }
-
-    res.status(200).json(result);
-  } catch (error) {
-    console.log(`Ocorreu um erro de servidor ${error} `);
-    res.status(500).json({
-      error: true,
-      message: `Ocorreu um erro de servidor ${error} `,
+    res.status(200).json({
+      error : false,
+      message : 'Categoria excluída com sucesso'
     });
+  } catch (error) {
+    next(error)
   }
 });
 
