@@ -1,11 +1,10 @@
 import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interfaces/IReclamacao.interface";
-import { Model, Op, where } from "sequelize";
+import { Op} from "sequelize";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import { HttpError } from "../enums/HttpError.enum";
 import { ImagemReclamacaoModel, ReclamacaoModel, TagModel, TagReclamacaoModel } from "../models";
 import { postTagReclamacoes, updateTagReclamacoes } from "./tag-reclamacao.controller";
 import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
-import { IImagemReclamacao } from "../interfaces/IImagemReclamacao.interface";
 
 const reclamacaoFindIncludes = [
     {
@@ -111,7 +110,10 @@ export const getByTag = async(tags:number[])=>{
     return reclamacoes
 }
 export const getByUsuario = async(fkUsuario: number)=>{
-    const reclamacoes = await ReclamacaoModel.findAll({where:{idUsuario:fkUsuario}})
+    const reclamacoes = await ReclamacaoModel.findAll({
+        where:{idUsuario:fkUsuario},
+        include: reclamacaoFindIncludes
+    })
     return reclamacoes;
 }
 export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamacao | null> => {

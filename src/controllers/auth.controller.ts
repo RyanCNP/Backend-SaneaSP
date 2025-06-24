@@ -1,11 +1,8 @@
 import { UserModel } from "../models/user.model";
 import jwt from "jsonwebtoken"
-import { jwtDecode } from 'jwt-decode';
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs"; 
-import { IUser } from "../interfaces/iUser.interface";
 import { ApiError } from "../errors/ApiError.error";
-import { ITokenDecode } from "../interfaces/ITokenDecode.interface";
 dotenv.config();
 
 export const autenticar = async (email: string, password: string) => {

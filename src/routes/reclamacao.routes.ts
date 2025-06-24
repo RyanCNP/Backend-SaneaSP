@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
-import { deleteReclamacao, getAllReclamacoes, getById, getByTag, getByUsuario, postReclamacao, putReclamacao } from "../controllers/reclamacao.controller";
-import { IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
+import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao,getByTag } from "../controllers/reclamacao.controller";
+import { ICreateReclamacao, IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
 import { validateToken } from "../middlewares/auth.middleware";
+
 const router = express.Router()
 
 
@@ -84,7 +85,8 @@ router.use(validateToken);
 
 router.post('/', async (req: Request, res: Response) =>{
     try {
-        const body = req.body;
+        const body:ICreateReclamacao = req.body;
+        body.idUsuario = req.user.id as number;
         const reclamacao = await postReclamacao(body);
         res.status(201).json(reclamacao);
     } catch (error) {

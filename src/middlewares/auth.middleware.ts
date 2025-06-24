@@ -60,12 +60,12 @@ export const validateToken = async (req : Request, res : Response, next : NextFu
             });
         }
         else{
-            console.warn('❌ Erro:' + error)
             res.status(500).json({
                 message : 'Algo deu errado, tente novamente mais tarde',
                 error : true
             });
         }
+        console.warn('❌ Erro:' + error)
         return;
     }
 }
