@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction } from "express";
 import { Request, Response } from "express";
 import {
     getUserList,
@@ -132,25 +132,18 @@ router.get("/nome/:nome", async (req: Request, res: Response) => {
 //     }
 // });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response, next : NextFunction) => {
     try {
         const body = req.body;
-        const result = await createUser(body);
+        const data = await createUser(body);
 
-        if (result.error) {
-            res.status(Number(result.httpError)).json({
-                error: true,
-                message: result.message
-            });
-            return;
-        }
-        res.status(201).json(result);
-    } catch (error) {
-        console.log(`Ocorreu um erro de servidor ${error} `);
-        res.status(500).json({
-            error: true,
-            message: `Ocorreu um erro de servidor ${error} `,
+        res.status(201).json({
+            error: false,
+            message: "Usuário cadastrado com sucesso",
+            data
         });
+    } catch (error) {
+        next(error)
     }
 });
 
