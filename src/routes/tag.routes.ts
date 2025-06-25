@@ -15,8 +15,6 @@ import { validateToken } from "../middlewares/auth.middleware"
 
 const router = express.Router();
 
-router.use(validateToken)
-
 router.get("/", async (req: Request, res: Response) => {
   try {
     const tagFilter = req.query as unknown as ITagListFilter;
@@ -37,6 +35,8 @@ router.get("/", async (req: Request, res: Response) => {
     });
   }
 });
+router.use(validateToken)
+
 
 router.get("/total", async (req: Request, res: Response) => {
   try {
