@@ -1,6 +1,6 @@
 'use strict';
 
-const { DataType } = require('sequelize-typescript');
+const { DataTypes } = require('sequelize');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -11,55 +11,56 @@ module.exports = {
           primaryKey:true,
           autoIncrement:true,
           allowNull:false,
-          type: DataType.INTEGER,
+          type: DataTypes.INTEGER,
         },
         titulo:{
           allowNull:false,
-          type:DataType.STRING(50),
+          type:DataTypes.STRING(50),
         },
         descricao:{
           allowNull:false,
-          type:DataType.STRING(500),
+          type:DataTypes.STRING(500),
         },
         data:{
           allowNull:false,
-          type:DataType.DATE()
+          type:DataTypes.DATE()
         },
         status:{
           allowNull:true,
-          type:DataType.CHAR(8)
+          type:DataTypes.INTEGER,
+          defaultValue: 0
         },
         cep:{
           allowNull:true,
-          type:DataType.STRING(30)
+          type:DataTypes.STRING(30)
         },
         cidade:{
           allowNull:true,
-          type:DataType.STRING(30)
+          type:DataTypes.STRING(30)
         },
         bairro:{
           allowNull:true,
-          type:DataType.STRING(30) 
+          type:DataTypes.STRING(30) 
         },
         rua:{
           allowNull:true,
-          type:DataType.STRING(30)
+          type:DataTypes.STRING(30)
         },
         numero:{
           allowNull:true,
-          type:DataType.STRING(30)
+          type:DataTypes.STRING(30)
         },
         complemento:{
           allowNull:true,
-          type:DataType.STRING(30)
+          type:DataTypes.STRING(30)
         },
         pontuacao:{
           allowNull:false,
-          type:DataType.DECIMAL(5,2)
+          type:DataTypes.DECIMAL(5,2)
         },
         id_usuario:{
           allowNull:false,
-          type:DataType.INTEGER
+          type:DataTypes.INTEGER
         }
         
       });

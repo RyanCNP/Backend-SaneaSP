@@ -3,7 +3,9 @@ import { Op } from "sequelize"
 import { HttpError } from "../enums/HttpError.enum";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import bcrypt from "bcryptjs"; 
-import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUser.interface";
+import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUsuario.interface";
+import { ERROR } from "sqlite3";
+import { ApiError } from "../errors/ApiError.error";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };
@@ -39,7 +41,7 @@ export const getUserByCPF = async (userCPF: string) => {
     return foundUser;
 }
 
-export const createUser = async (newUser: IUserCreationAttributes): Promise<IApiResponse<IUser>> => {
+export const createUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
     const salt = await bcrypt.genSalt(10);
     newUser.senha = await bcrypt.hash(newUser.senha, salt);
     const query : IUserExists = {
@@ -56,20 +58,19 @@ export const createUser = async (newUser: IUserCreationAttributes): Promise<IApi
     
     const userFound = await UserModel.findOne(query);
 
-    if (userFound) {
-        return {
-            error: true,
-            message: "Usuário ja cadastrado",
-            httpError: HttpError.BadRequest
-        }
+    if(userFound){
+        console.log(userFound)
+        console.log(newUser)
+        if (userFound.nome == newUser.nome.trim()) 
+            throw new ApiError('Usuário com o nome já cadastrado', 409)
+        else if(userFound.email == newUser.email.trim())
+            throw new ApiError('Usuário com o email já cadastrado', 409)
+        else if(userFound.cpf == newUser.cpf.trim())
+            throw new ApiError('Usuário com o cpf já cadastrado', 409)
     }
-
+    
     const createdUser = await UserModel.create(newUser);
-    return {
-        error: false,
-        message: "Usuário cadastrado com sucesso",
-        data: createdUser
-    }
+    return createdUser;
 }
 
 export const updateUser = async (userData: IUser): Promise<IApiResponse<IUser>> => {

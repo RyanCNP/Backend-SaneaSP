@@ -1,9 +1,7 @@
-import { Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import { IReclamacao } from "../interfaces/IReclamacao.interface";
 import { StatusReclamacao } from "../enums/statusReclamacao.enum";
-import { DataType } from "sequelize-typescript";
 import sequelize from "../config/database";
-import { ITag } from "../interfaces/ITag.interface";
 
 type ReclamacaoCreationalAttributes = Optional<IReclamacao, "id">
 
@@ -30,67 +28,67 @@ ReclamacaoModel.init(
             primaryKey: true,
             autoIncrement: true,
             allowNull: false,
-            type: DataType.INTEGER,
+            type: DataTypes.INTEGER,
             field: "id"
         },
         titulo: {
             allowNull: false,
-            type: DataType.STRING(50),
+            type: DataTypes.STRING(50),
             field: "titulo"
         },
         descricao: {
             allowNull: false,
-            type: DataType.STRING(500),
+            type: DataTypes.STRING(500),
             field:"descricao"
         },
         data: {
             allowNull: false,
-            type: DataType.DATE(),
+            type: DataTypes.DATE(),
             field:"data"
         },
         status: {
             allowNull: true,
-            type: DataType.INTEGER,
+            type: DataTypes.INTEGER,
             field: "status"
         },
         cep: {
             allowNull: true,
-            type: DataType.STRING(30),
+            type: DataTypes.STRING(30),
             field: "cep"
         },
         cidade: {
             allowNull: true,
-            type: DataType.STRING(30),
+            type: DataTypes.STRING(30),
             field:"cidade"
         },
         bairro: {
             allowNull: true,
-            type: DataType.STRING(30),
+            type: DataTypes.STRING(30),
             field:"bairro"
         },
         rua: {
             allowNull: true,
-            type: DataType.STRING(30),
+            type: DataTypes.STRING(30),
             field:"rua"
         },
         numero: {
             allowNull: true,
-            type: DataType.STRING(30),
+            type: DataTypes.STRING(30),
             field:"numero"
         },
         complemento: {
             allowNull: true,
-            type: DataType.STRING(30),
+            type: DataTypes.STRING(30),
             field:"complemento"
         },
         pontuacao: {
             allowNull: false,
-            type: DataType.DECIMAL(5, 2),
+            type: DataTypes.DECIMAL(5, 2),
             field:"pontuacao"
         },
         idUsuario: {
             allowNull: false,
-            type: DataType.INTEGER,
+            type: DataTypes.INTEGER,
             field:"id_usuario"
         }
     },

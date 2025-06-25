@@ -1,5 +1,6 @@
 import { IEndereco } from './IEndereco.interface';
 import { StatusReclamacao } from "../enums/statusReclamacao.enum";
+import { ITag } from './ITag.interface';
 
 export interface IReclamacao{
     id : number,
