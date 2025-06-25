@@ -100,9 +100,12 @@ router.put("/:id", async (req: Request, res: Response, next : NextFunction) => {
     const id = Number(req.params.id);
     const { nome } = req.body;
 
-    const result = await updateTag({ id, nome });
+    await updateTag({ id, nome });
 
-    res.status(200).json(result);
+    res.status(200).json({
+      error : false,
+      message: 'Categoria atualizada com sucesso'
+    });
   } catch (error) {
     next(error)
   }
