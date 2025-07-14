@@ -5,11 +5,13 @@ import { FindOptions, Op } from "sequelize";
 import { ApiError } from "../errors/ApiError.error";
 
 export const getCategoriaList = async (categoriaFilter : ICategoriaListFilter) : Promise<ICategoria[]> => {
+  const {nome, limit} = categoriaFilter;
+
   const where : any = {};
 
-  if(categoriaFilter.nome){
+  if(nome){
     where.nome = {
-      [Op.like]: `%${categoriaFilter.nome}%`
+      [Op.like]: `%${nome}%`
     };
   }
 
@@ -18,64 +20,49 @@ export const getCategoriaList = async (categoriaFilter : ICategoriaListFilter) :
     order : [['id', 'ASC']]
   }
 
-  if(categoriaFilter.limit){
-    query.limit = Number(categoriaFilter.limit)
+  if(limit){
+    query.limit = Number(limit)
   }
-
-  const categorias = await CategoriaModel.findAll(query)
-  return categorias;
-}
-
-export const countAllCategorias = async () : Promise<number> => {
-  const categoriaCount = await CategoriaModel.count();
-  return categoriaCount;
-}
-
-export const getCategoriaById = async (categoriaId : number) => {
-  const categoriaFound = await CategoriaModel.findOne({where : {id : categoriaId}})
-  return categoriaFound;
-};
-
-export const getCategoriaByName = async (nameFilter : string) => {
-  const categoriaFound = await CategoriaModel.findOne({where : {nome: nameFilter}})
-  return categoriaFound;
-}
-
-export const createCategoria = async (newcategoriaName : string) : Promise<ICategoria> => {
-  const categoriaFound = await CategoriaModel.findOne({where : {nome : {[Op.like] : `${newcategoriaName}`}}})
-
-  if(categoriaFound){
-    throw new ApiError(`Já existe uma categoria com o nome ${newcategoriaName}`, 409)
-  }
-
-  const createdCategoria = await CategoriaModel.create({nome : newcategoriaName})
-
-  return createdCategoria;
-};
-
-export const updateCategoria = async (categoriaData : ICategoria) : Promise<ICategoria> => {
-  const categoriaFound = await CategoriaModel.findOne({where : {id: categoriaData.id}})
-
-  if(categoriaFound == null)
-    throw new ApiError('Nenhuma categoria encontrada', 404)
   
+  return await CategoriaModel.findAll(query);
+}
 
-  if(categoriaFound.nome === categoriaData.nome)
+export const countAllCategorias = async () : Promise<number> => await CategoriaModel.count();
+
+export const getCategoriaById = async (categoriaId : number) => await CategoriaModel.findOne({where : {id : categoriaId}})
+
+export const getCategoriaByName = async (nameFilter : string) => await CategoriaModel.findOne({where : {nome: nameFilter}})
+
+export const createCategoria = async (newCategoriaName : string) : Promise<ICategoria> => {
+  const categoria = await CategoriaModel.findOne({where : {nome : {[Op.like] : `${newCategoriaName}`}}})
+
+  if(categoria){
+    throw new ApiError(`Já existe uma categoria com o nome ${newCategoriaName}`, 409)
+  }
+
+  return await CategoriaModel.create({nome : newCategoriaName});
+};
+
+export const updateCategoria = async (updatedCategoria : ICategoria) : Promise<ICategoria> => {
+  const categoria = await CategoriaModel.findOne({where : {id: updatedCategoria.id}})
+
+  if(!categoria)
+    throw new ApiError('Nenhuma categoria encontrada', 404)
+
+  if(categoria.nome === updatedCategoria.nome)
     throw new ApiError('Digite um novo nome para a categoria', 400)
 
   const categoriaNameExists = await CategoriaModel.findOne({
     where: {
-      nome : {[Op.like] : `%${categoriaData.nome}%`},
-      id : {[Op.ne] : categoriaData.id}
+      nome : {[Op.like] : `%${updatedCategoria.nome}%`},
+      id : {[Op.ne] : updatedCategoria.id}
     }
   })
 
   if(categoriaNameExists)
     throw new ApiError('Uma categoria já foi cadastrada com esse nome')
 
-  const updatedCategoria = await categoriaFound.update(categoriaData)
-
-  return updatedCategoria
+  return await categoria.update(updatedCategoria)
 };
 
 export const deleteCategoria = async (categoriaId : number) => {

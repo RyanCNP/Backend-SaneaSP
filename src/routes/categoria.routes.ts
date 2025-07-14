@@ -18,13 +18,13 @@ const router = express.Router();
 
 router.get("/", async (req: Request, res: Response, next : NextFunction) => {
   try {
-    const CategoriaFilter : ICategoriaListFilter = req.query;
-    const foundCategorias : ICategoria[] = await getCategoriaList(CategoriaFilter);
+    const filter : ICategoriaListFilter = req.query;
+    const foundCategorias : ICategoria[] = await getCategoriaList(filter);
 
     res.status(200).json({
       data : foundCategorias,
       pagination : {
-        limit : Number(CategoriaFilter.limit) || 0,
+        limit : Number(filter.limit) || 0,
         total : foundCategorias.length
       }
     });
@@ -32,8 +32,8 @@ router.get("/", async (req: Request, res: Response, next : NextFunction) => {
     next(error)
   }
 });
-router.use(validateToken)
 
+router.use(validateToken)
 
 router.get("/total", async (req: Request, res: Response, next : NextFunction) => {
   try {
@@ -48,13 +48,13 @@ router.get("/:id", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { id } = req.params;
 
-    const CategoriaFound = await getCategoriaById(Number(id));
+    const categoria = await getCategoriaById(Number(id));
 
-    if (!CategoriaFound) {
+    if (!categoria) {
       throw new ApiError('Nenhuma categoria foi encontrada com esse ID', 404)
     }
 
-    res.status(200).json(CategoriaFound);
+    res.status(200).json(categoria);
   } catch (error) {
    next(error)
   }
@@ -63,16 +63,16 @@ router.get("/:id", async (req: Request, res: Response, next : NextFunction) => {
 router.get("/nome/:nome", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { nome } = req.params;
-    const CategoriaFound = await getCategoriaByName(nome);
+    const categoria = await getCategoriaByName(nome);
 
-    if (!CategoriaFound) {
+    if (!categoria) {
       throw new ApiError('Nenhuma categoria foi encontrada com esse nome', 404)
     }
 
     res.status(200).json({
       error: false,
       message: "Categoria encontrada com sucesso",
-      data: CategoriaFound,
+      data: categoria,
     });
   } catch (error) {
     next(error)
@@ -83,12 +83,12 @@ router.post("/", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { nome } = req.body;
 
-    const result = await createCategoria(nome);
+    const created = await createCategoria(nome);
 
     res.status(201).json({
       error: false,
       message : 'Categoria criada com sucesso',
-      categoria : result
+      categoria : created
     });
   } catch (error) {
     next(error);
