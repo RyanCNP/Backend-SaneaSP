@@ -1,16 +1,16 @@
-import { TagModel } from "./tag.model";
+import { CategoriaModel } from "./categoria.model";
 import { ReclamacaoModel } from "./reclamacao.model";
-import { TagReclamacaoModel } from "./tagReclamacao.model";
+import { CategoriaReclamacaoModel } from "./categoriaReclamacao.model";
 import { ImagemReclamacaoModel } from "./imagemReclamacao.model";
 
 //Adicionando associação entre Tag e Reclamações
-ReclamacaoModel.belongsToMany(TagModel, 
-    {through :  TagReclamacaoModel, foreignKey: 'id_reclamacao', as : 'Tags'  })
-TagModel.belongsToMany(ReclamacaoModel, 
-    {through: TagReclamacaoModel, foreignKey: 'id_tag', as: 'reclamacoes'})
+ReclamacaoModel.belongsToMany(CategoriaModel, 
+    {through :  CategoriaReclamacaoModel, foreignKey: 'id_reclamacao', as : 'Categorias'  })
+CategoriaModel.belongsToMany(ReclamacaoModel, 
+    {through: CategoriaReclamacaoModel, foreignKey: 'id_tag', as: 'reclamacoes'})
 
-ReclamacaoModel.belongsToMany(TagModel,
-    {through: TagReclamacaoModel, foreignKey:'id_reclamacao', as: "tagsSelecionadas"})
+ReclamacaoModel.belongsToMany(CategoriaModel,
+    {through: CategoriaReclamacaoModel, foreignKey:'id_reclamacao', as: "categoriasSelecionadas"})
 
 //Adicionando associação entre Imagem e Reclamações
 ReclamacaoModel.hasMany(ImagemReclamacaoModel, 
@@ -21,7 +21,7 @@ ImagemReclamacaoModel.belongsTo(ReclamacaoModel,
 //Fazendo o export dos models com as modificações
 export {
     ReclamacaoModel, 
-    TagModel, 
-    TagReclamacaoModel,
+    CategoriaModel, 
+    CategoriaReclamacaoModel,
     ImagemReclamacaoModel
 };

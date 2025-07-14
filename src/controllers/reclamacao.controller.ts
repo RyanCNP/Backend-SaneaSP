@@ -3,7 +3,7 @@ import { Op} from "sequelize";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import { HttpError } from "../enums/HttpError.enum";
 import { ImagemReclamacaoModel, ReclamacaoModel, TagModel, TagReclamacaoModel } from "../models";
-import { postTagReclamacoes, updateTagReclamacoes } from "./tag-reclamacao.controller";
+import { postTagReclamacoes, updateTagReclamacoes } from "./categoria-reclamacao.controller";
 import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
 
 const reclamacaoFindIncludes = [

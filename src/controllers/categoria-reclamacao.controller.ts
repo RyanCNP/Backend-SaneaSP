@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { ICreateTagReclamacao, ITagReclamacao } from "../interfaces/ITagReclamacao.interface";
+import { ICreateCategoriaReclamacao, ICategoriaReclamacao } from "../interfaces/ICategoriaReclamacao.interface";
 import { TagModel, TagReclamacaoModel } from "../models";
 
 export const getTagReclamacaoIdsList = async (reclamacaoId : number) => {
@@ -60,7 +60,7 @@ export const updateTagReclamacoes = async (tags : number[], reclamacaoId : numbe
     })));
 }
 
-export const deleteTagReclamacoes = async (tagReclamacao : ICreateTagReclamacao) => {
+export const deleteTagReclamacoes = async (tagReclamacao : ICreateCategoriaReclamacao) => {
    await TagReclamacaoModel.destroy({
         where : {
             id_reclamacao : tagReclamacao.id_reclamacao,

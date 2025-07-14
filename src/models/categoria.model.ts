@@ -1,15 +1,15 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from '../config/database'
-import { ITag } from "../interfaces/ITag.interface";
+import { ICategoria } from "../interfaces/ICategoria.interface";
 
-type TagCreationalAttributes = Optional<ITag, "id">
+type CategoriaCreationalAttributes = Optional<ICategoria, "id">
 
-export class TagModel extends Model<ITag, TagCreationalAttributes>{
+export class CategoriaModel extends Model<ICategoria, CategoriaCreationalAttributes>{
     public id!: number;
     public nome!: string;
 }
 
-TagModel.init(
+CategoriaModel.init(
 {
     id : {
         primaryKey : true,
@@ -25,7 +25,7 @@ TagModel.init(
     },
 }, 
 {
-    tableName: "tag",
+    tableName: "categoria",
     sequelize,
     timestamps: false
 })

@@ -1,16 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import express from "express";
 import {
-  countAllTags,
-  createTag,
-  deleteTag,
-  getTagById,
-  getTagByName,
-  getTagList,
-  updateTag,
-} from "../controllers/tag.controller";
-import { ITagListFilter } from "../interfaces/ITagListFilter.interface";
-import { ITag } from "../interfaces/ITag.interface";
+  countAllCategorias,
+  createCategoria,
+  deleteCategoria,
+  getCategoriaById,
+  getCategoriaByName,
+  getCategoriaList,
+  updateCategoria,
+} from "../controllers/categoria.controller";
+import { ICategoriaListFilter } from "../interfaces/ICategoriaListFilter.interface";
+import { ICategoria } from "../interfaces/ICategoria.interface";
 import { validateToken } from "../middlewares/auth.middleware"
 import { ApiError } from "../errors/ApiError.error";
 
@@ -18,14 +18,14 @@ const router = express.Router();
 
 router.get("/", async (req: Request, res: Response, next : NextFunction) => {
   try {
-    const tagFilter : ITagListFilter = req.query;
-    const foundTags : ITag[] = await getTagList(tagFilter);
+    const CategoriaFilter : ICategoriaListFilter = req.query;
+    const foundCategorias : ICategoria[] = await getCategoriaList(CategoriaFilter);
 
     res.status(200).json({
-      data : foundTags,
+      data : foundCategorias,
       pagination : {
-        limit : Number(tagFilter.limit) || 0,
-        total : foundTags.length
+        limit : Number(CategoriaFilter.limit) || 0,
+        total : foundCategorias.length
       }
     });
   } catch (error) {
@@ -37,7 +37,7 @@ router.use(validateToken)
 
 router.get("/total", async (req: Request, res: Response, next : NextFunction) => {
   try {
-    const count = await countAllTags();
+    const count = await countAllCategorias();
     res.status(200).json(count);
   } catch (error) {
     next(error)
@@ -48,13 +48,13 @@ router.get("/:id", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { id } = req.params;
 
-    const tagFound = await getTagById(Number(id));
+    const CategoriaFound = await getCategoriaById(Number(id));
 
-    if (!tagFound) {
+    if (!CategoriaFound) {
       throw new ApiError('Nenhuma categoria foi encontrada com esse ID', 404)
     }
 
-    res.status(200).json(tagFound);
+    res.status(200).json(CategoriaFound);
   } catch (error) {
    next(error)
   }
@@ -63,16 +63,16 @@ router.get("/:id", async (req: Request, res: Response, next : NextFunction) => {
 router.get("/nome/:nome", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { nome } = req.params;
-    const tagFound = await getTagByName(nome);
+    const CategoriaFound = await getCategoriaByName(nome);
 
-    if (!tagFound) {
+    if (!CategoriaFound) {
       throw new ApiError('Nenhuma categoria foi encontrada com esse nome', 404)
     }
 
     res.status(200).json({
       error: false,
       message: "Categoria encontrada com sucesso",
-      data: tagFound,
+      data: CategoriaFound,
     });
   } catch (error) {
     next(error)
@@ -83,7 +83,7 @@ router.post("/", async (req: Request, res: Response, next : NextFunction) => {
   try {
     const { nome } = req.body;
 
-    const result = await createTag(nome);
+    const result = await createCategoria(nome);
 
     res.status(201).json({
       error: false,
@@ -100,7 +100,7 @@ router.put("/:id", async (req: Request, res: Response, next : NextFunction) => {
     const id = Number(req.params.id);
     const { nome } = req.body;
 
-    await updateTag({ id, nome });
+    await updateCategoria({ id, nome });
 
     res.status(200).json({
       error : false,
@@ -115,7 +115,7 @@ router.delete("/:id", async (req: Request, res: Response, next : NextFunction) =
   try {
     const { id } = req.params;
     
-    await deleteTag(Number(id));
+    await deleteCategoria(Number(id));
 
     res.status(200).json({
       error : false,
