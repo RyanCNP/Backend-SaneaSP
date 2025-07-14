@@ -7,7 +7,7 @@ import { ImagemReclamacaoModel } from "./imagemReclamacao.model";
 ReclamacaoModel.belongsToMany(CategoriaModel, 
     {through :  CategoriaReclamacaoModel, foreignKey: 'id_reclamacao', as : 'Categorias'  })
 CategoriaModel.belongsToMany(ReclamacaoModel, 
-    {through: CategoriaReclamacaoModel, foreignKey: 'id_tag', as: 'reclamacoes'})
+    {through: CategoriaReclamacaoModel, foreignKey: 'id_categoria', as: 'reclamacoes'})
 
 ReclamacaoModel.belongsToMany(CategoriaModel,
     {through: CategoriaReclamacaoModel, foreignKey:'id_reclamacao', as: "categoriasSelecionadas"})

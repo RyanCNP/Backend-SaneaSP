@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao,getByTag } from "../controllers/reclamacao.controller";
+import { deleteReclamacao, getAllReclamacoes, getById, getByUsuario, postReclamacao, putReclamacao, getByCategoria } from "../controllers/reclamacao.controller";
 import { ICreateReclamacao, IFilterListReclamacao } from "../interfaces/IReclamacao.interface";
 import { validateToken } from "../middlewares/auth.middleware";
 
@@ -31,32 +31,32 @@ router.get('/usuario',validateToken, async (req: Request, res: Response)=>{
         });
     }
 })
-router.get('/tags', async (req: Request, res: Response)=>{
+router.get('/categorias', async (req: Request, res: Response)=>{
     try {
-        let listTagId : number[] = [];
+        let listCategoriaId : number[] = [];
         let listaQuery !: string[];
         let idUsuario : number | undefined;
 
-        if(!req.query.tags){
+        if(!req.query.categorias){
             res.status(400).json({
                 error: true,
-                message: `Não foi passado parâmetro tags`,
+                message: `Não foi passado parâmetro categorias`,
             });
             return;
         }
 
-        if(Array.isArray(req.query.tags)){
-            listaQuery = req.query.tags as string[];
-            listTagId = listaQuery.map(id => Number(id));
+        if(Array.isArray(req.query.categorias)){
+            listaQuery = req.query.categorias as string[];
+            listCategoriaId = listaQuery.map(id => Number(id));
         }
         else{
-            listTagId.push(Number(req.query.tags as string));
+            listCategoriaId.push(Number(req.query.categorias as string));
         }
 
         if(req.query.idUsuario){
             idUsuario = Number(req.query.idUsuario);
         }
-        const reclamacoes = await getByTag(listTagId,idUsuario);
+        const reclamacoes = await getByCategoria(listCategoriaId,idUsuario);
         res.json(reclamacoes);
         return;
     } catch (error) {

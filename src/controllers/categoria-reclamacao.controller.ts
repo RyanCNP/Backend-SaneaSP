@@ -1,96 +1,96 @@
 import { Op } from "sequelize";
-import { ICreateCategoriaReclamacao, ICategoriaReclamacao } from "../interfaces/ICategoriaReclamacao.interface";
-import { TagModel, TagReclamacaoModel } from "../models";
+import { ICreateCategoriaReclamacao } from "../interfaces/ICategoriaReclamacao.interface";
+import { CategoriaModel, CategoriaReclamacaoModel } from "../models";
 
-export const getTagReclamacaoIdsList = async (reclamacaoId : number) => {
-    const tags = await TagReclamacaoModel.findAll({where : {
+export const getCategoriaReclamacaoIdsList = async (reclamacaoId : number) => {
+    const categorias = await CategoriaReclamacaoModel.findAll({where : {
         id_reclamacao : reclamacaoId
     }})
 
-    return tags.map(tag => tag.id_tag)
+    return categorias.map(categoria => categoria.id_categoria)
 }
 
-export const postTagReclamacoes = async (tags : number[], reclamacaoId : number) => {
-    const validTagsIds : number[] = await tagIdExistValidator(tags)
+export const postCategoriaReclamacoes = async (categorias : number[], reclamacaoId : number) => {
+    const validCategoriasIds : number[] = await categoriaIdExistValidator(categorias)
 
-    await TagReclamacaoModel.bulkCreate(validTagsIds.map(id_tag => ({
-        id_tag,
+    await CategoriaReclamacaoModel.bulkCreate(validCategoriasIds.map(id_categoria => ({
+        id_categoria,
         id_reclamacao: reclamacaoId,
     })));
 }
 
-export const updateTagReclamacoes = async (tags : number[], reclamacaoId : number) => {
-    // Remove tags que estavam atreladas e não existem mais no array de ids passados
-    const oldTags = await getTagReclamacaoIdsList(reclamacaoId)
+export const updateCategoriaReclamacoes = async (categorias : number[], reclamacaoId : number) => {
+    // Remove categorias que estavam atreladas e não existem mais no array de ids passados
+    const oldCategorias = await getCategoriaReclamacaoIdsList(reclamacaoId)
 
-    const tagsToRemove = oldTags.filter(oldTag => !tags.includes(oldTag))
+    const categoriasToRemove = oldCategorias.filter(oldCategoria => !categorias.includes(oldCategoria))
 
-    await TagReclamacaoModel.destroy({
+    await CategoriaReclamacaoModel.destroy({
         where : {
-            id_tag : {
-                [Op.in] : tagsToRemove
+            id_categoria : {
+                [Op.in] : categoriasToRemove
             },
             id_reclamacao : reclamacaoId
         }
     })
 
-    //Tags que já estão associadas e não foram removidas
-    const existingTagsRelation = await TagReclamacaoModel.findAll({
+    //Categorias que já estão associadas e não foram removidas
+    const existingCategoriasRelation = await CategoriaReclamacaoModel.findAll({
         where : {
             id_reclamacao : reclamacaoId,
-            id_tag : {
-                [Op.in] : tags
+            id_categoria : {
+                [Op.in] : categorias
             }
         }
     })
 
     
-    const existingTagsRelationIds = existingTagsRelation.map(tag => tag.id_tag)
+    const existingCategoriasRelationIds = existingCategoriasRelation.map(categoria => categoria.id_categoria)
 
-    //Tags com ids que não foram inseridos ainda na relação
-    const newTags = tags.filter(tagId => {
-        return !existingTagsRelationIds.includes(tagId)
+    //Categorias com ids que não foram inseridos ainda na relação
+    const newCategorias = categorias.filter(categoriaId => {
+        return !existingCategoriasRelationIds.includes(categoriaId)
     })
 
-    const validNewTagsIds = await tagIdExistValidator(newTags)
+    const validNewCategoriasIds = await categoriaIdExistValidator(newCategorias)
 
-    await TagReclamacaoModel.bulkCreate(validNewTagsIds.map(tagId => ({
-        id_tag : tagId,
+    await CategoriaReclamacaoModel.bulkCreate(validNewCategoriasIds.map(categoriaId => ({
+        id_categoria : categoriaId,
         id_reclamacao : reclamacaoId
     })));
 }
 
-export const deleteTagReclamacoes = async (tagReclamacao : ICreateCategoriaReclamacao) => {
-   await TagReclamacaoModel.destroy({
+export const deleteCategoriaReclamacoes = async (categoriaReclamacao : ICreateCategoriaReclamacao) => {
+   await CategoriaReclamacaoModel.destroy({
         where : {
-            id_reclamacao : tagReclamacao.id_reclamacao,
-            id_tag : tagReclamacao.id_tag
+            id_reclamacao : categoriaReclamacao.id_reclamacao,
+            id_categoria : categoriaReclamacao.id_categoria
         }
    })
 }
 
-export const tagIdExistValidator = async (tags : number[]) => {
-    //Verificando se as tags existem na tabela de tags
-    const existingTags = await TagModel.findAll({
+export const categoriaIdExistValidator = async (categorias : number[]) => {
+    //Verificando se as categorias existem na tabela de categorias
+    const existingCategorias = await CategoriaModel.findAll({
         where : {
             id : {
-                [Op.in] : tags
+                [Op.in] : categorias
             }
         }
     })
 
-    const existingTagsIds = existingTags.map(tag => tag.id)
+    const existingCategoriasIds = existingCategorias.map(categoria => categoria.id)
 
-    if(existingTags.length != tags.length){
-        const invalidTagsIds = tags.filter(tagId => {
-            return !existingTagsIds.includes(tagId)
+    if(existingCategorias.length != categorias.length){
+        const invalidCategoriasIds = categorias.filter(categoriaId => {
+            return !existingCategoriasIds.includes(categoriaId)
         })
 
-        throw new Error((invalidTagsIds.length == 1 
-            ? "A tag com ID: " 
-            : "As tags com ID: ") 
-            + invalidTagsIds.join(', ') + " não existem")
+        throw new Error((invalidCategoriasIds.length == 1 
+            ? `A categoria com ID: ${invalidCategoriasIds} não existe` 
+            : `As categorias com ID: ${invalidCategoriasIds.join(', ')} não existem`)
+        )
     }
 
-    return existingTagsIds;
+    return existingCategoriasIds;
 }

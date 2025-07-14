@@ -17,7 +17,7 @@ export interface IReclamacao{
     complemento ?: string,
     idUsuario: number,
     Imagens ?: string[] //Nomes das imagens,
-    Tags ?: number[] //Ids das tags,
+    Categorias ?: number[] //Ids das tags,
 }
 
 export interface IFilterListReclamacao{
@@ -45,5 +45,5 @@ export interface ICreateReclamacao{
     complemento ?: string,
     idUsuario: number,
     Imagens ?: string[],
-    Tags ?: number[]
+    Categorias ?: number[]
 }

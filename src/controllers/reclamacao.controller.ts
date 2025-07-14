@@ -2,16 +2,16 @@ import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interf
 import { Op} from "sequelize";
 import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import { HttpError } from "../enums/HttpError.enum";
-import { ImagemReclamacaoModel, ReclamacaoModel, TagModel, TagReclamacaoModel } from "../models";
-import { postTagReclamacoes, updateTagReclamacoes } from "./categoria-reclamacao.controller";
+import { CategoriaModel, ImagemReclamacaoModel, ReclamacaoModel} from "../models";
+import { postCategoriaReclamacoes, updateCategoriaReclamacoes } from "./categoria-reclamacao.controller";
 import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
 
 const reclamacaoFindIncludes = [
     {
-        //Trazer as tags da reclamação
-        model: TagModel,
-        as: 'Tags',  
-        through: { attributes: [] } //Para dados da tabela associativa TagReclamacoes nao vierem juntos do resultado
+        //Trazer as categorias da reclamação
+        model: CategoriaModel,
+        as: 'Categorias',  
+        through: { attributes: [] } //Para dados da tabela associativa CategoriaReclamacoes nao vierem juntos do resultado
     },
     {
         //Trazer as imagens da reclamação
@@ -81,20 +81,20 @@ export const getById = async (idReclamacao: number): Promise<IReclamacao | null>
     });
     return reclamacao;
 }
-export const getByTag = async(tags:number[], idUsuario?: number)=>{
+export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
     let query: any = {
         where : {},
         include: [
     {
-        model: TagModel,
-        as: 'tagsSelecionadas',  
+        model: CategoriaModel,
+        as: 'categoriasSelecionadas',  
         through: { attributes: [] },
-        where:{id:tags},
+        where:{id:categorias},
         require:true
     },
     {
-        model: TagModel,
-        as: 'Tags',
+        model: CategoriaModel,
+        as: 'Categorias',
         through: { attributes: [] },
 
     },
@@ -120,7 +120,7 @@ export const getByUsuario = async(fkUsuario: number)=>{
     return reclamacoes;
 }
 export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamacao | null> => {
-    const {Tags, Imagens, ...reclamacaoBody} = body;
+    const {Categorias, Imagens, ...reclamacaoBody} = body;
     
     const pontuacao = gerarPontuacao(body);
 
@@ -139,8 +139,8 @@ export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamac
     }
 
     // Criando registro de associação
-    if(Tags && Tags.length > 0)
-        await postTagReclamacoes(Tags, reclamacao.id)
+    if(Categorias && Categorias.length > 0)
+        await postCategoriaReclamacoes(Categorias, reclamacao.id)
 
     const response = await ReclamacaoModel.findByPk(reclamacao.id, 
     {
@@ -159,8 +159,8 @@ export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Pro
         }
     })
 
-    if(body.Tags)
-        await updateTagReclamacoes(body.Tags, idReclamacao);
+    if(body.Categorias)
+        await updateCategoriaReclamacoes(body.Categorias, idReclamacao);
 
     if(body.Imagens){
         await updateImagemReclamacao(body.Imagens, idReclamacao)
@@ -190,7 +190,7 @@ export const deleteReclamacao = async(idReclamacao : number): Promise<IApiRespon
         };
     }
     
-    //Associações com tags e reclamações são excluidas com cascade
+    //Associações com categorias e reclamações são excluidas com cascade
     await reclamacao.destroy();
 
     return {
@@ -202,14 +202,14 @@ export const deleteReclamacao = async(idReclamacao : number): Promise<IApiRespon
 
 function gerarPontuacao(bodyRequest : ICreateReclamacao | IReclamacao): number {
     let pontuacao = 0;
-    // por enquanto a pontuação de tag vai ser pela quantidade de tags adicionadas nas reclamações
+    // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
     if(bodyRequest.Imagens && bodyRequest.Imagens?.length > 0){
         pontuacao += 100 * bodyRequest.Imagens.length;
     }
 
-    // por enquanto a pontuação de tag vai ser pela quantidade de tags adicionadas nas reclamações
-    if(bodyRequest.Tags && bodyRequest.Tags?.length > 0){
-        pontuacao += 100 * bodyRequest.Tags.length;
+    // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
+    if(bodyRequest.Categorias && bodyRequest.Categorias?.length > 0){
+        pontuacao += 100 * bodyRequest.Categorias.length;
     }
 
     if(bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade){
