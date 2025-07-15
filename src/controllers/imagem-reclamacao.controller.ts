@@ -1,57 +1,37 @@
 import { Op } from "sequelize"
 import { ImagemReclamacaoModel } from "../models"
 
-export const createImagemReclamacao = async (imagens : string[], idReclamacao : number) => {
-    const newImages = imagens.map(imagem => 
-        (
-            {
-                nome : imagem,
-                id_reclamacao : idReclamacao
-            }
-        )
-    )
+export const createImagemReclamacao = async (imagesNames : string[], id_reclamacao : number) => {
+    //TODO: Adicionar forma de criação de nome único para imagem (como concatenação com timestamp)
+    const newImages = imagesNames.map(imageName => ({
+        nome :imageName, 
+        id_reclamacao
+    }))
 
     await ImagemReclamacaoModel.bulkCreate(newImages)
 }
 
-export const updateImagemReclamacao = async(imagens : string[], reclamacaoId : number) => {
-    const oldImages = await getImagesNamesList(reclamacaoId); //Lista de imagens antigas
-    let excludedImages : string [] = []
+export const updateImagemReclamacao = async(updatedImageNames : string[], id_reclamacao : number) => {
+    const oldImages = await ImagemReclamacaoModel.findAll({where : {id_reclamacao}})
+    const oldImageNames = oldImages.map(img => img.nome)
 
     //Verificando as imagens que já existiam
-    if(oldImages.length > 0)
-        excludedImages = oldImages.filter(oldImage => !imagens.includes(oldImage))
+    const imagesToRemove = oldImageNames.filter(oldImage => !updatedImageNames.includes(oldImage))
 
     //Removendo todas imagens que não estão mais atreladas a reclamação
-    if(excludedImages.length > 0){
+    if(imagesToRemove.length > 0){
         await ImagemReclamacaoModel.destroy(
         {
             where : 
             {
-                nome : {
-                    [Op.in] : excludedImages
-                }
+                nome : {[Op.in] : imagesToRemove},
+                id_reclamacao
             }
         })
-    }
+    }   
 
     //Criando os relacionamentos que não existiam antes
-    const newImages = imagens.filter(imagem => !oldImages.includes(imagem))
-    .map(imagem => ({
-        nome : imagem,
-        id_reclamacao : reclamacaoId
-    }))
+    const newImages = updatedImageNames.filter(imagem => !oldImageNames.includes(imagem))
 
-    if(newImages.length > 0)
-        await ImagemReclamacaoModel.bulkCreate(newImages)
-}
-
-export const getImagesNamesList = async (reclamacaoId : number) => {
-    const oldImages = await ImagemReclamacaoModel.findAll({
-        where : {
-            id_reclamacao : reclamacaoId
-        }
-    })
-
-    return oldImages.map(image => image.nome)
+    if(newImages.length > 0)await createImagemReclamacao(newImages, id_reclamacao)
 }

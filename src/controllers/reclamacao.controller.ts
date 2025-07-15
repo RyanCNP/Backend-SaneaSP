@@ -1,10 +1,10 @@
 import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interfaces/IReclamacao.interface";
 import { Op} from "sequelize";
-import { IApiResponse } from "../interfaces/IApiResponse.interface";
-import { HttpError } from "../enums/HttpError.enum";
 import { CategoriaModel, ImagemReclamacaoModel, ReclamacaoModel} from "../models";
-import { postCategoriaReclamacoes, updateCategoriaReclamacoes } from "./categoria-reclamacao.controller";
+import { createCategoryReclamacao, updateCategoryReclamacao } from "./categoria-reclamacao.controller";
 import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
+import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
 
 const reclamacaoFindIncludes = [
     {
@@ -79,6 +79,10 @@ export const getById = async (idReclamacao: number): Promise<IReclamacao | null>
         where:{id : idReclamacao},
         include: reclamacaoFindIncludes
     });
+
+    if(!reclamacao)
+        throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound)
+
     return reclamacao;
 }
 export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
@@ -140,17 +144,20 @@ export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamac
 
     // Criando registro de associação
     if(Categorias && Categorias.length > 0)
-        await postCategoriaReclamacoes(Categorias, reclamacao.id)
+        await createCategoryReclamacao(Categorias, reclamacao.id)
 
     const response = await ReclamacaoModel.findByPk(reclamacao.id, 
     {
         include: reclamacaoFindIncludes
     })
+
+    if(!response)
+        throw new ApiError("Não foi possível cadastrar a reclamação", HttpCode.BadRequest)
     
     return response
 }
 
-export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Promise<IApiResponse> => {
+export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Promise<IReclamacao> => {
     body.pontuacao = gerarPontuacao(body);
     
     await ReclamacaoModel.update(body, {
@@ -160,7 +167,7 @@ export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Pro
     })
 
     if(body.Categorias)
-        await updateCategoriaReclamacoes(body.Categorias, idReclamacao);
+        await updateCategoryReclamacao(body.Categorias, idReclamacao);
 
     if(body.Imagens){
         await updateImagemReclamacao(body.Imagens, idReclamacao)
@@ -170,34 +177,26 @@ export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Pro
         include: reclamacaoFindIncludes
     })
 
-    return {
-        message: 'Reclamação atualizada com sucesso',
-        error : false,
-        data : response
-    };
+    if(!response){
+        throw new ApiError("Não foi possível editar a reclamação", HttpCode.BadRequest)
+    }
+
+    return response
 }
 
-export const deleteReclamacao = async(idReclamacao : number): Promise<IApiResponse> => {
+export const deleteReclamacao = async(idReclamacao : number): Promise<IReclamacao> => {
     const reclamacao = await ReclamacaoModel.findByPk(idReclamacao, {
         include: reclamacaoFindIncludes
     }); 
     
     if(!reclamacao){
-        return {
-            message: 'Reclamação não encontrada',
-            error : true,
-            httpError: HttpError.NotFound
-        };
+        throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
     }
     
     //Associações com categorias e reclamações são excluidas com cascade
     await reclamacao.destroy();
 
-    return {
-        message: 'Reclamação excluída com sucesso',
-        error : false,
-        data : reclamacao
-    };      
+    return reclamacao
 }
 
 function gerarPontuacao(bodyRequest : ICreateReclamacao | IReclamacao): number {

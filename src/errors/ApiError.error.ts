@@ -1,8 +1,11 @@
+import { HttpCode } from "../enums/HttpCode.enum";
+
 export class ApiError extends Error{
-    public httpStatus : number;
-    constructor(message : string, httpStatus : number = 500){
+    public httpCode : HttpCode;
+    constructor(message : string, httpCode : HttpCode){
         super(message);
-        this.httpStatus = httpStatus;
+
+        this.httpCode = httpCode;
         this.name = 'ApiError'
         Object.setPrototypeOf(this, ApiError.prototype)
     }

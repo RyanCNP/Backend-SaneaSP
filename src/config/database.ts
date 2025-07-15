@@ -9,11 +9,11 @@ const databaseUrl = env == 'development'
   : process.env.PROD_DATABASE_URL
 
 if (env === 'production' && !process.env.PROD_DATABASE_URL) {
-  throw new Error('PROD_DATABASE_URL é necessário para produção');
+  throw new Error('PROD_DATABASE_URL é necessário para ambiente de produção');
 }
 
 if (env === 'development' && !process.env.DEV_DATABASE_URL) {
-  throw new Error('DEV_DATABASE_URL é necessário para desenvolvimento');
+  throw new Error('DEV_DATABASE_URL é necessário para ambiente de desenvolvimento');
 }
 
 const sequelize = new Sequelize(databaseUrl!, {

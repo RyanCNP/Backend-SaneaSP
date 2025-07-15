@@ -1,96 +1,62 @@
 import { Op } from "sequelize";
-import { ICreateCategoriaReclamacao } from "../interfaces/ICategoriaReclamacao.interface";
 import { CategoriaModel, CategoriaReclamacaoModel } from "../models";
+import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
 
-export const getCategoriaReclamacaoIdsList = async (reclamacaoId : number) => {
-    const categorias = await CategoriaReclamacaoModel.findAll({where : {
-        id_reclamacao : reclamacaoId
-    }})
-
-    return categorias.map(categoria => categoria.id_categoria)
-}
-
-export const postCategoriaReclamacoes = async (categorias : number[], reclamacaoId : number) => {
-    const validCategoriasIds : number[] = await categoriaIdExistValidator(categorias)
-
-    await CategoriaReclamacaoModel.bulkCreate(validCategoriasIds.map(id_categoria => ({
-        id_categoria,
-        id_reclamacao: reclamacaoId,
-    })));
-}
-
-export const updateCategoriaReclamacoes = async (categorias : number[], reclamacaoId : number) => {
-    // Remove categorias que estavam atreladas e não existem mais no array de ids passados
-    const oldCategorias = await getCategoriaReclamacaoIdsList(reclamacaoId)
-
-    const categoriasToRemove = oldCategorias.filter(oldCategoria => !categorias.includes(oldCategoria))
-
-    await CategoriaReclamacaoModel.destroy({
-        where : {
-            id_categoria : {
-                [Op.in] : categoriasToRemove
-            },
-            id_reclamacao : reclamacaoId
-        }
-    })
-
-    //Categorias que já estão associadas e não foram removidas
-    const existingCategoriasRelation = await CategoriaReclamacaoModel.findAll({
-        where : {
-            id_reclamacao : reclamacaoId,
-            id_categoria : {
-                [Op.in] : categorias
-            }
-        }
-    })
-
+export const createCategoryReclamacao = async (categorias : number[], id_reclamacao : number) => {
+    await categoryIdExistsValidator(categorias)
     
-    const existingCategoriasRelationIds = existingCategoriasRelation.map(categoria => categoria.id_categoria)
-
-    //Categorias com ids que não foram inseridos ainda na relação
-    const newCategorias = categorias.filter(categoriaId => {
-        return !existingCategoriasRelationIds.includes(categoriaId)
-    })
-
-    const validNewCategoriasIds = await categoriaIdExistValidator(newCategorias)
-
-    await CategoriaReclamacaoModel.bulkCreate(validNewCategoriasIds.map(categoriaId => ({
-        id_categoria : categoriaId,
-        id_reclamacao : reclamacaoId
+    await CategoriaReclamacaoModel.bulkCreate(categorias.map(id_categoria => ({
+        id_categoria,
+        id_reclamacao,
     })));
 }
 
-export const deleteCategoriaReclamacoes = async (categoriaReclamacao : ICreateCategoriaReclamacao) => {
-   await CategoriaReclamacaoModel.destroy({
-        where : {
-            id_reclamacao : categoriaReclamacao.id_reclamacao,
-            id_categoria : categoriaReclamacao.id_categoria
-        }
-   })
-}
+export const updateCategoryReclamacao = async (updatedCategoriesIds : number[], id_reclamacao : number) => {
+    const oldCategories = await CategoriaReclamacaoModel.findAll({where : {id_reclamacao}});
+    const oldCategoryIds = oldCategories.map(categorie => categorie.id_categoria);
 
-export const categoriaIdExistValidator = async (categorias : number[]) => {
-    //Verificando se as categorias existem na tabela de categorias
-    const existingCategorias = await CategoriaModel.findAll({
-        where : {
-            id : {
-                [Op.in] : categorias
+    /* Remove categorias que estavam atreladas e não existem mais no array de ids passados */
+    const categoriesToRemove = oldCategoryIds.filter(categorie => !updatedCategoriesIds.includes(categorie))
+    if(categoriesToRemove.length > 0){
+        await CategoriaReclamacaoModel.destroy({
+            where : {
+                id_categoria : {
+                    [Op.in] : categoriesToRemove
+                },
+                id_reclamacao
             }
-        }
-    })
-
-    const existingCategoriasIds = existingCategorias.map(categoria => categoria.id)
-
-    if(existingCategorias.length != categorias.length){
-        const invalidCategoriasIds = categorias.filter(categoriaId => {
-            return !existingCategoriasIds.includes(categoriaId)
         })
-
-        throw new Error((invalidCategoriasIds.length == 1 
-            ? `A categoria com ID: ${invalidCategoriasIds} não existe` 
-            : `As categorias com ID: ${invalidCategoriasIds.join(', ')} não existem`)
-        )
     }
 
-    return existingCategoriasIds;
+    /* Procura categorias que já estavam associadas e não foram removidas durante a atualização*/
+    const categoriesToCreate = updatedCategoriesIds.filter(categorie => !oldCategoryIds.includes(categorie))
+    /* Cria as novas categorias */
+    if(categoriesToCreate.length > 0)
+        await createCategoryReclamacao(categoriesToCreate, id_reclamacao);
+}
+
+export const categoryIdExistsValidator = async (categories : number[]) => {
+    //Verificando se as categorias existem na tabela de categorias, se não, lança uma exceção
+    const existingCategories = await CategoriaModel.findAll({
+        where : {
+            id : {
+                [Op.in] : categories
+            }
+        }
+    })
+
+    const existingCategoriesIds = existingCategories.map(category => category.id)
+
+    if(existingCategories.length != categories.length){
+        const invalidCategoriesIds = categories.filter(categoryId => {
+            return !existingCategoriesIds.includes(categoryId)
+        })
+
+        throw new ApiError((invalidCategoriesIds.length == 1 
+            ? `A categoria com ID: ${invalidCategoriesIds} não existe` 
+            : `As categorias com ID: ${invalidCategoriesIds.join(', ')} não existem`), HttpCode.NotFound)
+    }
+
+    return true;
 }
