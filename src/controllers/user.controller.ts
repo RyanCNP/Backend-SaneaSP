@@ -32,16 +32,6 @@ export const getUserByName = async (userName: string) => {
     return foundUser;
 }
 
-export const createUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
-    const salt = await bcrypt.genSalt(10);
-    newUser.senha = await bcrypt.hash(newUser.senha, salt);
-   
-    //Verifica se o nome, email e CPF estão disponíveis, caso contrário lança ApiError
-    await uniqueUserValidator(newUser);
-    
-    return await UserModel.create(newUser);;
-}
-
 export const updateUser = async (updatedUser: IUser): Promise<IUser> => {
     const userFound = await UserModel.findOne({ where: { id: updatedUser.id } });
 
@@ -64,7 +54,7 @@ export const deleteUser = async (userId: number): Promise<IUser> => {
     return userFound;
 }
 
-const uniqueUserValidator = async (user : IUser) => {
+export const uniqueUserValidator = async (user : IUser) => {
     const query : IUserExists = {
         where: {
             [Op.or]: [

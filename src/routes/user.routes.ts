@@ -4,7 +4,6 @@ import {
     getUserList,
     getUserByName,
     getUserById,
-    createUser,
     updateUser,
     deleteUser
 } from "../controllers/user.controller"
@@ -34,17 +33,6 @@ router.get("/nome/:nome", async (req: Request, res: Response) => {
         error: false,
         message: "Usuário encontrado",
         data: userFound
-    });
-});
-
-router.post("/", async (req: Request, res: Response, next : NextFunction) => {
-    const body = req.body;
-    const data = await createUser(body);
-
-    res.status(201).json({
-        error: false,
-        message: "Usuário cadastrado com sucesso",
-        data
     });
 });
 

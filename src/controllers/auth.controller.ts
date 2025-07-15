@@ -1,9 +1,11 @@
-import { UserModel } from "../models/user.model";
-import jwt, { SignOptions } from "jsonwebtoken";
+import { IUserCreationAttributes, UserModel } from "../models/user.model";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
+import { IUser } from "../interfaces/IUsuario.interface";
+import { uniqueUserValidator } from "./user.controller";
 dotenv.config();
 
 export const autenticar = async (email: string, password: string) => {
@@ -31,3 +33,13 @@ export const autenticar = async (email: string, password: string) => {
 
   return token;
 };
+
+export const registerUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
+    const salt = await bcrypt.genSalt(10);
+    newUser.senha = await bcrypt.hash(newUser.senha, salt);
+   
+    //Verifica se o nome, email e CPF estão disponíveis, caso contrário lança ApiError
+    await uniqueUserValidator(newUser);
+    
+    return await UserModel.create(newUser);;
+}
