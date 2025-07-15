@@ -1,4 +1,4 @@
-export interface ITagListFilter{
+export interface ICategoriaListFilter{
     nome ?: string,
     limit ?: number
 }

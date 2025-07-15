@@ -1,17 +1,17 @@
 import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interfaces/IReclamacao.interface";
 import { Op} from "sequelize";
-import { IApiResponse } from "../interfaces/IApiResponse.interface";
-import { HttpError } from "../enums/HttpError.enum";
-import { ImagemReclamacaoModel, ReclamacaoModel, TagModel, TagReclamacaoModel } from "../models";
-import { postTagReclamacoes, updateTagReclamacoes } from "./tag-reclamacao.controller";
+import { CategoriaModel, ImagemReclamacaoModel, ReclamacaoModel} from "../models";
+import { createCategoryReclamacao, updateCategoryReclamacao } from "./categoria-reclamacao.controller";
 import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
+import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
 
 const reclamacaoFindIncludes = [
     {
-        //Trazer as tags da reclamação
-        model: TagModel,
-        as: 'Tags',  
-        through: { attributes: [] } //Para dados da tabela associativa TagReclamacoes nao vierem juntos do resultado
+        //Trazer as categorias da reclamação
+        model: CategoriaModel,
+        as: 'Categorias',  
+        through: { attributes: [] } //Para dados da tabela associativa CategoriaReclamacoes nao vierem juntos do resultado
     },
     {
         //Trazer as imagens da reclamação
@@ -79,22 +79,26 @@ export const getById = async (idReclamacao: number): Promise<IReclamacao | null>
         where:{id : idReclamacao},
         include: reclamacaoFindIncludes
     });
+
+    if(!reclamacao)
+        throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound)
+
     return reclamacao;
 }
-export const getByTag = async(tags:number[], idUsuario?: number)=>{
+export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
     let query: any = {
         where : {},
         include: [
     {
-        model: TagModel,
-        as: 'tagsSelecionadas',  
+        model: CategoriaModel,
+        as: 'categoriasSelecionadas',  
         through: { attributes: [] },
-        where:{id:tags},
+        where:{id:categorias},
         require:true
     },
     {
-        model: TagModel,
-        as: 'Tags',
+        model: CategoriaModel,
+        as: 'Categorias',
         through: { attributes: [] },
 
     },
@@ -120,7 +124,7 @@ export const getByUsuario = async(fkUsuario: number)=>{
     return reclamacoes;
 }
 export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamacao | null> => {
-    const {Tags, Imagens, ...reclamacaoBody} = body;
+    const {Categorias, Imagens, ...reclamacaoBody} = body;
     
     const pontuacao = gerarPontuacao(body);
 
@@ -139,18 +143,21 @@ export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamac
     }
 
     // Criando registro de associação
-    if(Tags && Tags.length > 0)
-        await postTagReclamacoes(Tags, reclamacao.id)
+    if(Categorias && Categorias.length > 0)
+        await createCategoryReclamacao(Categorias, reclamacao.id)
 
     const response = await ReclamacaoModel.findByPk(reclamacao.id, 
     {
         include: reclamacaoFindIncludes
     })
+
+    if(!response)
+        throw new ApiError("Não foi possível cadastrar a reclamação", HttpCode.BadRequest)
     
     return response
 }
 
-export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Promise<IApiResponse> => {
+export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Promise<IReclamacao> => {
     body.pontuacao = gerarPontuacao(body);
     
     await ReclamacaoModel.update(body, {
@@ -159,8 +166,8 @@ export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Pro
         }
     })
 
-    if(body.Tags)
-        await updateTagReclamacoes(body.Tags, idReclamacao);
+    if(body.Categorias)
+        await updateCategoryReclamacao(body.Categorias, idReclamacao);
 
     if(body.Imagens){
         await updateImagemReclamacao(body.Imagens, idReclamacao)
@@ -170,46 +177,38 @@ export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Pro
         include: reclamacaoFindIncludes
     })
 
-    return {
-        message: 'Reclamação atualizada com sucesso',
-        error : false,
-        data : response
-    };
+    if(!response){
+        throw new ApiError("Não foi possível editar a reclamação", HttpCode.BadRequest)
+    }
+
+    return response
 }
 
-export const deleteReclamacao = async(idReclamacao : number): Promise<IApiResponse> => {
+export const deleteReclamacao = async(idReclamacao : number): Promise<IReclamacao> => {
     const reclamacao = await ReclamacaoModel.findByPk(idReclamacao, {
         include: reclamacaoFindIncludes
     }); 
     
     if(!reclamacao){
-        return {
-            message: 'Reclamação não encontrada',
-            error : true,
-            httpError: HttpError.NotFound
-        };
+        throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
     }
     
-    //Associações com tags e reclamações são excluidas com cascade
+    //Associações com categorias e reclamações são excluidas com cascade
     await reclamacao.destroy();
 
-    return {
-        message: 'Reclamação excluída com sucesso',
-        error : false,
-        data : reclamacao
-    };      
+    return reclamacao
 }
 
 function gerarPontuacao(bodyRequest : ICreateReclamacao | IReclamacao): number {
     let pontuacao = 0;
-    // por enquanto a pontuação de tag vai ser pela quantidade de tags adicionadas nas reclamações
+    // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
     if(bodyRequest.Imagens && bodyRequest.Imagens?.length > 0){
         pontuacao += 100 * bodyRequest.Imagens.length;
     }
 
-    // por enquanto a pontuação de tag vai ser pela quantidade de tags adicionadas nas reclamações
-    if(bodyRequest.Tags && bodyRequest.Tags?.length > 0){
-        pontuacao += 100 * bodyRequest.Tags.length;
+    // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
+    if(bodyRequest.Categorias && bodyRequest.Categorias?.length > 0){
+        pontuacao += 100 * bodyRequest.Categorias.length;
     }
 
     if(bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade){

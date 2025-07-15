@@ -1,4 +1,4 @@
-export interface ITag{
+export interface ICategoria{
     id: number,
     nome: string
 }

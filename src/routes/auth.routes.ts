@@ -1,49 +1,32 @@
-import express, { Request, Response } from "express";
+import express, {Request, Response } from "express";
 import dotenv from "dotenv";
-import { autenticar} from "../controllers/auth.controller";
-import { ApiError } from "../errors/ApiError.error";
+import { autenticar, registerUser} from "../controllers/auth.controller";
 import { validateToken } from "../middlewares/auth.middleware";
 dotenv.config();
 
 export const authRoutes = express.Router();
 
-authRoutes.post("/", async (req: Request, res: Response) => {
-  try {
-    const { email, senha } = req.body;
-    const token = await autenticar(email, senha);
-    res.status(200).json(token);
-  } catch (error) {
-    //Verifica se o erro é uma ApiError
-    if(error instanceof ApiError){
-      res.status(error.httpStatus).json({
-        message: error.message,
-        error: true,
-      });
-    }
-    else{
-      res.status(500).json({
-        message: "Ocorreu um erro de servidor: " + error,
-        error: true,
-      });
-    }
-  }
+//Login
+authRoutes.post("/login", async (req: Request, res: Response) => {
+  const { email, senha } = req.body;
+  const token = await autenticar(email, senha);
+  res.status(200).json(token);
 });
 
+//Cadastro
+authRoutes.post("/register", async (req: Request, res: Response) => {
+    const body = req.body;
+    const data = await registerUser(body);
+
+    res.status(201).json({
+        error: false,
+        message: "Cadastro realizado com sucesso",
+        data
+    });
+});
+
+//Dados do usuário logado
 authRoutes.get("/me", validateToken, async (req: Request, res: Response) => {
-  try {
-    res.status(200).json(req.user)
-  } catch (error) {
-    if(error instanceof ApiError){
-      res.status(error.httpStatus).json({
-        message : error.message,
-        error: true
-      })
-    }
-    else{
-      res.status(500).json({
-        message : 'Ocorreu um erro de servidor' + error,
-        error: true
-      })
-    }
-  }
+  //req.user é obtido no middleware de autenticação
+  res.status(200).json(req.user)
 });

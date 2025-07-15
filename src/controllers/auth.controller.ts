@@ -1,37 +1,45 @@
-import { UserModel } from "../models/user.model";
-import jwt from "jsonwebtoken"
+import { IUserCreationAttributes, UserModel } from "../models/user.model";
+import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import bcrypt from "bcryptjs"; 
+import bcrypt from "bcryptjs";
 import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
+import { IUser } from "../interfaces/IUsuario.interface";
+import { uniqueUserValidator } from "./user.controller";
 dotenv.config();
 
 export const autenticar = async (email: string, password: string) => {
-  const user = await UserModel.findOne({where : {email : email}});
+  const user = await UserModel.findOne({ where: { email } });
 
-  if(!user) {
-    throw new ApiError('O email não existe', 404)
-  };
+  const isMatch = user && (await bcrypt.compare(password, user.senha));
 
-  const isMatch = await bcrypt.compare(password, user.senha)
-  
-  if(!isMatch) {
-    throw new ApiError('Email ou senha estão incorretos', 401)
-  };
-   
-  const secretKey = process.env.SECRET_KEY || "";
-  if(secretKey == ""){
-    console.warn('❌ Secret Key deve ser definida no .env')
-    throw new ApiError('Erro interno de servidor')
+  if (!isMatch) {
+    throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
+  }
+
+  const secretKey : string = process.env.SECRET_KEY || "";
+  const expiresIn : any = process.env.EXPIRES_IN || "";
+
+  if (!secretKey || !expiresIn) {
+    console.warn("❌ SECRET_KEY e EXPIRES_IN devem ser definidas, verifique o arquivo .env");
+    throw new Error("Erro interno de servidor");
   }
 
   const token = jwt.sign(
-    {
-      id: user.id,
-    },
-    secretKey, 
-    {expiresIn : '7 days'}
+    {id: user.id},
+    secretKey,
+    {expiresIn}
   );
 
   return token;
 };
 
+export const registerUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
+    const salt = await bcrypt.genSalt(10);
+    newUser.senha = await bcrypt.hash(newUser.senha, salt);
+   
+    //Verifica se o nome, email e CPF estão disponíveis, caso contrário lança ApiError
+    await uniqueUserValidator(newUser);
+    
+    return await UserModel.create(newUser);;
+}

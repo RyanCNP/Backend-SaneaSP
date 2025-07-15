@@ -1,11 +1,9 @@
 import { UserModel, IUserCreationAttributes } from "../models/user.model";
 import { Op } from "sequelize"
-import { HttpError } from "../enums/HttpError.enum";
-import { IApiResponse } from "../interfaces/IApiResponse.interface";
 import bcrypt from "bcryptjs"; 
 import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUsuario.interface";
-import { ERROR } from "sqlite3";
 import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
     const query: any = { where: {} };
@@ -22,126 +20,65 @@ export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]
 
 export const getUserById = async (userId: number) => {
     const foundUser = await UserModel.findOne({ where: { id: userId } });
+    if(!foundUser)
+        throw new ApiError("Nenhum usuário encontrado",HttpCode.NotFound);
     return foundUser;
 }
 
 export const getUserByName = async (userName: string) => {
     const foundUser = await UserModel.findOne({ where: { nome: userName } });
-    console.log('Usuario procurado: ' +foundUser)
+    if(!foundUser)
+        throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound);
     return foundUser;
 }
 
-export const getUserByEmail = async (userEmail: string) => {
-    const foundUser = await UserModel.findOne({ where: { email: userEmail } });
-    return foundUser;
+export const updateUser = async (updatedUser: IUser): Promise<IUser> => {
+    const userFound = await UserModel.findOne({ where: { id: updatedUser.id } });
+
+    if (!userFound) {
+        throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
+    }
+
+    //Verifica se o nome, email e CPF estão disponíveis, caso contrário lança ApiError
+    await uniqueUserValidator(updatedUser);
+
+    return await userFound.update(updatedUser);
+}
+export const deleteUser = async (userId: number): Promise<IUser> => {
+    const userFound = await UserModel.findByPk(userId);
+
+    if (!userFound) throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
+
+    await userFound.destroy();
+
+    return userFound;
 }
 
-export const getUserByCPF = async (userCPF: string) => {
-    const foundUser = await UserModel.findOne({ where: { cpf: userCPF } });
-    return foundUser;
-}
-
-export const createUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
-    const salt = await bcrypt.genSalt(10);
-    newUser.senha = await bcrypt.hash(newUser.senha, salt);
+export const uniqueUserValidator = async (user : IUser) => {
     const query : IUserExists = {
         where: {
             [Op.or]: [
-                { email: newUser.email },
-                { nome: newUser.nome }
+                { email: user.email },
+                { nome: user.nome }
             ]
         }
     };
 
-    if(newUser.cpf)
-        query.where[Op.or].push({ cpf: newUser.cpf });
+    if (user.cpf)
+        query.where[Op.or].push({ cpf: user.cpf });
     
     const userFound = await UserModel.findOne(query);
 
-    if(userFound){
-        console.log(userFound)
-        console.log(newUser)
-        if (userFound.nome == newUser.nome.trim()) 
-            throw new ApiError('Usuário com o nome já cadastrado', 409)
-        else if(userFound.email == newUser.email.trim())
-            throw new ApiError('Usuário com o email já cadastrado', 409)
-        else if(userFound.cpf == newUser.cpf.trim())
-            throw new ApiError('Usuário com o cpf já cadastrado', 409)
-    }
-    
-    const createdUser = await UserModel.create(newUser);
-    return createdUser;
-}
+    if(!userFound) return;
 
-export const updateUser = async (userData: IUser): Promise<IApiResponse<IUser>> => {
-    const userFound = await UserModel.findOne({ where: { id: userData.id } });
+    if(userFound.id != user.id){
+        if (userFound.nome.trim() == user.nome.trim()) 
+            throw new ApiError('Já existe um usuário com esse nome', HttpCode.Conflict)
 
-    if (!userFound) {
-        return {
-            error: true,
-            message: "Usuário não encontrado.",
-            httpError: HttpError.NotFound
-        };
-    }
+        if(userFound.email.trim() == user.email.trim())
+            throw new ApiError('Esse email já está em uso', HttpCode.Conflict)
 
-    if (userData.nome && userFound.nome !== userData.nome) {
-        const nomeExistente = await UserModel.findOne({
-            where: {
-                nome: userData.nome,
-                id: { [Op.ne]: userData.id }
-            }
-        });
-
-        if (nomeExistente) {
-            return {
-                error: true,
-                message: "Já existe um usuário com esse nome",
-                httpError: HttpError.Conflict
-            };
-        }
-    }
-
-    if (userData.email && userFound.email !== userData.email) {
-        const emailExistente = await UserModel.findOne({
-            where: {
-                email: userData.email,
-                id: { [Op.ne]: userData.id }
-            }
-        });
-
-        if (emailExistente) {
-            return {
-                error: true,
-                message: "Já existe um usuário com esse email",
-                httpError: HttpError.Conflict
-            };
-        }
-    }
-
-    await userFound.update(userData);
-
-    return {
-        error: false,
-        message: "Usuário atualizado com sucesso!",
-        data: userFound
-    }
-}
-export const deleteUser = async (userId: number): Promise<IApiResponse> => {
-    const userFound = await UserModel.findByPk(userId);
-
-    if (!userFound) {
-        return {
-            message: 'Nenhum usuário foi encontrado',
-            error: true,
-            httpError: HttpError.NotFound
-        }
-    }
-
-    await userFound.destroy();
-
-    return {
-        message: 'Usuário excluido com sucesso!',
-        error: false,
-        data: userFound
+        if(userFound.cpf.trim() == user.cpf.trim())
+            throw new ApiError('Esse CPF já está em uso', HttpCode.Conflict)
     }
 }
