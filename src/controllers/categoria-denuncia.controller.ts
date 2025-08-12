@@ -1,30 +1,30 @@
 import { Op } from "sequelize";
-import { CategoriaModel, CategoriaReclamacaoModel } from "../models";
+import { CategoriaModel, CategoriaDenunciaModel } from "../models";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
 
-export const createCategoryReclamacao = async (categorias : number[], id_reclamacao : number) => {
+export const createCategoryDenuncia = async (categorias : number[], id_denuncia : number) => {
     await categoryIdExistsValidator(categorias)
     
-    await CategoriaReclamacaoModel.bulkCreate(categorias.map(id_categoria => ({
+    await CategoriaDenunciaModel.bulkCreate(categorias.map(id_categoria => ({
         id_categoria,
-        id_reclamacao,
+        id_denuncia,
     })));
 }
 
-export const updateCategoryReclamacao = async (updatedCategoriesIds : number[], id_reclamacao : number) => {
-    const oldCategories = await CategoriaReclamacaoModel.findAll({where : {id_reclamacao}});
+export const updateCategoryDenuncia = async (updatedCategoriesIds : number[], id_denuncia : number) => {
+    const oldCategories = await CategoriaDenunciaModel.findAll({where : {id_denuncia}});
     const oldCategoryIds = oldCategories.map(categorie => categorie.id_categoria);
 
     /* Remove categorias que estavam atreladas e não existem mais no array de ids passados */
     const categoriesToRemove = oldCategoryIds.filter(categorie => !updatedCategoriesIds.includes(categorie))
     if(categoriesToRemove.length > 0){
-        await CategoriaReclamacaoModel.destroy({
+        await CategoriaDenunciaModel.destroy({
             where : {
                 id_categoria : {
                     [Op.in] : categoriesToRemove
                 },
-                id_reclamacao
+                id_denuncia
             }
         })
     }
@@ -33,7 +33,7 @@ export const updateCategoryReclamacao = async (updatedCategoriesIds : number[], 
     const categoriesToCreate = updatedCategoriesIds.filter(categorie => !oldCategoryIds.includes(categorie))
     /* Cria as novas categorias */
     if(categoriesToCreate.length > 0)
-        await createCategoryReclamacao(categoriesToCreate, id_reclamacao);
+        await createCategoryDenuncia(categoriesToCreate, id_denuncia);
 }
 
 export const categoryIdExistsValidator = async (categories : number[]) => {

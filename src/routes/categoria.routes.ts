@@ -9,9 +9,9 @@ import {
   getCategoriaList,
   updateCategoria,
 } from "../controllers/categoria.controller";
-import { ICategoriaListFilter } from "../interfaces/ICategoriaListFilter.interface";
-import { ICategoria } from "../interfaces/ICategoria.interface";
-import { validateToken } from "../middlewares/auth.middleware"
+import { ICategoriaListFilter } from "../interfaces/categoria-list-filter";
+import { ICategoria } from "../interfaces/categoria";
+import { validateToken } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 

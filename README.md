@@ -16,7 +16,7 @@ Todas as migrations foram feitas para o banco de dados com inclusão de alguns d
   
 ##### Rotas possíveis:
 
-- https://backend-saneasp.onrender.com/reclamacao
+- https://backend-saneasp.onrender.com/denuncia
 - https://backend-saneasp.onrender.com/tag (protegida)
 - https://backend-saneasp.onrender.com/user
 

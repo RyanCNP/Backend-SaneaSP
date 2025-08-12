@@ -1,16 +1,16 @@
 /**
  * @swagger
  * tags:
- *   - name: Reclamacoes
+ *   - name: Denuncias
  *     description: Endpoints relacionados às reclamações
  */
 
 /**
  * @swagger
- * /reclamacao:
+ * /denuncia:
  *   get:
  *     summary: Lista todas as reclamações com filtros opcionais
- *     tags: [Reclamacoes]
+ *     tags: [Denuncias]
  *     parameters:
  *       - in: query
  *         name: titulo
@@ -76,7 +76,7 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Reclamacao'
+ *                 $ref: '#/components/schemas/Denuncia'
  *       500:
  *         description: Erro interno do servidor
  */
@@ -84,10 +84,10 @@
 
 /**
  * @swagger
- * /reclamacao/usuario:
+ * /denuncia/usuario:
  *   get:
  *     summary: Lista todas as reclamações do usuário autenticado
- *     tags: [Reclamacoes]
+ *     tags: [Denuncias]
  *     security:
  *       - TokenAuth: []
  *     responses:
@@ -98,7 +98,7 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Reclamacao'
+ *                 $ref: '#/components/schemas/Denuncia'
  *       401:
  *         description: Token inválido ou não informado
  *       500:
@@ -107,10 +107,10 @@
 
 /**
  * @swagger
- * /reclamacao/{id}:
+ * /denuncia/{id}:
  *   get:
  *     summary: Busca uma reclamação por ID
- *     tags: [Reclamacoes]
+ *     tags: [Denuncias]
  *     parameters:
  *       - in: path
  *         name: id
@@ -124,7 +124,7 @@
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Reclamacao'
+ *               $ref: '#/components/schemas/Denuncia'
  *       404:
  *         description: Reclamação não encontrada
  *       500:
@@ -133,10 +133,10 @@
 
 /**
  * @swagger
- * /reclamacao:
+ * /denuncia:
  *   post:
  *     summary: Cria uma nova reclamação
- *     tags: [Reclamacoes]
+ *     tags: [Denuncias]
  *     security:
  *       - TokenAuth: []
  *     requestBody:
@@ -144,7 +144,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Reclamacao'
+ *             $ref: '#/components/schemas/Denuncia'
  *     responses:
  *       201:
  *         description: Reclamação criada com sucesso
@@ -156,10 +156,10 @@
 
 /**
  * @swagger
- * /reclamacao/{id}:
+ * /denuncia/{id}:
  *   put:
  *     summary: Atualiza uma reclamação existente
- *     tags: [Reclamacoes]
+ *     tags: [Denuncias]
  *     security:
  *       - TokenAuth: []
  *     parameters:
@@ -174,7 +174,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/Reclamacao'
+ *             $ref: '#/components/schemas/Denuncia'
  *     responses:
  *       200:
  *         description: Reclamação atualizada com sucesso
@@ -188,10 +188,10 @@
 
 /**
  * @swagger
- * /reclamacao/{id}:
+ * /denuncia/{id}:
  *   delete:
  *     summary: Remove uma reclamação pelo ID
- *     tags: [Reclamacoes]
+ *     tags: [Denuncias]
  *     security:
  *       - TokenAuth: []
  *     parameters:

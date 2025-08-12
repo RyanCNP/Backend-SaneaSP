@@ -1,16 +1,16 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from '../config/database'
-import { IImagemReclamacao } from "../interfaces/IImagemReclamacao.interface";
+import { IImagemDenuncia } from "../interfaces/imagem-denuncia";
 
-type ImagemReclamacaoCreationalAttributes = Optional<IImagemReclamacao, "id">
+type ImagemDenunciaCreationalAttributes = Optional<IImagemDenuncia, "id">
 
-export class ImagemReclamacaoModel extends Model<IImagemReclamacao, ImagemReclamacaoCreationalAttributes>{
+export class ImagemDenunciaModel extends Model<IImagemDenuncia, ImagemDenunciaCreationalAttributes>{
     public id!: number;
     public nome!: string;
-    public id_reclamacao!: number
+    public id_denuncia!: number
 }
 
-ImagemReclamacaoModel.init({
+ImagemDenunciaModel.init({
     id: {
         primaryKey: true,
         autoIncrement: true,
@@ -23,17 +23,17 @@ ImagemReclamacaoModel.init({
         type: DataTypes.STRING(100),
         field: "nome"
     },
-    id_reclamacao: {
+    id_denuncia: {
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
-            model: 'reclamacao',
+            model: 'denuncia',
             key: 'id'
         },
         onDelete: 'CASCADE'
     }
 },{
-    tableName : 'imagemReclamacao',
+    tableName : 'imagem_denuncia',
     sequelize,
     timestamps : false
 })

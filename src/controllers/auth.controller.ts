@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
-import { IUser } from "../interfaces/IUsuario.interface";
+import { IUser } from "../interfaces/usuario";
 import { uniqueUserValidator } from "./user.controller";
 dotenv.config();
 

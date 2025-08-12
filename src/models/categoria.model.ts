@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from '../config/database'
-import { ICategoria } from "../interfaces/ICategoria.interface";
+import { ICategoria } from "../interfaces/categoria";
 
 type CategoriaCreationalAttributes = Optional<ICategoria, "id">
 
