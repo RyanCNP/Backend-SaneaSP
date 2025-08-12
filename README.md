@@ -8,20 +8,16 @@
 - Ryan Carlo Negretti Pereira
 
 ## Hospedagem
-O backend do SaneaSP está hospedado no link abaixo, com conexão ao banco de dados Postgree fornecido pela plataforma Render
-Todas as migrations foram feitas para o banco de dados com inclusão de alguns dados
-
-#### Backend do projeto
+O backend do SaneaSP foi hospedado na plataforma Render com conexão ao banco de dados Postgree fornecido.
 - https://backend-saneasp.onrender.com
-  
-##### Rotas possíveis:
 
+## Documentação Swagger
+- https://backend-saneasp.onrender.com/api-docs
+
+### Endpoints do projeto:
 - https://backend-saneasp.onrender.com/denuncia
-- https://backend-saneasp.onrender.com/tag (protegida)
+- https://backend-saneasp.onrender.com/tag
 - https://backend-saneasp.onrender.com/user
-
-#### Documentação Swagger
-[Link para a documentação Swagger do projeto](https://backend-saneasp.onrender.com/api-docs)
 
 ## FrontEnd do projeto
 🔗 [Repositório FrontEnd](https://github.com/MathGueff/FrontEnd-SaneaSP.git)
@@ -51,12 +47,20 @@ Para iniciar o projeto em desenvolvimento
 npm run dev
 ```
 
-Para ter acesso à páginas do site
+Acesso para conteúdos protegidos
 
 | Email do usuário | Senha | Nível de acesso |
 |------------------|-------|-----------------|
 | pedro@gmail.com  | pedro | 0               |
 | gueff@gmail.com  | math  | 1               |
+
+## Tecnologias utilizadas
+
+Framework: Express
+
+Linguagem: TypeScript
+
+Banco de Dados: SQLite e PostgreeSQL com Sequelize como ORM
 
 ## Comandos:
 
