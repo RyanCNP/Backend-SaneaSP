@@ -1,4 +1,4 @@
-import { IUser } from '../interfaces/IUsuario.interface';
+import { IUser } from '../interfaces/usuario';
 declare global{
     namespace Express{
         export interface Request{

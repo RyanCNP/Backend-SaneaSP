@@ -1,16 +1,16 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import { IReclamacao } from "../interfaces/IReclamacao.interface";
-import { StatusReclamacao } from "../enums/statusReclamacao.enum";
+import { IDenuncia } from "../interfaces/denuncia";
+import { StatusDenuncia } from "../enums/statusDenuncia.enum";
 import sequelize from "../config/database";
 
-type ReclamacaoCreationalAttributes = Optional<IReclamacao, "id">
+type DenunciaCreationalAttributes = Optional<IDenuncia, "id">
 
-export class ReclamacaoModel extends Model<IReclamacao, ReclamacaoCreationalAttributes> {
+export class DenunciaModel extends Model<IDenuncia, DenunciaCreationalAttributes> {
   public id!: number;
   public titulo!: string;
   public descricao!: string;
   public data!: Date;
-  public status!: StatusReclamacao;
+  public status!: StatusDenuncia;
   public pontuacao!: number;
   public cep ?: string;
   public cidade ?: string;
@@ -22,7 +22,7 @@ export class ReclamacaoModel extends Model<IReclamacao, ReclamacaoCreationalAttr
   public Usuario !: number;
 }
 
-ReclamacaoModel.init(
+DenunciaModel.init(
     {
         id: {
             primaryKey: true,
@@ -93,7 +93,7 @@ ReclamacaoModel.init(
         }
     },
     {
-        tableName: "reclamacao",
+        tableName: "denuncia",
         sequelize,
         timestamps:false
     }

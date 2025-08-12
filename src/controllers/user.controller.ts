@@ -1,7 +1,7 @@
 import { UserModel, IUserCreationAttributes } from "../models/user.model";
 import { Op } from "sequelize"
 import bcrypt from "bcryptjs"; 
-import { IUserListFilters, IUser, IUserExists } from "../interfaces/IUsuario.interface";
+import { IUserListFilters, IUser, IUserExists } from "../interfaces/usuario";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
 

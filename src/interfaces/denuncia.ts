@@ -1,13 +1,11 @@
-import { IEndereco } from './IEndereco.interface';
-import { StatusReclamacao } from "../enums/statusReclamacao.enum";
-import { ICategoria } from './ICategoria.interface';
+import { StatusDenuncia } from "../enums/statusDenuncia.enum";
 
-export interface IReclamacao{
+export interface IDenuncia{
     id : number,
     titulo: string,
     descricao: string,
     data: Date,
-    status: StatusReclamacao,
+    status: StatusDenuncia,
     pontuacao: number,
     cep ?: string,
     cidade ?: string,
@@ -20,11 +18,11 @@ export interface IReclamacao{
     Categorias ?: number[] //Ids das tags,
 }
 
-export interface IFilterListReclamacao{
+export interface IFilterListDenuncia{
     titulo ?: string,
     descricao ?: string,
     data ?: Date,
-    status ?: StatusReclamacao,
+    status ?: StatusDenuncia,
     pontuacao? : number,
     cep ?: string,
     cidade ?: string,
@@ -34,7 +32,7 @@ export interface IFilterListReclamacao{
     complemento ?: string
 }
 
-export interface ICreateReclamacao{
+export interface ICreateDenuncia{
     titulo: string,
     descricao: string,
     cep ?: string,

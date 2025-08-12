@@ -15,7 +15,7 @@ O backend do SaneaSP foi hospedado na plataforma Render com conexão ao banco de
 - https://backend-saneasp.onrender.com/api-docs
 
 ### Endpoints do projeto:
-- https://backend-saneasp.onrender.com/reclamacao
+- https://backend-saneasp.onrender.com/denuncia
 - https://backend-saneasp.onrender.com/tag
 - https://backend-saneasp.onrender.com/user
 

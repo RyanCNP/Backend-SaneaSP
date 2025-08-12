@@ -1,30 +1,30 @@
-import { ICreateReclamacao, IFilterListReclamacao, IReclamacao } from "../interfaces/IReclamacao.interface";
+import { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia";
 import { Op} from "sequelize";
-import { CategoriaModel, ImagemReclamacaoModel, ReclamacaoModel} from "../models";
-import { createCategoryReclamacao, updateCategoryReclamacao } from "./categoria-reclamacao.controller";
-import { createImagemReclamacao, updateImagemReclamacao } from "./imagem-reclamacao.controller";
+import { CategoriaModel, ImagemDenunciaModel, DenunciaModel} from "../models";
+import { createCategoryDenuncia, updateCategoryDenuncia } from "./categoria-denuncia.controller";
+import { createImagemDenuncia, updateImagemDenuncia } from "./imagem-denuncia.controller";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
 
-const reclamacaoFindIncludes = [
+const denunciaFindIncludes = [
     {
         //Trazer as categorias da reclamação
         model: CategoriaModel,
         as: 'Categorias',  
-        through: { attributes: [] } //Para dados da tabela associativa CategoriaReclamacoes nao vierem juntos do resultado
+        through: { attributes: [] } //Para dados da tabela associativa CategoriaDenuncias nao vierem juntos do resultado
     },
     {
         //Trazer as imagens da reclamação
-        model: ImagemReclamacaoModel,
+        model: ImagemDenunciaModel,
         as: 'Imagens',
-        attributes: {exclude : ['id_reclamacao']},
+        attributes: {exclude : ['id_denuncia']},
     }
 ]
 
-export const getAllReclamacoes = async (filtros : IFilterListReclamacao): Promise<IReclamacao[]> =>{
+export const getAllDenuncias = async (filtros : IFilterListDenuncia): Promise<IDenuncia[]> =>{
     let query: any = {
         where : {},
-        include: reclamacaoFindIncludes
+        include: denunciaFindIncludes
     }
     if(filtros){
         if (filtros.titulo) {
@@ -69,21 +69,21 @@ export const getAllReclamacoes = async (filtros : IFilterListReclamacao): Promis
             }
         }
     }
-    const reclamacoes = await ReclamacaoModel.findAll(query);
-    return reclamacoes
+    const denuncias = await DenunciaModel.findAll(query);
+    return denuncias
 };
 
-export const getById = async (idReclamacao: number): Promise<IReclamacao | null> =>{
-    const reclamacao = await ReclamacaoModel.findOne(
+export const getById = async (idDenuncia: number): Promise<IDenuncia | null> =>{
+    const denuncia = await DenunciaModel.findOne(
     {
-        where:{id : idReclamacao},
-        include: reclamacaoFindIncludes
+        where:{id : idDenuncia},
+        include: denunciaFindIncludes
     });
 
-    if(!reclamacao)
+    if(!denuncia)
         throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound)
 
-    return reclamacao;
+    return denuncia;
 }
 export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
     let query: any = {
@@ -104,51 +104,51 @@ export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
     },
     {
         //Trazer as imagens da reclamação
-        model: ImagemReclamacaoModel,
+        model: ImagemDenunciaModel,
         as: 'Imagens',
-        attributes: {exclude : ['id_reclamacao']},
+        attributes: {exclude : ['id_denuncia']},
     }
 ]
     };
     if(idUsuario){
         query.where.idUsuario = idUsuario
     }
-    const reclamacoes = await ReclamacaoModel.findAll(query);
-    return reclamacoes
+    const denuncias = await DenunciaModel.findAll(query);
+    return denuncias
 }
 export const getByUsuario = async(fkUsuario: number)=>{
-    const reclamacoes = await ReclamacaoModel.findAll({
+    const denuncias = await DenunciaModel.findAll({
         where:{idUsuario:fkUsuario},
-        include: reclamacaoFindIncludes
+        include: denunciaFindIncludes
     })
-    return reclamacoes;
+    return denuncias;
 }
-export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamacao | null> => {
-    const {Categorias, Imagens, ...reclamacaoBody} = body;
+export const postDenuncia = async (body : ICreateDenuncia):Promise<IDenuncia | null> => {
+    const {Categorias, Imagens, ...denunciaBody} = body;
     
     const pontuacao = gerarPontuacao(body);
 
-    const newReclamacao = {
+    const newDenuncia = {
       status: 0,
       pontuacao,
       data: new Date(),
-      ...reclamacaoBody
+      ...denunciaBody
     };
 
     //Cria reclamação
-    const reclamacao = await ReclamacaoModel.create(newReclamacao);
+    const denuncia = await DenunciaModel.create(newDenuncia);
 
     if(Imagens && Imagens.length > 0){
-        await createImagemReclamacao(Imagens, reclamacao.id);
+        await createImagemDenuncia(Imagens, denuncia.id);
     }
 
     // Criando registro de associação
     if(Categorias && Categorias.length > 0)
-        await createCategoryReclamacao(Categorias, reclamacao.id)
+        await createCategoryDenuncia(Categorias, denuncia.id)
 
-    const response = await ReclamacaoModel.findByPk(reclamacao.id, 
+    const response = await DenunciaModel.findByPk(denuncia.id, 
     {
-        include: reclamacaoFindIncludes
+        include: denunciaFindIncludes
     })
 
     if(!response)
@@ -157,24 +157,24 @@ export const postReclamacao = async (body : ICreateReclamacao):Promise<IReclamac
     return response
 }
 
-export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Promise<IReclamacao> => {
+export const putDenuncia = async(idDenuncia : number, body: IDenuncia):Promise<IDenuncia> => {
     body.pontuacao = gerarPontuacao(body);
     
-    await ReclamacaoModel.update(body, {
+    await DenunciaModel.update(body, {
         where :{
-            id: idReclamacao
+            id: idDenuncia
         }
     })
 
     if(body.Categorias)
-        await updateCategoryReclamacao(body.Categorias, idReclamacao);
+        await updateCategoryDenuncia(body.Categorias, idDenuncia);
 
     if(body.Imagens){
-        await updateImagemReclamacao(body.Imagens, idReclamacao)
+        await updateImagemDenuncia(body.Imagens, idDenuncia)
     }
 
-    const response = await ReclamacaoModel.findByPk(idReclamacao, {
-        include: reclamacaoFindIncludes
+    const response = await DenunciaModel.findByPk(idDenuncia, {
+        include: denunciaFindIncludes
     })
 
     if(!response){
@@ -184,22 +184,22 @@ export const putReclamacao = async(idReclamacao : number, body: IReclamacao):Pro
     return response
 }
 
-export const deleteReclamacao = async(idReclamacao : number): Promise<IReclamacao> => {
-    const reclamacao = await ReclamacaoModel.findByPk(idReclamacao, {
-        include: reclamacaoFindIncludes
+export const deleteDenuncia = async(idDenuncia : number): Promise<IDenuncia> => {
+    const denuncia = await DenunciaModel.findByPk(idDenuncia, {
+        include: denunciaFindIncludes
     }); 
     
-    if(!reclamacao){
+    if(!denuncia){
         throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
     }
     
     //Associações com categorias e reclamações são excluidas com cascade
-    await reclamacao.destroy();
+    await denuncia.destroy();
 
-    return reclamacao
+    return denuncia
 }
 
-function gerarPontuacao(bodyRequest : ICreateReclamacao | IReclamacao): number {
+function gerarPontuacao(bodyRequest : ICreateDenuncia | IDenuncia): number {
     let pontuacao = 0;
     // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
     if(bodyRequest.Imagens && bodyRequest.Imagens?.length > 0){

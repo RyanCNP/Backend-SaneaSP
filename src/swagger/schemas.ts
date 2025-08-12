@@ -57,7 +57,7 @@
  *           type: string
  *           example: "Apto 45"
  *           description: "Complemento do endereço"
- *     Reclamacao:
+ *     Denuncia:
  *       type: object
  *       properties:
  *         id:

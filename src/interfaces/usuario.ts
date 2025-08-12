@@ -1,6 +1,6 @@
 import { Op } from "sequelize"
 import { UserLevel } from "../enums/UserLevel.enum"
-import { IEndereco } from "./IEndereco.interface"
+import { IEndereco } from "./endereco"
 
 export interface IUser {
     id?: number,

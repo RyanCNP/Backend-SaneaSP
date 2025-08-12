@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import dotenv from "dotenv";
-import { ITokenDecode } from "../interfaces/ITokenDecode.interface";
+import { ITokenDecode } from "../interfaces/token-decode";
 import { jwtDecode } from "jwt-decode";
 import { UserModel } from "../models/user.model";
 import { JsonWebTokenError } from "jsonwebtoken";

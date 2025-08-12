@@ -1,4 +1,4 @@
-export enum StatusReclamacao{
+export enum StatusDenuncia{
     Aberto,
     Visualizada,
     Analise,

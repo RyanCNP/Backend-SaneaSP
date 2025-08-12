@@ -1,9 +1,9 @@
-import { ICategoria } from "../interfaces/ICategoria.interface";
-import { ICategoriaListFilter } from "../interfaces/ICategoriaListFilter.interface";
+import { ICategoriaListFilter } from "../interfaces/categoria-list-filter";
 import { CategoriaModel } from "../models/categoria.model";
 import { FindOptions, Op } from "sequelize";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
+import { ICategoria } from "../interfaces/categoria";
 
 export const getCategoriaList = async (categoriaFilter : ICategoriaListFilter) : Promise<ICategoria[]> => {
   const {nome, limit} = categoriaFilter;

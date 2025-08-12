@@ -1,7 +1,7 @@
 import express from "express";
 import cors from 'cors'
 import categoriaRoutes from "./src/routes/categoria.routes";
-import reclamacaoRoutes from "./src/routes/reclamacao.routes";
+import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
 import { authRoutes } from "./src/routes/auth.routes";
 import { setupSwagger } from "./src/swagger/swagger";
@@ -15,7 +15,7 @@ app.use(cors()) //Habilita o CORS Cross-Origin resource sharing
 app.use(express.json());
 
 app.use("/categoria", categoriaRoutes);
-app.use("/reclamacao", reclamacaoRoutes);
+app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes)
 app.use("/auth", authRoutes)
 
