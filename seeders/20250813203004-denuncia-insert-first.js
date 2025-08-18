@@ -7,7 +7,7 @@ module.exports = {
       {
         titulo: "Falta de abastecimento de água",
         descricao: "Há três dias o bairro está sem água, afetando diversas famílias. A situação está insustentável, pois as pessoas não conseguem realizar atividades básicas como cozinhar, tomar banho ou lavar roupas. Entramos em contato com a companhia de saneamento, mas até agora não houve retorno sobre o motivo da interrupção ou previsão de normalização.",
-        data: "2024-11-28",
+        data: new Date(),
         status: 0,
         cep: "18050600",
         cidade: "Sorocaba",
@@ -22,11 +22,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete('denuncia', null, {})
   },
 };
