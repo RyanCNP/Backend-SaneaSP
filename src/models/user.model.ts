@@ -14,6 +14,7 @@ export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public cpf!: string;
     public endereco?: IEndereco;
     public nivel!: UserLevel;
+    public active!: boolean;
 }
 
 UserModel.init({
@@ -61,6 +62,12 @@ UserModel.init({
         allowNull: false,
         defaultValue: UserLevel.COMMON,
         field: 'nivel'
+    },
+    active: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'active'
     }
 }, {
     tableName: 'usuario',

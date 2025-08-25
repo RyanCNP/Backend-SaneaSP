@@ -11,6 +11,7 @@ export interface IUser {
     cpf: string,
     endereco?: IEndereco,
     nivel: UserLevel
+    active: boolean
 }
 
 export interface IUserListFilters {
