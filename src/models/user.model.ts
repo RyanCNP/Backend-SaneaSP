@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/database.config";
 import { IEndereco } from "../interfaces/endereco";
 import { IUser, UserLevel } from "../interfaces/usuario";
 
