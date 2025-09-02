@@ -6,6 +6,8 @@ import userRoutes from "./src/routes/user.routes";
 import { authRoutes } from "./src/routes/auth.routes";
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
+import  uploadRoutes  from "./src/routes/upload.routes";
+import path from "path";
 
 const app = express();
 
@@ -18,6 +20,10 @@ app.use("/categoria", categoriaRoutes);
 app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes)
 app.use("/auth", authRoutes)
+app.use("/public", express.static(path.join(__dirname, "../public")));
+
+// Rotas
+app.use("/upload", uploadRoutes);
 
 app.use(errorHandler)
 
