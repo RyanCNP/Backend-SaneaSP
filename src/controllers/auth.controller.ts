@@ -51,7 +51,7 @@ export const registerUser = async (newUser: IUserCreationAttributes) => {
     { expiresIn: "24h" }
   );
 
-  const templatePath = path.join(__dirname, "..", "templates", "confirmationEmail.html");
+  const templatePath = path.join(__dirname, "..", "templates", "registrationConfirmation.html");
   let html = fs.readFileSync(templatePath, "utf-8");
 
   const confirmationLink = `${process.env.APP_URL}/auth/confirm/${verificationToken}`;
