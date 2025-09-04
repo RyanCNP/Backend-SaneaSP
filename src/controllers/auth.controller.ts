@@ -20,8 +20,8 @@ export const autenticar = async (email: string, password: string) => {
     throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
   }
 
-  const secretKey: string = process.env.SECRET_KEY || "";
-  const expiresIn: any = process.env.EXPIRES_IN || "";
+  const secretKey : string = process.env.SECRET_KEY || "";
+  const expiresIn : any = process.env.EXPIRES_IN || "";
 
   if (!secretKey || !expiresIn) {
     console.warn("❌ SECRET_KEY e EXPIRES_IN devem ser definidas, verifique o arquivo .env");
@@ -29,9 +29,9 @@ export const autenticar = async (email: string, password: string) => {
   }
 
   const token = jwt.sign(
-    { id: user.id },
+    {id: user.id},
     secretKey,
-    { expiresIn }
+    {expiresIn}
   );
 
   return token;
