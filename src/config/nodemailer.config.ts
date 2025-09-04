@@ -1,16 +1,24 @@
-import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
+import nodemailer, { Transporter } from "nodemailer";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+function createTransporter(): Transporter {
+  if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    throw new Error("❌ As variáveis SMTP_HOST, SMTP_PORT, SMTP_USER e SMTP_PASS devem estar definidas no .env");
   }
-});
 
-export default transporter;
+  const port = Number(process.env.SMTP_PORT);
+
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port,
+    secure: false,
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
+
+export const transporter = createTransporter();
