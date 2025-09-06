@@ -14,25 +14,34 @@ dotenv.config();
 export const autenticar = async (email: string, password: string) => {
   const user = await UserModel.findOne({ where: { email } });
 
-  const isMatch = user && (await bcrypt.compare(password, user.senha));
+  if (!user) {
+    throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
+  }
+
+  const isMatch = await bcrypt.compare(password, user.senha);
 
   if (!isMatch) {
     throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
   }
 
-  const secretKey : string = process.env.SECRET_KEY || "";
-  const expiresIn : any = process.env.EXPIRES_IN || "";
+  if (!user.verified) {
+    throw new ApiError(
+      "Cadastro ainda não confirmado. Verifique seu e-mail.",
+      HttpCode.Unautorized
+    );
+  }
+
+  const secretKey: string = process.env.SECRET_KEY || "";
+  const expiresIn: any = process.env.EXPIRES_IN || "";
 
   if (!secretKey || !expiresIn) {
-    console.warn("❌ SECRET_KEY e EXPIRES_IN devem ser definidas, verifique o arquivo .env");
+    console.warn(
+      "❌ SECRET_KEY e EXPIRES_IN devem ser definidas, verifique o arquivo .env"
+    );
     throw new Error("Erro interno de servidor");
   }
 
-  const token = jwt.sign(
-    {id: user.id},
-    secretKey,
-    {expiresIn}
-  );
+  const token = jwt.sign({ id: user.id }, secretKey, { expiresIn });
 
   return token;
 };
