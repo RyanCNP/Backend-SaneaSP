@@ -10,7 +10,8 @@ export interface IUser {
     senha: string,
     cpf: string,
     endereco?: IEndereco,
-    nivel: UserLevel
+    nivel: UserLevel,
+    verified: boolean
 }
 
 export interface IUserListFilters {

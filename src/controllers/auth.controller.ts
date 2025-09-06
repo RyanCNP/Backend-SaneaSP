@@ -6,6 +6,9 @@ import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
 import { IUser } from "../interfaces/usuario";
 import { uniqueUserValidator } from "./user.controller";
+import { transporter } from "../config/nodemailer.config";
+import fs from "fs";
+import path from "path";
 dotenv.config();
 
 export const autenticar = async (email: string, password: string) => {
@@ -34,12 +37,32 @@ export const autenticar = async (email: string, password: string) => {
   return token;
 };
 
-export const registerUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
-    const salt = await bcrypt.genSalt(10);
-    newUser.senha = await bcrypt.hash(newUser.senha, salt);
-   
-    //Verifica se o nome, email e CPF estão disponíveis, caso contrário lança ApiError
-    await uniqueUserValidator(newUser);
-    
-    return await UserModel.create(newUser);;
-}
+export const registerUser = async (newUser: IUserCreationAttributes) => {
+  const salt = await bcrypt.genSalt(10);
+  newUser.senha = await bcrypt.hash(newUser.senha, salt);
+
+  await uniqueUserValidator(newUser);
+
+  const user = await UserModel.create(newUser);
+
+  const verificationToken = jwt.sign(
+    { id: user.id },
+    process.env.SECRET_KEY || "",
+    { expiresIn: "24h" }
+  );
+
+  const templatePath = path.join(__dirname, "..", "templates", "registrationConfirmation.html");
+  let html = fs.readFileSync(templatePath, "utf-8");
+
+  const confirmationLink = `${process.env.APP_URL}/auth/confirm/${verificationToken}`;
+  html = html.replace(/{{nome}}/g, user.nome).replace(/\[LINK_CONFIRMACAO\]/g, confirmationLink);
+
+  await transporter.sendMail({
+    from: `"SaneaSP" <${process.env.SMTP_USER}>`,
+    to: user.email,
+    subject: "Confirme seu cadastro - SaneaSP",
+    html,
+  });
+
+  return user;
+};
