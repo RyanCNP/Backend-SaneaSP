@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
+import sequelize from "../config/database.config";
 import { IEndereco } from "../interfaces/endereco";
 import { IUser, UserLevel } from "../interfaces/usuario";
 
@@ -14,7 +14,7 @@ export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public cpf!: string;
     public endereco?: IEndereco;
     public nivel!: UserLevel;
-    public active!: boolean;
+    public verified!: boolean;
 }
 
 UserModel.init({
@@ -63,11 +63,11 @@ UserModel.init({
         defaultValue: UserLevel.COMMON,
         field: 'nivel'
     },
-    active: {
+    verified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-        field: 'active'
+        field: 'verified'
     }
 }, {
     tableName: 'usuario',
