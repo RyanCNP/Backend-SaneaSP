@@ -1,7 +1,8 @@
 import { ApiError } from "../errors/ApiError.error";
+import { DataLocation } from "../interfaces/data-location";
 
 const API_KEY = process.env.LOCATIONIQ_KEY;
-export const geoconding = async (address: any): Promise<Location | ApiError> => {
+export const geoconding = async (address: any): Promise<DataLocation | ApiError> => {
     const url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${encodeURIComponent(address)}&format=json`;
     const response = await fetch(url);
 
@@ -10,12 +11,12 @@ export const geoconding = async (address: any): Promise<Location | ApiError> => 
     }
     const data: any[] = await response.json();
 
-    const coordanates: Location = data[0]
+    const coordanates: DataLocation = data[0]
 
     return coordanates;
 }
 
-export const reverGeocolding = async (lat: number, lon: number): Promise<Location | ApiError> => {
+export const reverGeocolding = async (lat: number, lon: number): Promise<DataLocation | ApiError> => {
     const url = `us1.locationiq.com/v1/reverse.php?key=${API_KEY}&lat=${lat}&lon=${lon}&format=json`;
 
     const response = await fetch(url);
@@ -24,7 +25,7 @@ export const reverGeocolding = async (lat: number, lon: number): Promise<Locatio
     }
     const data: any[] = await response.json();
 
-    const address: Location = data[0]
+    const address: DataLocation = data[0]
 
     return address;
 }

@@ -1,4 +1,4 @@
-export interface Location{
+export interface DataLocation{
     lat: number,
     lon: number,
     address:{
