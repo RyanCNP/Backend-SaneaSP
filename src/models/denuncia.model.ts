@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { IDenuncia } from "../interfaces/denuncia";
 import { StatusDenuncia } from "../enums/statusDenuncia.enum";
-import sequelize from "../config/database";
+import sequelize from "../config/database.config";
 
 type DenunciaCreationalAttributes = Optional<IDenuncia, "id">
 

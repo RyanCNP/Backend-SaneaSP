@@ -43,6 +43,11 @@ module.exports = {
           type: DataTypes.INTEGER,
           allowNull: false,
           defaultValue: 0
+        },
+        verified: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         }
       });
   },
