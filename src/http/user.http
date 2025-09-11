@@ -36,14 +36,14 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json
 
 {
-    "nome": "UserTes123t2",
-    "telefone": "(12) 34567-8901",
-    "email": "usertestasd1email@gmail.com",
-    "senha": "user1password1234",
-    "cpf": "123.456.789-02",
-    "cep": "121345-678",
-    "endereco": "Rua Carmelina Garcia, 303, Votorantim - SP",
-    "nivel": 0
+    "nome": "Matheus Augusto Gueff",
+    "telefone": "(19) 99655-3967",
+    "email": "davy@gmail.com",
+    "senha": "Mudar@123",
+    "cpf": "487.394.988-24",
+    "cep": "13092-367",
+    "endereco": "Rua Rachid Elias Zakia, Campinas, SP",
+    "nivel": 1
 }
 
 ###
