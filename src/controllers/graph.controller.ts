@@ -1,13 +1,13 @@
 
 
 import sequelize, { FindAttributeOptions, Sequelize } from "sequelize";
-import { IfilterGraph } from "../interfaces/graph";
+import { BigPoints, IfilterGraph } from "../interfaces/graph";
 import { DenunciaModel } from "../models";
 
-export const getBigPoints = async(params:IfilterGraph) =>{
+export const getBigPoints = async(params:IfilterGraph):Promise<BigPoints[]> =>{
     let groupBy:string = 'cidade';
     let whereCidade:any = {};
-    let selects: FindAttributeOptions = ['cidade', [sequelize.fn('SUM',sequelize.col('pontuacao')),'total']];
+    let selects: FindAttributeOptions = ['cidade', [sequelize.fn('SUM',sequelize.col('pontuacao')),'pontuacao']];
     if(params.cidade){
         whereCidade = {
             cidade : params.cidade
@@ -19,11 +19,11 @@ export const getBigPoints = async(params:IfilterGraph) =>{
        attributes : selects,
        where: whereCidade,
        order:[
-        ['total','DESC']
+        ['pontuacao','DESC']
        ],
        group:groupBy,
        limit: params?.limit || 10
 
     })
-    return result;
+    return result as unknown as BigPoints[];
 }

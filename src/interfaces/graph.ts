@@ -1,4 +1,4 @@
-import { StatusDenuncia } from "../enums/statusDenuncia.enum";
+import { StatusDenuncia } from './../enums/statusDenuncia.enum';
 
 export interface IfilterGraph{
     cidade ?: string,
@@ -8,4 +8,9 @@ export interface IfilterGraph{
     limit ?: number
     dataInicio ?: string,
     dataFinal ?: string,
+}
+export interface BigPoints{
+    cidade: string,
+    bairro ?: string,
+    pontuacao : number
 }
