@@ -23,27 +23,31 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.6",
     "pg": "^8.16.2",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "sqlite3": "^5.1.7",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "4.3",
-    "typescript": "^5.8.3"
+    "swagger-ui-express": "4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
+    "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^2.0.0",
     "@types/node": "^22.13.10",
+    "@types/nodemailer": "^7.0.1",
     "@types/pg": "^8.15.4",
     "@types/sequelize": "^4.28.20",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "sequelize-cli": "^6.6.2",
     "swagger-autogen": "^2.23.7",
+    "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.2"
   },
   "repository": {
     "type": "git",

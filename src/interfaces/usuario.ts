@@ -15,7 +15,8 @@ export interface IUser {
     rua ?: string,
     numero ?: string,
     complemento ?: string,
-    nivel: UserLevel
+    nivel: UserLevel,
+    verified: boolean
 }
 
 export interface IUserListFilters {

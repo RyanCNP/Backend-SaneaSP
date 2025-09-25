@@ -1,7 +1,9 @@
-import express, {Request, Response } from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { autenticar, registerUser} from "../controllers/auth.controller";
+import { autenticar, registerUser } from "../controllers/auth.controller";
 import { validateToken } from "../middlewares/auth.middleware";
+import jwt from "jsonwebtoken";
+import { UserModel } from "../models/user.model";
 dotenv.config();
 
 export const authRoutes = express.Router();
@@ -15,14 +17,26 @@ authRoutes.post("/login", async (req: Request, res: Response) => {
 
 //Cadastro
 authRoutes.post("/register", async (req: Request, res: Response) => {
-    const body = req.body;
-    const data = await registerUser(body);
+  const data = await registerUser(req.body);
 
-    res.status(201).json({
-        error: false,
-        message: "Cadastro realizado com sucesso",
-        data
-    });
+  res.status(201).json({
+    error: false,
+    message: "Cadastro realizado! Verifique seu e-mail para ativar sua conta.",
+    data,
+  });
+});
+
+// Rota de confirmação de cadastro
+authRoutes.get("/confirm/:token", async (req: Request, res: Response) => {
+  const { token } = req.params;
+  const secretKey = process.env.SECRET_KEY || "";
+  const decoded: any = jwt.verify(token, secretKey);
+
+  await UserModel.update(
+    { verified: true },
+    { where: { id: decoded.id } }
+  );
+  res.json({ message: "Conta verificada com sucesso!" });
 });
 
 //Dados do usuário logado
