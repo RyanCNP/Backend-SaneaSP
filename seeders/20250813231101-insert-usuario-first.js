@@ -11,7 +11,13 @@ module.exports = {
         email: "davy@gmail.com",
         senha: "$2b$10$LOQRWSEjJk0m0/EwRzgIGulqHgp2JP6pnQU87j3VV7xC11Oz8YwSu",
         cpf: "48739498824",
-        endereco: "Rua Rachid Elias Zakia, Campinas, SP",
+        rua: "Rua Horácio Scrosoppi",
+        numero: "282",
+        bairro: "Ipiranga",
+        cidade: "São Paulo",
+        complemento: null,
+        cep: "04275-020",
+
         nivel: 1,
       },
       {
@@ -21,7 +27,13 @@ module.exports = {
         email: "math@gmail.com",
         senha: "$2b$10$6nontGwjMnAdRyTuEvVpsu7Y4C3QcPBZnJ4/vaZNt9rsVW3m15vra",
         cpf: "37491871852",
-        endereco: "Praça Bom Jesus, 334, Jundiaí, SP",
+        rua: "Rua Henrique Dias",
+        numero: "387",
+        bairro: "Centro",
+        cidade: "Paulínia",
+        complemento: null,
+        cep: "13140-140",
+
         nivel: 1,
       },
       {
@@ -31,7 +43,13 @@ module.exports = {
         email: "ryan@gmail.com",
         senha: "$2b$10$WDwdCzFIYF4aBXIIvGfSnOMwSiuvdkTT/x8wimLLnPGNbJ6mDbnuK",
         cpf: "19353433860",
-        endereco: "Rua Henrique Dias, 387, Paulínia, SP",
+        rua: "Praça Bom Jesus",
+        numero: "334",
+        bairro: "Vila Arens",
+        cidade: "Jundiaí",
+        complemento: null,
+        cep: "13202-002",
+
         nivel: 1,
       },
       {
@@ -41,7 +59,13 @@ module.exports = {
         email: "pedro@gmail.com",
         senha: "$2b$10$NG.x/4SMYP.o7WjVAeTB2eA55RguGVFRuWGYoi8huF4UxZxiQSZWm",
         cpf: "58993165866",
-        endereco: "Rua Henrique Dias, 387, Paulínia, SP",
+        rua: "Praça Bom Jesus",
+        numero: "334",
+        bairro: "Vila Arens",
+        cidade: "Jundiaí",
+        complemento: null,
+        cep: "13202-002",
+
         nivel: 1,
       },
       {
@@ -51,7 +75,13 @@ module.exports = {
         email: "nery@gmail.com",
         senha: "$2b$10$m0NAZ4jKqJ7tBRdyFOKoqeoNmB3346VcPW0GjqJMjwQCgIIwumW8K",
         cpf: "14277895840",
-        endereco: "Rua Horácio Scrosoppi, 282, São Paulo, SP",
+        rua: "Rua Rachid Elias Zakia",
+        numero: null,
+        bairro: "Chácara Primavera",
+        cidade: "Campinas",
+        complemento: null,
+        cep: "13087-540",
+
         nivel: 1,
       },
     ]);
