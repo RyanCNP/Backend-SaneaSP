@@ -1,6 +1,6 @@
 import { Op } from "sequelize"
 import { UserLevel } from "../enums/UserLevel.enum"
-import { IEndereco } from "./endereco"
+
 
 export interface IUser {
     id?: number,
@@ -9,7 +9,12 @@ export interface IUser {
     email: string,
     senha: string,
     cpf: string,
-    endereco?: IEndereco,
+    cep ?: string,
+    cidade ?: string,
+    bairro ?: string,
+    rua ?: string,
+    numero ?: string,
+    complemento ?: string,
     nivel: UserLevel,
     verified: boolean
 }
