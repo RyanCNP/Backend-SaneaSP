@@ -31,7 +31,7 @@ app.use("/graph", graphRoutes);
 
 app.use("/location",locationRoutes)
 // Acesso público às imagens
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 // Middleware de erro
 app.use(errorHandler);
