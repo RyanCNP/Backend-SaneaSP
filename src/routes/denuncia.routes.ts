@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { deleteDenuncia, getAllDenuncias, getById, getByUsuario, postDenuncia, putDenuncia, getByCategoria } from "../controllers/denuncia.controller";
 import { ICreateDenuncia, IFilterListDenuncia } from "../interfaces/denuncia";
 import { validateToken } from "../middlewares/auth.middleware";
