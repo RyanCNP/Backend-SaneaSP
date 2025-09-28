@@ -1,6 +1,6 @@
 import { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia";
-import { Op} from "sequelize";
-import { CategoriaModel, ImagemDenunciaModel, DenunciaModel} from "../models";
+import { Op } from "sequelize";
+import { CategoriaModel, ImagemDenunciaModel, DenunciaModel } from "../models";
 import { createCategoryDenuncia, updateCategoryDenuncia } from "./categoria-denuncia.controller";
 import { createImagemDenuncia, updateImagemDenuncia } from "./imagem-denuncia.controller";
 import { ApiError } from "../errors/ApiError.error";
@@ -10,23 +10,23 @@ const denunciaFindIncludes = [
     {
         //Trazer as categorias da reclamação
         model: CategoriaModel,
-        as: 'Categorias',  
+        as: 'Categorias',
         through: { attributes: [] } //Para dados da tabela associativa CategoriaDenuncias nao vierem juntos do resultado
     },
     {
         //Trazer as imagens da reclamação
         model: ImagemDenunciaModel,
         as: 'Imagens',
-        attributes: {exclude : ['id_denuncia']},
+        attributes: { exclude: ['id_denuncia'] },
     }
 ]
 
-export const getAllDenuncias = async (filtros : IFilterListDenuncia): Promise<IDenuncia[]> =>{
+export const getAllDenuncias = async (filtros: IFilterListDenuncia): Promise<IDenuncia[]> => {
     let query: any = {
-        where : {},
+        where: {},
         include: denunciaFindIncludes
     }
-    if(filtros){
+    if (filtros) {
         if (filtros.titulo) {
             query.where.titulo = {
                 [Op.like]: `%${filtros.titulo}%`
@@ -63,7 +63,7 @@ export const getAllDenuncias = async (filtros : IFilterListDenuncia): Promise<ID
         //         [Op.like]: `%${filtros.data}%`
         //     };
         // }
-        if(filtros.pontuacao){
+        if (filtros.pontuacao) {
             query.where.pontuacao = {
                 [Op.like]: `${filtros.pontuacao}`
             }
@@ -73,103 +73,103 @@ export const getAllDenuncias = async (filtros : IFilterListDenuncia): Promise<ID
     return denuncias
 };
 
-export const getById = async (idDenuncia: number): Promise<IDenuncia | null> =>{
+export const getById = async (idDenuncia: number): Promise<IDenuncia | null> => {
     const denuncia = await DenunciaModel.findOne(
-    {
-        where:{id : idDenuncia},
-        include: denunciaFindIncludes
-    });
+        {
+            where: { id: idDenuncia },
+            include: denunciaFindIncludes
+        });
 
-    if(!denuncia)
+    if (!denuncia)
         throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound)
 
     return denuncia;
 }
-export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
+export const getByCategoria = async (categorias: number[], idUsuario?: number) => {
     let query: any = {
-        where : {},
+        where: {},
         include: [
-    {
-        model: CategoriaModel,
-        as: 'categoriasSelecionadas',  
-        through: { attributes: [] },
-        where:{id:categorias},
-        require:true
-    },
-    {
-        model: CategoriaModel,
-        as: 'Categorias',
-        through: { attributes: [] },
+            {
+                model: CategoriaModel,
+                as: 'categoriasSelecionadas',
+                through: { attributes: [] },
+                where: { id: categorias },
+                require: true
+            },
+            {
+                model: CategoriaModel,
+                as: 'Categorias',
+                through: { attributes: [] },
 
-    },
-    {
-        //Trazer as imagens da reclamação
-        model: ImagemDenunciaModel,
-        as: 'Imagens',
-        attributes: {exclude : ['id_denuncia']},
-    }
-]
+            },
+            {
+                //Trazer as imagens da reclamação
+                model: ImagemDenunciaModel,
+                as: 'Imagens',
+                attributes: { exclude: ['id_denuncia'] },
+            }
+        ]
     };
-    if(idUsuario){
+    if (idUsuario) {
         query.where.idUsuario = idUsuario
     }
     const denuncias = await DenunciaModel.findAll(query);
     return denuncias
 }
-export const getByUsuario = async(fkUsuario: number)=>{
+export const getByUsuario = async (fkUsuario: number) => {
     const denuncias = await DenunciaModel.findAll({
-        where:{idUsuario:fkUsuario},
+        where: { idUsuario: fkUsuario },
         include: denunciaFindIncludes
     })
     return denuncias;
 }
-export const postDenuncia = async (body : ICreateDenuncia):Promise<IDenuncia | null> => {
-    const {Categorias, Imagens, ...denunciaBody} = body;
-    
+export const postDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia | null> => {
+    const { Categorias, Imagens, ...denunciaBody } = body;
+
     const pontuacao = gerarPontuacao(body);
 
     const newDenuncia = {
-      status: 0,
-      pontuacao,
-      data: new Date(),
-      ...denunciaBody
+        status: 0,
+        pontuacao,
+        data: new Date(),
+        ...denunciaBody
     };
 
     //Cria reclamação
     const denuncia = await DenunciaModel.create(newDenuncia);
 
-    if(Imagens && Imagens.length > 0){
+    if (Imagens && Imagens.length > 0) {
         await createImagemDenuncia(Imagens, denuncia.id);
     }
 
     // Criando registro de associação
-    if(Categorias && Categorias.length > 0)
+    if (Categorias && Categorias.length > 0)
         await createCategoryDenuncia(Categorias, denuncia.id)
 
-    const response = await DenunciaModel.findByPk(denuncia.id, 
-    {
-        include: denunciaFindIncludes
-    })
+    const response = await DenunciaModel.findByPk(denuncia.id,
+        {
+            include: denunciaFindIncludes
+        })
 
-    if(!response)
+    if (!response)
         throw new ApiError("Não foi possível cadastrar a reclamação", HttpCode.BadRequest)
-    
+
     return response
 }
 
-export const putDenuncia = async(idDenuncia : number, body: IDenuncia):Promise<IDenuncia> => {
+export const putDenuncia = async (idDenuncia: number, body: IDenuncia): Promise<IDenuncia> => {
     body.pontuacao = gerarPontuacao(body);
-    
+
     await DenunciaModel.update(body, {
-        where :{
+        where: {
             id: idDenuncia
         }
     })
 
-    if(body.Categorias)
+    if (body.Categorias)
         await updateCategoryDenuncia(body.Categorias, idDenuncia);
 
-    if(body.Imagens){
+    if (body.Imagens) {
         await updateImagemDenuncia(body.Imagens, idDenuncia)
     }
 
@@ -177,43 +177,43 @@ export const putDenuncia = async(idDenuncia : number, body: IDenuncia):Promise<I
         include: denunciaFindIncludes
     })
 
-    if(!response){
+    if (!response) {
         throw new ApiError("Não foi possível editar a reclamação", HttpCode.BadRequest)
     }
 
     return response
 }
 
-export const deleteDenuncia = async(idDenuncia : number): Promise<IDenuncia> => {
+export const deleteDenuncia = async (idDenuncia: number): Promise<IDenuncia> => {
     const denuncia = await DenunciaModel.findByPk(idDenuncia, {
         include: denunciaFindIncludes
-    }); 
-    
-    if(!denuncia){
+    });
+
+    if (!denuncia) {
         throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
     }
-    
+
     //Associações com categorias e reclamações são excluidas com cascade
     await denuncia.destroy();
 
     return denuncia
 }
 
-function gerarPontuacao(bodyRequest : ICreateDenuncia | IDenuncia): number {
+function gerarPontuacao(bodyRequest: ICreateDenuncia | IDenuncia): number {
     let pontuacao = 0;
     // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
-    if(bodyRequest.Imagens && bodyRequest.Imagens?.length > 0){
+    if (bodyRequest.Imagens && bodyRequest.Imagens?.length > 0) {
         pontuacao += 100 * bodyRequest.Imagens.length;
     }
 
     // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
-    if(bodyRequest.Categorias && bodyRequest.Categorias?.length > 0){
+    if (bodyRequest.Categorias && bodyRequest.Categorias?.length > 0) {
         pontuacao += 100 * bodyRequest.Categorias.length;
     }
 
-    if(bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade){
+    if (bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade) {
         pontuacao += 200
     }
-    
+
     return pontuacao
 }
