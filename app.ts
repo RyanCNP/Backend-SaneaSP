@@ -7,7 +7,7 @@ import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
 import locationRoutes from "./src/routes/location.routes"
 import { authRoutes } from "./src/routes/auth.routes";
-import multerImagesRoutes from "./src/routes/multer-images.routes";
+import uploadRoutes from "./src/routes/upload.routes";
 import graphRoutes from "./src/routes/graph.routes";
 
 import { setupSwagger } from "./src/swagger/swagger";
@@ -26,7 +26,7 @@ app.use("/categoria", categoriaRoutes);
 app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
-app.use("/upload", multerImagesRoutes);
+app.use("/upload", uploadRoutes);
 app.use("/graph", graphRoutes);
 
 app.use("/location",locationRoutes)
