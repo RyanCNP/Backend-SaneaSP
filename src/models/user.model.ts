@@ -28,12 +28,12 @@ UserModel.init({
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
-        field: 'id_usuario'
+        field: 'id'
     },
     nome: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        field: 'nome_usuario'
+        field: 'nome'
     },
     telefone: {
         type: DataTypes.STRING(14),
