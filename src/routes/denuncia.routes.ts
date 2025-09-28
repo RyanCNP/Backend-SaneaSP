@@ -1,7 +1,10 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, {Request, Response } from "express";
 import { deleteDenuncia, getAllDenuncias, getById, getByUsuario, postDenuncia, putDenuncia, getByCategoria } from "../controllers/denuncia.controller";
-import { ICreateDenuncia, IFilterListDenuncia } from "../interfaces/denuncia";
+import { ICreateDenuncia, IDenuncia, IFilterListDenuncia } from "../interfaces/denuncia";
 import { validateToken } from "../middlewares/auth.middleware";
+import { uploadImages } from "../config/multer.config";
+import { createImagemDenuncia, deleteImagemDenuncia, updateImagemDenuncia } from "../controllers/imagem-denuncia.controller";
+import { IImagemDenunciaCreate } from "../interfaces/imagem-denuncia";
 
 const router = express.Router()
 
@@ -54,26 +57,53 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.use(validateToken);
 
-router.post('/', async (req: Request, res: Response) =>{
-    const body:ICreateDenuncia = req.body;
+router.post('/', uploadImages.array('imagens', 10), async (req: Request, res: Response) => {
+    const body: ICreateDenuncia = req.body;
     body.idUsuario = req.user.id as number;
-    const denuncia = await postDenuncia(body);
+    const files = req.files as Express.Multer.File[];
+
+    // 1. Cria a denúncia
+    let denuncia :IDenuncia = await postDenuncia(body);
+
+    // 2. Se há imagens, cria no banco
+    if (files && files.length > 0) {
+        const fileNames = files.map(file => file.filename);
+        const createdImages : IImagemDenunciaCreate[] = await createImagemDenuncia(fileNames, denuncia.id);
+
+        if(createdImages.length > 0){
+            denuncia = await getById(denuncia.id);
+        }
+    }
+
     res.status(201).json(denuncia);
-})
-
-router.put('/:id', async (req:Request, res: Response) =>{
-    const id = Number(req.params.id);
-    const body = req.body;
-
-    //Verifica se existe a reclamação com o id passado, caso contrário lança ApiError
-    await getById(id);
-    const result = await putDenuncia(id,body);
-    res.status(200).json(result)
 });
+
+router.put('/:id', uploadImages.array('imagens', 10), async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const body = req.body;
+  const files = req.files as Express.Multer.File[];
+  const fileNames = files?.map(file => file.filename) || [];
+
+  // 1 Verifica se a denúncia existe e lança APIERROR caso contrário
+  await getById(id);
+
+  // 2 Atualiza campos da denúncia
+  await putDenuncia(id, body);
+
+  // 3 Atualiza as imagens da denuncia
+  await updateImagemDenuncia(fileNames, id);
+  
+  // 4 Recupera a denúncia atualizada com imagens e categorias
+  const updatedDenuncia = await getById(id);
+
+  res.status(200).json(updatedDenuncia);
+});
+
 
 router.delete('/:id',async(req:Request,res:Response)=>{
     const idDenuncia = Number(req.params.id);
     const result = await deleteDenuncia(idDenuncia);
+    await deleteImagemDenuncia(idDenuncia);
     res.status(200).json(result)
 });
 

@@ -73,7 +73,7 @@ export const getAllDenuncias = async (filtros: IFilterListDenuncia): Promise<IDe
     return denuncias
 };
 
-export const getById = async (idDenuncia: number): Promise<IDenuncia | null> => {
+export const getById = async (idDenuncia: number): Promise<IDenuncia> => {
     const denuncia = await DenunciaModel.findOne(
         {
             where: { id: idDenuncia },
@@ -123,7 +123,7 @@ export const getByUsuario = async (fkUsuario: number) => {
     })
     return denuncias;
 }
-export const postDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia | null> => {
+export const postDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia> => {
     const { Categorias, Imagens, ...denunciaBody } = body;
 
     const pontuacao = gerarPontuacao(body);
