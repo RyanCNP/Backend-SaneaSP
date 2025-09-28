@@ -2,7 +2,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-export const uploadDir = path.join(__dirname, "../../uploads");
+export const uploadDir = path.join(__dirname, "../../public");
 
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
@@ -23,10 +23,11 @@ const fileFilter: multer.Options["fileFilter"] = (_req, file, cb) => {
 };
 
 const limits = {
-    fileSize: 1024 * 1024 * 5,
+    fieldNameSize: 150,
+    fileSize: 1024*1024*5,
 };
 
-export const upload = multer({
+export const uploadImages = multer({
     fileFilter,
     limits,
     storage
