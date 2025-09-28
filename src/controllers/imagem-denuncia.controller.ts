@@ -1,5 +1,5 @@
 import { ImagemDenunciaModel } from "../models";
-import { removeFiles } from "./multer-images.controller";
+import { removeFiles } from "./imagem-multer.controller";
 import { Op } from "sequelize";
 
 export const createImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
