@@ -1,5 +1,4 @@
 import { ImagemDenunciaModel } from "../models";
-import { removeFiles } from "./imagem-multer.controller";
 import { Op } from "sequelize";
 
 export const createImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
@@ -23,7 +22,6 @@ export const updateImagemDenuncia = async (fileNames: string[], id_denuncia: num
 
     // Remove do disco e do banco
     if (filesToRemove.length > 0) {
-        await removeFiles(filesToRemove);
         await ImagemDenunciaModel.destroy({
             where: {
                 nome: { [Op.in]: filesToRemove },
@@ -46,7 +44,6 @@ export const deleteImagemDenuncia = async (id_denuncia: number) => {
     const imageNames = images.map(img => img.nome);
 
     if (imageNames.length > 0) {
-        await removeFiles(imageNames);
         await ImagemDenunciaModel.destroy({ where: { id_denuncia } });
     }
 };
