@@ -141,4 +141,4 @@ node_modules
 database.sqlite
 
 # Multer
-uploads
+public
