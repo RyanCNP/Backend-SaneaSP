@@ -1,37 +1,52 @@
-import { Op } from "sequelize"
-import { ImagemDenunciaModel } from "../models"
+import { ImagemDenunciaModel } from "../models";
+import { removeFiles } from "./multer-images.controller";
+import { Op } from "sequelize";
 
-export const createImagemDenuncia = async (imagesNames : string[], id_denuncia : number) => {
-    //TODO: Adicionar forma de criação de nome único para imagem (como concatenação com timestamp)
-    const newImages = imagesNames.map(imageName => ({
-        nome :imageName, 
-        id_denuncia
-    }))
+export const createImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
+    if (!fileNames || fileNames.length === 0) {
+        throw new Error("Nenhum arquivo enviado.");
+    }
 
-    await ImagemDenunciaModel.bulkCreate(newImages)
-}
+    const newImages = fileNames.map(nome => ({ nome, id_denuncia }));
+    await ImagemDenunciaModel.bulkCreate(newImages);
 
-export const updateImagemDenuncia = async(updatedImageNames : string[], id_denuncia : number) => {
-    const oldImages = await ImagemDenunciaModel.findAll({where : {id_denuncia}})
-    const oldImageNames = oldImages.map(img => img.nome)
+    return newImages;
+};
 
-    //Verificando as imagens que já existiam
-    const imagesToRemove = oldImageNames.filter(oldImage => !updatedImageNames.includes(oldImage))
+export const updateImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
+    // Recupera imagens antigas do banco
+    const oldImages = await ImagemDenunciaModel.findAll({ where: { id_denuncia } });
+    const oldImageNames = oldImages.map(img => img.nome);
 
-    //Removendo todas imagens que não estão mais atreladas a reclamação
-    if(imagesToRemove.length > 0){
-        await ImagemDenunciaModel.destroy(
-        {
-            where : 
-            {
-                nome : {[Op.in] : imagesToRemove},
+    // Determina arquivos que devem ser removidos
+    const filesToRemove = oldImageNames.filter(name => !fileNames.includes(name));
+
+    // Remove do disco e do banco
+    if (filesToRemove.length > 0) {
+        await removeFiles(filesToRemove);
+        await ImagemDenunciaModel.destroy({
+            where: {
+                nome: { [Op.in]: filesToRemove },
                 id_denuncia
             }
-        })
-    }   
+        });
+    }
 
-    //Criando os relacionamentos que não existiam antes
-    const newImages = updatedImageNames.filter(imagem => !oldImageNames.includes(imagem))
+    // Determina novas imagens a adicionar
+    const newImages = fileNames.filter(name => !oldImageNames.includes(name));
+    if (newImages.length > 0) {
+        await createImagemDenuncia(newImages, id_denuncia);
+    }
 
-    if(newImages.length > 0)await createImagemDenuncia(newImages, id_denuncia)
-}
+    return await ImagemDenunciaModel.findAll({ where: { id_denuncia } });
+};
+
+export const deleteImagemDenuncia = async (id_denuncia: number) => {
+    const images = await ImagemDenunciaModel.findAll({ where: { id_denuncia } });
+    const imageNames = images.map(img => img.nome);
+
+    if (imageNames.length > 0) {
+        await removeFiles(imageNames);
+        await ImagemDenunciaModel.destroy({ where: { id_denuncia } });
+    }
+};
