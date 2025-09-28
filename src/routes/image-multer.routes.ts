@@ -24,7 +24,7 @@ router.get('/imagens', async (req: Request, res: Response) => {
         files: files.map(file => path.join(uploadDir, file))
     })
 })
-
+/*
 router.get('/imagens/:filename', async (req: Request, res: Response) => {
     const { filename } = req.params;
     const filePath = path.join(uploadDir, filename);
@@ -49,5 +49,5 @@ router.delete('/imagens/remover/:filename', async (req: Request, res: Response) 
     fs.unlinkSync(filePath);
     res.status(200).json({message: `A imagem ${filename} foi removida com sucesso!`});
 })
-
+*/
 export default router;
