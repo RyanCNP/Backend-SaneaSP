@@ -1,7 +1,6 @@
 import path from "path";
 import fs from "fs";
-
-const uploadDir = path.join(__dirname, "../../uploads");
+import { uploadDir } from "../config/multer.config";
 
 export const removeFiles = async (fileNames: string[]): Promise<void> => {
     for (const name of fileNames) {
