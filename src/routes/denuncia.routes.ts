@@ -4,10 +4,9 @@ import { ICreateDenuncia, IDenuncia, IFilterListDenuncia } from "../interfaces/d
 import { validateToken } from "../middlewares/auth.middleware";
 import { uploadImages } from "../config/multer.config";
 import { createImagemDenuncia, deleteImagemDenuncia, updateImagemDenuncia } from "../controllers/imagem-denuncia.controller";
-import { IImagemDenunciaCreate } from "../interfaces/imagem-denuncia";
+import { ICreateImagemDenuncia } from "../interfaces/imagem-denuncia";
 
 const router = express.Router()
-
 
 router.get('/', async (req: Request, res: Response) => {
     const query : IFilterListDenuncia = req.query
@@ -68,7 +67,7 @@ router.post('/', uploadImages.array('imagens', 10), async (req: Request, res: Re
     // 2. Se há imagens, cria no banco
     if (files && files.length > 0) {
         const fileNames = files.map(file => file.filename);
-        const createdImages : IImagemDenunciaCreate[] = await createImagemDenuncia(fileNames, denuncia.id);
+        const createdImages : ICreateImagemDenuncia[] = await createImagemDenuncia(fileNames, denuncia.id);
 
         if(createdImages.length > 0){
             denuncia = await getById(denuncia.id);

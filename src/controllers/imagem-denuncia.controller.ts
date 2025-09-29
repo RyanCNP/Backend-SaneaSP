@@ -1,3 +1,4 @@
+import { ICreateImagemDenuncia, IImagemDenuncia } from "../interfaces/imagem-denuncia";
 import { ImagemDenunciaModel } from "../models";
 import { Op } from "sequelize";
 
@@ -6,7 +7,7 @@ export const createImagemDenuncia = async (fileNames: string[], id_denuncia: num
         throw new Error("Nenhum arquivo enviado.");
     }
 
-    const newImages = fileNames.map(nome => ({ nome, id_denuncia }));
+    const newImages : ICreateImagemDenuncia[] = fileNames.map(nome => ({ nome, id_denuncia }));
     await ImagemDenunciaModel.bulkCreate(newImages);
 
     return newImages;
