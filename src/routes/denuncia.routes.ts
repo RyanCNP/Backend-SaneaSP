@@ -101,9 +101,13 @@ router.put('/:id', uploadImages.array('imagens', 10), async (req: Request, res: 
 
 router.delete('/:id',async(req:Request,res:Response)=>{
     const idDenuncia = Number(req.params.id);
-    const result = await deleteDenuncia(idDenuncia);
+
+    const denuncia = await getById(idDenuncia);
+    
     await deleteImagemDenuncia(idDenuncia);
-    res.status(200).json(result)
+    await deleteDenuncia(idDenuncia);
+
+    res.status(200).json(denuncia)
 });
 
 export default router
