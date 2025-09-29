@@ -1,12 +1,16 @@
+import { uploadDir } from "../config/multer.config";
+import { ICreateImagemDenuncia } from "../interfaces/imagem-denuncia";
 import { ImagemDenunciaModel } from "../models";
 import { Op } from "sequelize";
+import fs from 'fs/promises';
+import path from 'path';
 
 export const createImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
     if (!fileNames || fileNames.length === 0) {
         throw new Error("Nenhum arquivo enviado.");
     }
 
-    const newImages = fileNames.map(nome => ({ nome, id_denuncia }));
+    const newImages : ICreateImagemDenuncia[] = fileNames.map(nome => ({ nome, id_denuncia }));
     await ImagemDenunciaModel.bulkCreate(newImages);
 
     return newImages;
@@ -39,9 +43,15 @@ export const updateImagemDenuncia = async (fileNames: string[], id_denuncia: num
     return await ImagemDenunciaModel.findAll({ where: { id_denuncia } });
 };
 
-export const deleteImagemDenuncia = async (id_denuncia: number) => {
+export const deleteImagemDenuncia = async (id_denuncia: number) => { 
     const images = await ImagemDenunciaModel.findAll({ where: { id_denuncia } });
+
     const imageNames = images.map(img => img.nome);
+
+    for (const img of imageNames) {
+        const filePath = path.join(uploadDir, img);
+        await fs.unlink(filePath);
+    }
 
     if (imageNames.length > 0) {
         await ImagemDenunciaModel.destroy({ where: { id_denuncia } });

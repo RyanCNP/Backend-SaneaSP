@@ -2,14 +2,19 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from '../config/database.config'
 import { IImagemDenuncia } from "../interfaces/imagem-denuncia";
 
-type ImagemDenunciaCreationalAttributes = Optional<IImagemDenuncia, "id">
+const IMAGE_BASE_URL = `${process.env.HOST}:${process.env.PORT}/public`;
 
+type ImagemDenunciaCreationalAttributes = Optional<IImagemDenuncia, "id" | "url">;
 export class ImagemDenunciaModel extends Model<IImagemDenuncia, ImagemDenunciaCreationalAttributes>{
     public id!: number;
     public nome!: string;
     public id_denuncia!: number
-}
 
+    public get url(): string {
+        return `${IMAGE_BASE_URL}${this.nome}`;
+    }
+}
+ 
 ImagemDenunciaModel.init({
     id: {
         primaryKey: true,
@@ -31,6 +36,12 @@ ImagemDenunciaModel.init({
             key: 'id'
         },
         onDelete: 'CASCADE'
+    },
+    url: {
+        type: DataTypes.VIRTUAL,
+        get(this: ImagemDenunciaModel) {
+            return `${IMAGE_BASE_URL}/${this.getDataValue("nome")}`;
+        }
     }
 },{
     tableName : 'imagem_denuncia',
