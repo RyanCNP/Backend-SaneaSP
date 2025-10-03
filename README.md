@@ -127,3 +127,25 @@ Nova funcionalidade que altera o modelo de negócio -->
 ```
 feat!: <breve-descrição>
 ```
+
+Alterações técnicas que não afetão o código fonte -->
+```
+chore(opicional):<breve-descrição>
+```
+
+## PADRÃO DE BRANCH
+
+Nova funcionalidade -->
+```
+feature/<nome-da-funcionalidade>
+```
+
+Correção de bug urgente -->
+```
+hotfix/<nome-da-correção>
+```
+
+Correção de bug -->
+```
+fix/<nome-do-bug>
+```
