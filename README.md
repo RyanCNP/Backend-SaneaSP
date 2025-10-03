@@ -103,3 +103,22 @@ Para desfazer todas as migrações
 ```
 npm run migrate:undo:all
 ```
+
+## PADRÃO DE COMMIT
+
+Nova funcionalidade -->
+```
+feat: <breve-deacrição>
+```
+Correção de erro ou bug -->
+```
+fix: <breve-deacrição>
+```
+Documentação -->
+```
+docs: <breve-deacrição>
+```
+Refatoração de código -->
+```
+refactor: <breve-deacrição>
+```
