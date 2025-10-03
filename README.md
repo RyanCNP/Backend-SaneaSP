@@ -4,6 +4,7 @@
 
 - Davy Oliveira Ribeiro
 - Matheus Augusto Santos Gueff
+- Matheus Nery de Camargo
 - Pedro Silva Martins   
 - Ryan Carlo Negretti Pereira
 
@@ -121,4 +122,8 @@ docs: <breve-deacrição>
 Refatoração de código -->
 ```
 refactor: <breve-deacrição>
+```
+Nova funcionalidade que altera o modelo de negócio -->
+```
+feat!: <breve-descrição>
 ```
