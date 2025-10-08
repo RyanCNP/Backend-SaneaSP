@@ -56,7 +56,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.use(validateToken);
 
-router.post('/', uploadImages.array('imagens', 10), async (req: Request, res: Response) => {
+router.post('/', async (req: Request, res: Response) => {
     const body: ICreateDenuncia = req.body;
     body.idUsuario = req.user.id as number;
     const files = req.files as Express.Multer.File[];
