@@ -5,7 +5,7 @@ import { ImagemDenunciaModel } from "./imagem-denuncia.model";
 
 //Adicionando associação entre Tag e Reclamações
 DenunciaModel.belongsToMany(CategoriaModel, 
-    {through :  CategoriaDenunciaModel, foreignKey: 'id_denuncia', as : 'Categorias'  })
+    {through :  CategoriaDenunciaModel, foreignKey: 'id_denuncia', as : 'categorias'  })
 CategoriaModel.belongsToMany(DenunciaModel, 
     {through: CategoriaDenunciaModel, foreignKey: 'id_categoria', as: 'denuncias'})
 
@@ -14,7 +14,7 @@ DenunciaModel.belongsToMany(CategoriaModel,
 
 //Adicionando associação entre Imagem e Reclamações
 DenunciaModel.hasMany(ImagemDenunciaModel, 
-    {foreignKey: 'id_denuncia', as: 'Imagens'})
+    {foreignKey: 'id_denuncia', as: 'imagens'})
 ImagemDenunciaModel.belongsTo(DenunciaModel, 
     {foreignKey: 'id_denuncia', as: 'denuncia'})
 

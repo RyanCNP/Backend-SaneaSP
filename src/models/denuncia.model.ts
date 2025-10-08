@@ -9,17 +9,16 @@ export class DenunciaModel extends Model<IDenuncia, DenunciaCreationalAttributes
   public id!: number;
   public titulo!: string;
   public descricao!: string;
-  public data!: Date;
+  public dataPublicacao!: Date;
   public status!: StatusDenuncia;
   public pontuacao!: number;
-  public cep ?: string;
-  public cidade ?: string;
-  public bairro ?: string;
-  public rua ?: string;
+  public cep !: string;
+  public cidade !: string;
+  public bairro !: string;
+  public rua !: string;
   public numero ?: string;
   public complemento ?: string;
   public idUsuario!: number;
-  public Usuario !: number;
 }
 
 DenunciaModel.init(
@@ -41,7 +40,7 @@ DenunciaModel.init(
             type: DataTypes.STRING(500),
             field:"descricao"
         },
-        data: {
+        dataPublicacao: {
             allowNull: false,
             type: DataTypes.DATE(),
             field:"data"
