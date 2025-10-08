@@ -10,13 +10,13 @@ const denunciaFindIncludes = [
     {
         //Trazer as categorias da reclamação
         model: CategoriaModel,
-        as: 'Categorias',
+        as: 'categorias',
         through: { attributes: [] } //Para dados da tabela associativa CategoriaDenuncias nao vierem juntos do resultado
     },
     {
         //Trazer as imagens da reclamação
         model: ImagemDenunciaModel,
-        as: 'Imagens',
+        as: 'imagens',
         attributes: { exclude: ['id_denuncia'] },
     }
 ]
@@ -70,7 +70,7 @@ export const getAllDenuncias = async (filtros: IFilterListDenuncia): Promise<IDe
         }
     }
     const denuncias = await DenunciaModel.findAll(query);
-    return denuncias
+    return denuncias;
 };
 
 export const getById = async (idDenuncia: number): Promise<IDenuncia> => {
@@ -98,14 +98,14 @@ export const getByCategoria = async (categorias: number[], idUsuario?: number) =
             },
             {
                 model: CategoriaModel,
-                as: 'Categorias',
+                as: 'categorias',
                 through: { attributes: [] },
 
             },
             {
                 //Trazer as imagens da reclamação
                 model: ImagemDenunciaModel,
-                as: 'Imagens',
+                as: 'imagens',
                 attributes: { exclude: ['id_denuncia'] },
             }
         ]
@@ -124,27 +124,26 @@ export const getByUsuario = async (fkUsuario: number) => {
     return denuncias;
 }
 export const postDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia> => {
-    const { Categorias, Imagens, ...denunciaBody } = body;
+    const { categorias, imagens, ...denunciaBody } = body;
 
-    const pontuacao = gerarPontuacao(body);
+    body.pontuacao = gerarPontuacao(body);
 
     const newDenuncia = {
         status: 0,
-        pontuacao,
-        data: new Date(),
+        dataPublicacao: new Date(),
         ...denunciaBody
     };
 
     //Cria reclamação
     const denuncia = await DenunciaModel.create(newDenuncia);
 
-    if (Imagens && Imagens.length > 0) {
-        await createImagemDenuncia(Imagens, denuncia.id);
+    if (imagens && imagens.length > 0) {
+        await createImagemDenuncia(imagens, denuncia.id);
     }
 
     // Criando registro de associação
-    if (Categorias && Categorias.length > 0)
-        await createCategoryDenuncia(Categorias, denuncia.id)
+    if (categorias && categorias.length > 0)
+        await createCategoryDenuncia(categorias, denuncia.id)
 
     const response = await DenunciaModel.findByPk(denuncia.id,
         {
@@ -157,7 +156,7 @@ export const postDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia> =>
     return response
 }
 
-export const putDenuncia = async (idDenuncia: number, body: IDenuncia): Promise<IDenuncia> => {
+export const putDenuncia = async (idDenuncia: number, body: ICreateDenuncia): Promise<IDenuncia> => {
     body.pontuacao = gerarPontuacao(body);
 
     await DenunciaModel.update(body, {
@@ -166,11 +165,11 @@ export const putDenuncia = async (idDenuncia: number, body: IDenuncia): Promise<
         }
     })
 
-    if (body.Categorias)
-        await updateCategoryDenuncia(body.Categorias, idDenuncia);
+    if (body.categorias)
+        await updateCategoryDenuncia(body.categorias, idDenuncia);
 
-    if (body.Imagens) {
-        await updateImagemDenuncia(body.Imagens, idDenuncia)
+    if (body.imagens) {
+        await updateImagemDenuncia(body.imagens, idDenuncia)
     }
 
     const response = await DenunciaModel.findByPk(idDenuncia, {
@@ -199,16 +198,16 @@ export const deleteDenuncia = async (idDenuncia: number): Promise<IDenuncia> => 
     return denuncia
 }
 
-function gerarPontuacao(bodyRequest: ICreateDenuncia | IDenuncia): number {
+function gerarPontuacao(bodyRequest: ICreateDenuncia): number {
     let pontuacao = 0;
     // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
-    if (bodyRequest.Imagens && bodyRequest.Imagens?.length > 0) {
-        pontuacao += 100 * bodyRequest.Imagens.length;
+    if (bodyRequest.imagens && bodyRequest.imagens?.length > 0) {
+        pontuacao += 100 * bodyRequest.imagens.length;
     }
 
     // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
-    if (bodyRequest.Categorias && bodyRequest.Categorias?.length > 0) {
-        pontuacao += 100 * bodyRequest.Categorias.length;
+    if (bodyRequest.categorias && bodyRequest.categorias?.length > 0) {
+        pontuacao += 100 * bodyRequest.categorias.length;
     }
 
     if (bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade) {
