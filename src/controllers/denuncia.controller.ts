@@ -1,10 +1,10 @@
 import { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia";
 import { Op } from "sequelize";
 import { CategoriaModel, ImagemDenunciaModel, DenunciaModel } from "../models";
-import { createCategoryDenuncia, updateCategoryDenuncia } from "./categoria-denuncia.controller";
 import { createImagemDenuncia, updateImagemDenuncia } from "./imagem-denuncia.controller";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
+import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/categoria-denuncia.service";
 
 const denunciaFindIncludes = [
     {

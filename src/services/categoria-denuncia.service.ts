@@ -14,10 +14,10 @@ export const createCategoryDenuncia = async (categorias : number[], id_denuncia 
 
 export const updateCategoryDenuncia = async (updatedCategoriesIds : number[], id_denuncia : number) => {
     const oldCategories = await CategoriaDenunciaModel.findAll({where : {id_denuncia}});
-    const oldCategoryIds = oldCategories.map(categorie => categorie.id_categoria);
+    const oldCategoryIds = oldCategories.map(category => category.id_categoria);
 
     /* Remove categorias que estavam atreladas e não existem mais no array de ids passados */
-    const categoriesToRemove = oldCategoryIds.filter(categorie => !updatedCategoriesIds.includes(categorie))
+    const categoriesToRemove = oldCategoryIds.filter(category => !updatedCategoriesIds.includes(category))
     if(categoriesToRemove.length > 0){
         await CategoriaDenunciaModel.destroy({
             where : {
@@ -30,7 +30,7 @@ export const updateCategoryDenuncia = async (updatedCategoriesIds : number[], id
     }
 
     /* Procura categorias que já estavam associadas e não foram removidas durante a atualização*/
-    const categoriesToCreate = updatedCategoriesIds.filter(categorie => !oldCategoryIds.includes(categorie))
+    const categoriesToCreate = updatedCategoriesIds.filter(category => !oldCategoryIds.includes(category))
     /* Cria as novas categorias */
     if(categoriesToCreate.length > 0)
         await createCategoryDenuncia(categoriesToCreate, id_denuncia);
