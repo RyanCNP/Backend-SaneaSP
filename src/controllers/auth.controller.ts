@@ -1,24 +1,23 @@
-import { IUserCreationAttributes, UserModel } from "../models/user.model";
+import { Request, Response } from "express";
+import { UserModel } from "../models/user.model";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
-import { IUser } from "../interfaces/usuario";
 import { uniqueUserValidator } from "./user.controller";
-import { transporter } from "../config/nodemailer.config";
-import fs from "fs";
-import path from "path";
+import { sendRegistrationEmail } from "../services/mail.service";
 dotenv.config();
 
-export const autenticar = async (email: string, password: string) => {
+export const autenticar = async (req : Request, res : Response) => {
+  const { email, senha } = req.body;
   const user = await UserModel.findOne({ where: { email } });
 
   if (!user) {
     throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
   }
 
-  const isMatch = await bcrypt.compare(password, user.senha);
+  const isMatch = await bcrypt.compare(senha, user.senha);
 
   if (!isMatch) {
     throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
@@ -43,10 +42,12 @@ export const autenticar = async (email: string, password: string) => {
 
   const token = jwt.sign({ id: user.id }, secretKey, { expiresIn });
 
-  return token;
+  
+  res.status(200).json(token);
 };
 
-export const registerUser = async (newUser: IUserCreationAttributes) => {
+export const registerUser = async (req : Request, res : Response) => {
+  const newUser = req.body;
   const salt = await bcrypt.genSalt(10);
   newUser.senha = await bcrypt.hash(newUser.senha, salt);
 
@@ -60,18 +61,26 @@ export const registerUser = async (newUser: IUserCreationAttributes) => {
     { expiresIn: "24h" }
   );
 
-  const templatePath = path.join(__dirname, "..", "templates", "registrationConfirmation.html");
-  let html = fs.readFileSync(templatePath, "utf-8");
+  await sendRegistrationEmail(user, verificationToken)
 
-  const confirmationLink = `${process.env.FRONTEND_URL}/confirmar-cadastro?token=${verificationToken}`;
-  html = html.replace(/{{nome}}/g, user.nome).replace(/\[LINK_CONFIRMACAO\]/g, confirmationLink);
-
-  await transporter.sendMail({
-    from: `"SaneaSP" <${process.env.SMTP_USER}>`,
-    to: user.email,
-    subject: "Confirme seu cadastro - SaneaSP",
-    html,
+  res.status(201).json({
+    error: false,
+    message: "Cadastro realizado! Verifique seu e-mail para ativar sua conta."
   });
-
-  return user;
 };
+
+export const emailConfirmation = async(req : Request, res : Response) => {
+  const { token } = req.params;
+  const secretKey = process.env.SECRET_KEY || "";
+  const decoded: any = jwt.verify(token, secretKey);
+
+  await UserModel.update(
+    { verified: true },
+    { where: { id: decoded.id } }
+  );
+  res.json({ message: "Conta verificada com sucesso!" });
+}
+
+export const getAuthenticatedUser = async (req : Request, res : Response) => {
+  res.status(200).json(req.user)
+}
