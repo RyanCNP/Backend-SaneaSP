@@ -127,13 +127,13 @@ export const postDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia> =>
     const { categorias, imagens, ...denunciaBody } = body;
 
     body.pontuacao = gerarPontuacao(body);
-
+    const { pontuacao, ...denunciaBodyWithoutPontuacao } = denunciaBody;
     const newDenuncia = {
         status: 0,
         dataPublicacao: new Date(),
-        ...denunciaBody
+        pontuacao: body.pontuacao,
+        ...denunciaBodyWithoutPontuacao
     };
-
     //Cria reclamação
     const denuncia = await DenunciaModel.create(newDenuncia);
 
