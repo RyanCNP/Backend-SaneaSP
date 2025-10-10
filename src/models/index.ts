@@ -14,7 +14,7 @@ DenunciaModel.belongsToMany(CategoriaModel,
 
 //Adicionando associação entre Imagem e Reclamações
 DenunciaModel.hasMany(ImagemDenunciaModel, 
-    {foreignKey: 'id_denuncia', as: 'imagens'})
+    {foreignKey: 'id_denuncia', as: 'imagens',  onDelete: 'CASCADE'})
 ImagemDenunciaModel.belongsTo(DenunciaModel, 
     {foreignKey: 'id_denuncia', as: 'denuncia'})
 
