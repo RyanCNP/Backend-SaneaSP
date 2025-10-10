@@ -1,4 +1,4 @@
-import { uploadDir } from "../config/multer.config";
+import { deleteImage, uploadDir } from "../config/multer.config";
 import { ICreateImagemDenuncia } from "../interfaces/imagem-denuncia";
 import { ImagemDenunciaModel } from "../models";
 import { Op } from "sequelize";
@@ -48,10 +48,7 @@ export const deleteImagemDenuncia = async (id_denuncia: number) => {
 
     const imageNames = images.map(img => img.nome);
 
-    for (const img of imageNames) {
-        const filePath = path.join(uploadDir, img);
-        await fs.unlink(filePath);
-    }
+     await deleteImage(imageNames);
 
     if (imageNames.length > 0) {
         await ImagemDenunciaModel.destroy({ where: { id_denuncia } });
