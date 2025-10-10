@@ -1,31 +1,27 @@
-import { ApiError } from "../errors/ApiError.error";
-import { DataLocation } from "../interfaces/data-location";
+import type { Request, Response } from "express"
+import * as locationService from "../services/location.service"
+import { ApiError } from "../errors/ApiError.error"
+import { HttpCode } from "../enums/HttpCode.enum"
 
-const API_KEY = process.env.LOCATIONIQ_KEY;
-export const geoconding = async (address: any): Promise<DataLocation | ApiError> => {
-    const url = `https://us1.locationiq.com/v1/search?key=${API_KEY}&q=${encodeURIComponent(address)}&format=json`;
-    const response = await fetch(url);
+export const getGeocoding = async (req: Request, res: Response) => {
+  const address = req.query.endereco as string
 
-    if (response.status === 404) {
-        return new ApiError('Não foi possível achar o endereço', 404);
-    }
-    const data: any[] = await response.json();
+  if (!address) {
+    throw new ApiError("Nenhum endereço foi informado", HttpCode.BadRequest)
+  }
 
-    const coordanates: DataLocation = data[0]
-
-    return coordanates;
+  const data = await locationService.geocoding(address)
+  res.json(data)
 }
 
-export const reverGeocolding = async (lat: number, lon: number): Promise<DataLocation | ApiError> => {
-    const url = `us1.locationiq.com/v1/reverse.php?key=${API_KEY}&lat=${lat}&lon=${lon}&format=json`;
+export const getReverseGeocoding = async (req: Request, res: Response) => {
+  const lat = req.query.lat as unknown as number
+  const lon = req.query.lon as unknown as number
 
-    const response = await fetch(url);
-    if (!response.ok) {
-        return new ApiError('Erro na requisição', response.status);
-    }
-    const data: any[] = await response.json();
+  if (!lat || !lon) {
+    throw new ApiError("Coordenadas não foram informadas corretamente", HttpCode.BadRequest)
+  }
 
-    const address: DataLocation = data[0]
-
-    return address;
+  const address = await locationService.reverseGeocoding(lat, lon)
+  res.json(address)
 }
