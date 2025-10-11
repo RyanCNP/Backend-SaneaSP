@@ -80,4 +80,7 @@ export async function up(queryInterface, Sequelize) {
 }
 export async function down(queryInterface, Sequelize) {
   await queryInterface.bulkDelete("usuario", null, {});
+  await queryInterface.sequelize.query(
+      "DELETE FROM sqlite_sequence WHERE name='usuario';"
+    );
 }
