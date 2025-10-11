@@ -62,7 +62,6 @@ export const postDenuncia = async (req: Request, res: Response) => {
   const body: ICreateDenuncia = req.body
   body.idUsuario = req.user.id as number
   const files = req.files as Express.Multer.File[]
-
   let denuncia = await createNewDenuncia(body)
 
   if (files && files.length > 0) {

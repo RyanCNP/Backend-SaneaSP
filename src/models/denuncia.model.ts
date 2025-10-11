@@ -43,30 +43,30 @@ DenunciaModel.init(
         dataPublicacao: {
             allowNull: false,
             type: DataTypes.DATE(),
-            field:"data"
+            field:"dataPublicacao"
         },
         status: {
-            allowNull: true,
+            allowNull: false,
             type: DataTypes.INTEGER,
             field: "status"
         },
         cep: {
-            allowNull: true,
+            allowNull: false,
             type: DataTypes.STRING(30),
             field: "cep"
         },
         cidade: {
-            allowNull: true,
+            allowNull: false,
             type: DataTypes.STRING(30),
             field:"cidade"
         },
         bairro: {
-            allowNull: true,
+            allowNull: false,
             type: DataTypes.STRING(30),
             field:"bairro"
         },
         rua: {
-            allowNull: true,
+            allowNull: false,
             type: DataTypes.STRING(30),
             field:"rua"
         },
