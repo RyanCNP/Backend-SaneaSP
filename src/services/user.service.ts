@@ -33,6 +33,16 @@ export const getUserById = async (userId: number): Promise<IUser> => {
   return foundUser
 }
 
+export const getUserNameById = async (userId: number): Promise<string> => {
+  const foundUser = await UserModel.findOne({ where: { id: userId }, attributes : ["nome"]})
+
+  if (!foundUser) {
+    throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
+  }
+
+  return foundUser.nome
+}
+
 export const getUserByName = async (userName: string): Promise<IUser> => {
   const foundUser = await UserModel.findOne({ where: { nome: userName } })
 
