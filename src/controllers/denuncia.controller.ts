@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import type { ICreateDenuncia, IFilterListDenuncia } from "../interfaces/denuncia"
+import type { ICreateDenuncia, IDenuncia, IFilterListDenuncia } from "../interfaces/denuncia"
 import {
   findAllDenuncias,
   findDenunciaById,
@@ -61,14 +61,12 @@ export const getByCategoria = async (req: Request, res: Response) => {
 }
 
 export const postDenuncia = async (req: Request, res: Response) => {
-  const body: ICreateDenuncia = req.body
-  body.idUsuario = req.user.id as number
-  const files = req.files as Express.Multer.File[]
+  const body: ICreateDenuncia = req.body;
+  body.idUsuario = req.user.id as number;
   let denuncia = await createNewDenuncia(body)
 
-  if (files && files.length > 0) {
-    const fileNames = files.map((file) => file.filename)
-    const createdImages = await createImagemDenuncia(fileNames, denuncia.id)
+  if (body.imagens && body.imagens.length > 0) {
+    const createdImages = await createImagemDenuncia(body.imagens, denuncia.id)
 
     if (createdImages.length > 0) {
       denuncia = await findDenunciaById(denuncia.id)
@@ -84,24 +82,23 @@ export const postDenuncia = async (req: Request, res: Response) => {
 }
 
 export const putDenuncia = async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
-  const body = req.body
-  console.log(body)
+  const id = Number(req.params.id);
+  const body = req.body as ICreateDenuncia;
+  console.log(body);
 
-  await findDenunciaById(id)
+  await findDenunciaById(id);
 
-  await updateDenunciaById(id, body)
+  await updateDenunciaById(id, body);
 
   if (body.categorias) {
-    await updateCategoryDenuncia(body.categorias, id)
+    await updateCategoryDenuncia(body.categorias, id);
   }
 
-  const files = req.files as Express.Multer.File[];
-  console.log(files)
-  if (files && files.length > 0) {
+  if (body.imagens && body.imagens.length > 0) {
+    let files:string[] = body.imagens;
     const images = await getImagesByComplaintId(id)
     await removeFile(images.map(img => img.nome));
-    await createImagemDenuncia(files.map(f => f.filename), id)
+    await createImagemDenuncia(files, id)
   }
 
   const updatedDenuncia = await findDenunciaById(id)
