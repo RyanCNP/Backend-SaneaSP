@@ -3,7 +3,7 @@ import {
   deleteDenuncia,
   getAllDenuncias,
   getById,
-  getByUsuario,
+  getUserComplaint,
   postDenuncia,
   putDenuncia,
   getByCategoria,
@@ -15,13 +15,11 @@ const router = express.Router()
 
 router.get("/", getAllDenuncias)
 router.get("/categorias", getByCategoria)
+router.get("/my", validateToken, getUserComplaint)
 router.get("/:id", getById)
 
-router.use(validateToken)
-
-router.get("/usuario", getByUsuario)
-router.post("/", uploadImages.array("imagens", 10), postDenuncia)
-router.put("/:id", uploadImages.array("imagens", 10), putDenuncia)
-router.delete("/:id", deleteDenuncia)
+router.post("/", validateToken ,uploadImages.array("imagens", 10), postDenuncia)
+router.put("/:id", validateToken, uploadImages.array("imagens", 10), putDenuncia)
+router.delete("/:id", validateToken, deleteDenuncia)
 
 export default router

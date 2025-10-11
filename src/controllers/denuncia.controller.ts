@@ -3,7 +3,7 @@ import type { ICreateDenuncia, IFilterListDenuncia } from "../interfaces/denunci
 import {
   findAllDenuncias,
   findDenunciaById,
-  findDenunciasByUsuario,
+  findUserComplaint,
   findDenunciasByCategoria,
   createNewDenuncia,
   updateDenunciaById,
@@ -26,9 +26,12 @@ export const getById = async (req: Request, res: Response) => {
   res.status(200).json(denuncia)
 }
 
-export const getByUsuario = async (req: Request, res: Response) => {
+export const getUserComplaint = async (req: Request, res: Response) => {
   const idUsuario = req.user.id as number
-  const denuncias = await findDenunciasByUsuario(idUsuario)
+  console.log(req.user)
+  console.log(idUsuario)
+  const filter : IFilterListDenuncia = req.query
+  const denuncias = await findUserComplaint(idUsuario, filter)
   res.status(200).json(denuncias)
 }
 
