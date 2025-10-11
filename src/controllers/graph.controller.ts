@@ -1,29 +1,9 @@
+import type { Request, Response } from "express"
+import type { IfilterGraph } from "../interfaces/graph"
+import * as graphService from "../services/graph.service"
 
-
-import sequelize, { FindAttributeOptions, Sequelize } from "sequelize";
-import { BigPoints, IfilterGraph } from "../interfaces/graph";
-import { DenunciaModel } from "../models";
-
-export const getBigPoints = async(params:IfilterGraph):Promise<BigPoints[]> =>{
-    let groupBy:string = 'cidade';
-    let whereCidade:any = {};
-    let selects: FindAttributeOptions = ['cidade', [sequelize.fn('SUM',sequelize.col('pontuacao')),'pontuacao']];
-    if(params.cidade){
-        whereCidade = {
-            cidade : params.cidade
-        };
-        groupBy = "bairro";
-        selects.push('bairro');
-    }
-    const result = await DenunciaModel.findAll({
-       attributes : selects,
-       where: whereCidade,
-       order:[
-        ['pontuacao','DESC']
-       ],
-       group:groupBy,
-       limit: params?.limit || 10
-
-    })
-    return result as unknown as BigPoints[];
+export const getMaioresPontuacoes = async (req: Request, res: Response) => {
+  const filter = req.query as unknown as IfilterGraph
+  const result = await graphService.getBigPoints(filter)
+  res.json(result)
 }

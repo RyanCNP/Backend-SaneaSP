@@ -1,46 +1,16 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import dotenv from "dotenv";
-import { autenticar, registerUser } from "../controllers/auth.controller";
+import { autenticar, emailConfirmation, getAuthenticatedUser, registerUser } from "../controllers/auth.controller";
 import { validateToken } from "../middlewares/auth.middleware";
-import jwt from "jsonwebtoken";
-import { UserModel } from "../models/user.model";
 dotenv.config();
 
 export const authRoutes = express.Router();
 
 //Login
-authRoutes.post("/login", async (req: Request, res: Response) => {
-  const { email, senha } = req.body;
-  const token = await autenticar(email, senha);
-  res.status(200).json(token);
-});
-
+authRoutes.post("/login", autenticar);
 //Cadastro
-authRoutes.post("/register", async (req: Request, res: Response) => {
-  const data = await registerUser(req.body);
-
-  res.status(201).json({
-    error: false,
-    message: "Cadastro realizado! Verifique seu e-mail para ativar sua conta.",
-    data,
-  });
-});
-
+authRoutes.post("/register", registerUser);
 // Rota de confirmação de cadastro
-authRoutes.get("/confirm/:token", async (req: Request, res: Response) => {
-  const { token } = req.params;
-  const secretKey = process.env.SECRET_KEY || "";
-  const decoded: any = jwt.verify(token, secretKey);
-
-  await UserModel.update(
-    { verified: true },
-    { where: { id: decoded.id } }
-  );
-  res.json({ message: "Conta verificada com sucesso!" });
-});
-
+authRoutes.get("/confirm/:token", emailConfirmation);
 //Dados do usuário logado
-authRoutes.get("/me", validateToken, async (req: Request, res: Response) => {
-  //req.user é obtido no middleware de autenticação
-  res.status(200).json(req.user)
-});
+authRoutes.get("/me", validateToken, getAuthenticatedUser);

@@ -21,14 +21,14 @@ module.exports = {
           allowNull:false,
           type:DataTypes.STRING(500),
         },
-        data:{
+        dataPublicacao:{
           allowNull:false,
           type:DataTypes.DATE()
         },
         status:{
           allowNull:true,
           type:DataTypes.INTEGER,
-          defaultValue: 0
+          defaultValue: 0,
         },
         cep:{
           allowNull:true,
@@ -62,7 +62,6 @@ module.exports = {
           allowNull:false,
           type:DataTypes.INTEGER
         }
-        
       });
   },
 

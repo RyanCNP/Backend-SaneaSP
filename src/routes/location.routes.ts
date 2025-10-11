@@ -1,34 +1,9 @@
-import express, { Request, Response } from 'express'
-import { geoconding, reverGeocolding } from '../controllers/location.controller';
-import { NumericLiteral } from 'typescript';
-const router = express.Router();
+import express from "express"
+import { getGeocoding, getReverseGeocoding } from "../controllers/location.controller"
 
-router.get('/geoconding', async (req: Request, res: Response) => {
-    const address = req.query.endereco;
-    if (!address) {
-        res.status(400).json({
-            error: true,
-            message: `Nenhumm endereço foi informado`,
-        });
-        return;
-    }
-    const data = await geoconding(address);
-    res.json(data);
-})
+const router = express.Router()
 
-router.get('/reverGeoconding', async (req: Request, res: Response) => {
-    const lat = req.query.lat as unknown as number;
-    const lon = req.query.lon as unknown as number;
+router.get("/geoconding", getGeocoding)
+router.get("/reverGeoconding", getReverseGeocoding)
 
-    if (!lat || !lon) {
-        res.status(400).json({
-            error: true,
-            message: `Coordenadas não foram informadas corretamente`,
-        });
-        return;
-    }
-    
-    const address = await reverGeocolding(lat,lon)
-    res.json(address);
-})
-export default router;
+export default router
