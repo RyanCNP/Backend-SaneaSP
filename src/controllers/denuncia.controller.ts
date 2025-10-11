@@ -9,8 +9,10 @@ import {
   updateDenunciaById,
   deleteDenunciaById,
 } from "../services/denuncia.service"
-import { createImagemDenuncia, deleteImagemDenuncia, updateImagemDenuncia } from "./imagem-denuncia.controller"
+import { createImagemDenuncia } from "./imagem-denuncia.controller"
 import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/categoria-denuncia.service"
+import { removeFile } from "../services/image-upload.service"
+import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
   const query: IFilterListDenuncia = req.query
@@ -84,8 +86,7 @@ export const postDenuncia = async (req: Request, res: Response) => {
 export const putDenuncia = async (req: Request, res: Response) => {
   const id = Number(req.params.id)
   const body = req.body
-  const files = req.files as Express.Multer.File[]
-  const fileNames = files?.map((file) => file.filename) || []
+  console.log(body)
 
   await findDenunciaById(id)
 
@@ -95,8 +96,12 @@ export const putDenuncia = async (req: Request, res: Response) => {
     await updateCategoryDenuncia(body.categorias, id)
   }
 
-  if (fileNames.length > 0) {
-    await updateImagemDenuncia(fileNames, id)
+  const files = req.files as Express.Multer.File[];
+  console.log(files)
+  if (files && files.length > 0) {
+    const images = await getImagesByComplaintId(id)
+    await removeFile(images.map(img => img.nome));
+    await createImagemDenuncia(files.map(f => f.filename), id)
   }
 
   const updatedDenuncia = await findDenunciaById(id)
@@ -107,8 +112,8 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
   const idDenuncia = Number(req.params.id)
 
   const denuncia = await findDenunciaById(idDenuncia)
-
-  await deleteImagemDenuncia(denuncia.id)
+  const imagens = await getImagesByComplaintId(idDenuncia);
+  await removeFile(imagens.map(img => img.nome));
   await deleteDenunciaById(idDenuncia)
 
   res.status(200).json(denuncia)
