@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-  async up (queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('denuncia', [
       {
-         id: 1,
+        id: 1,
         titulo: "Esgoto a céu aberto",
         descricao: "O esgoto corre no meio da rua há semanas, espalhando mau cheiro e mosquitos. Crianças não conseguem brincar na calçada e todos temem doenças. Já tentei ligar na Prefeitura e abri protocolo na Sabesp, mas nada foi resolvido.",
         dataPublicacao: new Date("2025-09-01"),
@@ -608,7 +608,7 @@ module.exports = {
     ],);
   },
 
-  async down (queryInterface, Sequelize) {
+  async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('denuncia', null, {});
     await queryInterface.sequelize.query(
       "DELETE FROM sqlite_sequence WHERE name='denuncia';"

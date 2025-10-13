@@ -12,7 +12,7 @@ if (env === "development") {
     storage: "./database.sqlite",
     logging: false,
   });
-} 
+}
 else if (env === "production") {
   const databaseUrl = process.env.PROD_DATABASE_URL;
 
@@ -31,7 +31,7 @@ else if (env === "production") {
     },
     logging: false,
   });
-} 
+}
 else throw new Error(`Ambiente desconhecido: ${env}`);
 
 export default sequelize;

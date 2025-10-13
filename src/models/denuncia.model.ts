@@ -6,19 +6,19 @@ import sequelize from "../config/database.config";
 type DenunciaCreationalAttributes = Optional<IDenuncia, "id">
 
 export class DenunciaModel extends Model<IDenuncia, DenunciaCreationalAttributes> {
-  public id!: number;
-  public titulo!: string;
-  public descricao!: string;
-  public dataPublicacao!: Date;
-  public status!: StatusDenuncia;
-  public pontuacao!: number;
-  public cep !: string;
-  public cidade !: string;
-  public bairro !: string;
-  public rua !: string;
-  public numero ?: string;
-  public complemento ?: string;
-  public idUsuario!: number;
+    public id!: number;
+    public titulo!: string;
+    public descricao!: string;
+    public dataPublicacao!: Date;
+    public status!: StatusDenuncia;
+    public pontuacao!: number;
+    public cep !: string;
+    public cidade !: string;
+    public bairro !: string;
+    public rua !: string;
+    public numero?: string;
+    public complemento?: string;
+    public idUsuario!: number;
 }
 
 DenunciaModel.init(
@@ -38,12 +38,12 @@ DenunciaModel.init(
         descricao: {
             allowNull: false,
             type: DataTypes.STRING(500),
-            field:"descricao"
+            field: "descricao"
         },
         dataPublicacao: {
             allowNull: false,
             type: DataTypes.DATE(),
-            field:"dataPublicacao"
+            field: "dataPublicacao"
         },
         status: {
             allowNull: false,
@@ -58,43 +58,43 @@ DenunciaModel.init(
         cidade: {
             allowNull: false,
             type: DataTypes.STRING(30),
-            field:"cidade"
+            field: "cidade"
         },
         bairro: {
             allowNull: false,
             type: DataTypes.STRING(30),
-            field:"bairro"
+            field: "bairro"
         },
         rua: {
             allowNull: false,
             type: DataTypes.STRING(30),
-            field:"rua"
+            field: "rua"
         },
         numero: {
             allowNull: true,
             type: DataTypes.STRING(30),
-            field:"numero"
+            field: "numero"
         },
         complemento: {
             allowNull: true,
             type: DataTypes.STRING(30),
-            field:"complemento"
+            field: "complemento"
         },
         pontuacao: {
             allowNull: false,
             type: DataTypes.DECIMAL(5, 2),
-            field:"pontuacao"
+            field: "pontuacao"
         },
         idUsuario: {
             allowNull: false,
             type: DataTypes.INTEGER,
-            field:"id_usuario"
+            field: "id_usuario"
         }
     },
     {
         tableName: "denuncia",
         sequelize,
-        timestamps:false
+        timestamps: false
     }
 );
 
