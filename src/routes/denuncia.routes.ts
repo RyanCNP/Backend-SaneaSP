@@ -20,7 +20,7 @@ router.get("/:id", getById)
 router.use(validateToken)
 
 router.get("/usuario", getByUsuario)
-router.post("/", uploadImages.array("imagens", 10), postDenuncia)
+router.post("/", postDenuncia)
 router.put("/:id", uploadImages.array("imagens", 10), putDenuncia)
 router.delete("/:id", deleteDenuncia)
 
