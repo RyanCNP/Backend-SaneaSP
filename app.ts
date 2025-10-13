@@ -29,6 +29,7 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
+
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));
 

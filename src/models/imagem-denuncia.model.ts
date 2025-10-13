@@ -5,7 +5,7 @@ import { IImagemDenuncia } from "../interfaces/imagem-denuncia";
 const IMAGE_BASE_URL = `${process.env.HOST}:${process.env.PORT}/public`;
 
 type ImagemDenunciaCreationalAttributes = Optional<IImagemDenuncia, "id" | "url">;
-export class ImagemDenunciaModel extends Model<IImagemDenuncia, ImagemDenunciaCreationalAttributes>{
+export class ImagemDenunciaModel extends Model<IImagemDenuncia, ImagemDenunciaCreationalAttributes> {
     public id!: number;
     public nome!: string;
     public id_denuncia!: number
@@ -14,7 +14,7 @@ export class ImagemDenunciaModel extends Model<IImagemDenuncia, ImagemDenunciaCr
         return `${IMAGE_BASE_URL}${this.nome}`;
     }
 }
- 
+
 ImagemDenunciaModel.init({
     id: {
         primaryKey: true,
@@ -43,8 +43,8 @@ ImagemDenunciaModel.init({
             return `${IMAGE_BASE_URL}/${this.getDataValue("nome")}`;
         }
     }
-},{
-    tableName : 'imagem_denuncia',
+}, {
+    tableName: 'imagem_denuncia',
     sequelize,
-    timestamps : false
+    timestamps: false
 })

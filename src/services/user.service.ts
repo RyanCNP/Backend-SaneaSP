@@ -74,11 +74,11 @@ export const uniqueUserValidator = async (user: IUser): Promise<void> => {
     },
   }
 
-  if(user.nome)
-    query.where[Op.or].push({nome : user.nome})
+  if (user.nome)
+    query.where[Op.or].push({ nome: user.nome })
 
-  if(user.email)
-    query.where[Op.or].push({email : user.email})
+  if (user.email)
+    query.where[Op.or].push({ email: user.email })
 
   if (user.cpf) {
     query.where[Op.or].push({ cpf: user.cpf })

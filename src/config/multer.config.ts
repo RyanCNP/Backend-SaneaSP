@@ -27,7 +27,7 @@ const fileFilter: multer.Options["fileFilter"] = (_req, file, cb) => {
 
 const limits = {
     fieldNameSize: 150,
-    fileSize: 1024*1024*5,
+    fileSize: 1024 * 1024 * 5,
 };
 
 export const uploadImages = multer({
