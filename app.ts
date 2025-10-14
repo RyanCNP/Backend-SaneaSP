@@ -9,6 +9,7 @@ import locationRoutes from "./src/routes/location.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
+import feedbackRoutes from "./src/routes/feedback.routes";
 
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
@@ -29,6 +30,7 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
+app.use("/feedback", feedbackRoutes);
 
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));
