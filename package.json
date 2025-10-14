@@ -10,9 +10,9 @@
     "migration-create": "npx sequelize-cli migration:generate --name",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo",
-    "migrate:undo:all" : "npx sequelize-cli db:migrate:undo:all",
+    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all",
     "seed-create": "npx sequelize-cli seed:generate --name",
-    "seed":"npx sequelize-cli db:seed:all",
+    "seed": "npx sequelize-cli db:seed:all",
     "seed:undo": "npx sequelize-cli db:seed:undo",
     "seed:undo:all": "npx sequelize-cli db:seed:undo:all"
   },
@@ -28,6 +28,7 @@
     "pg": "^8.16.2",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
+    "socket.io": "^4.8.1",
     "sqlite3": "^5.1.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "4.3"
