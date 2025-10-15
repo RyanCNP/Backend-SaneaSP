@@ -41,7 +41,7 @@ app.use(errorHandler);
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:4200",
+    origin: ["http://localhost:4200"],
     methods: ["GET", "POST"]
   }
 });
@@ -50,10 +50,10 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`Cliente conectado: ${socket.id}`);
 
-  socket.on("message", (msg) => {
+  socket.on("comentario", (msg) => {
     console.log("Mensagem recebida:", msg);
     // Reenvia para todos os clientes conectados
-    io.emit("message", msg);
+    io.emit("comentario", msg);
   });
 
   socket.on("disconnect", () => {
