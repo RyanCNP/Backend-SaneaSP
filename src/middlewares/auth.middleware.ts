@@ -9,16 +9,16 @@ import { ApiError } from "../errors/ApiError.error";
 import { HttpCode } from "../enums/HttpCode.enum";
 dotenv.config();
 
-export const validateToken = async (req : Request, res : Response, next : NextFunction) => {
+export const validateToken = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers['authorization'];
 
     const secret = process.env.SECRET_KEY || "";
 
-    if(!token){
+    if (!token) {
         throw new ApiError('Faça login para ter acesso a esse recurso', HttpCode.Unautorized)
     }
 
-    if(!secret){
+    if (!secret) {
         console.warn('❌ SECRET_KEY deve ser definida, verifique o .env')
         throw new ApiError('Erro interno de servidor', HttpCode.InternalServerError);
     }
@@ -26,30 +26,30 @@ export const validateToken = async (req : Request, res : Response, next : NextFu
     try {
         jwt.verify(token, secret);
 
-        const decoded : ITokenDecode = jwtDecode(token)
-        const user : UserModel | null = await UserModel.findByPk(decoded.id);
+        const decoded: ITokenDecode = jwtDecode(token)
+        const user: UserModel | null = await UserModel.findByPk(decoded.id);
 
-        if(!user){
+        if (!user) {
             throw new ApiError('Não autorizado. Usuário não encontrado', HttpCode.Unautorized)
         }
 
-        const plainUser = user.get({plain:true})
-        const {senha, ...loggedUser } = plainUser
+        const plainUser = user.get({ plain: true })
+        const { senha, ...loggedUser } = plainUser
 
-        
+
         req.user = loggedUser
 
         next()
     } catch (error) {
-        if(error instanceof JsonWebTokenError){
-            const cause = error.name == 'TokenExpiredError' 
-                ? 'Sua sessão expirou' 
+        if (error instanceof JsonWebTokenError) {
+            const cause = error.name == 'TokenExpiredError'
+                ? 'Sua sessão expirou'
                 : 'Login inválido'
             const message = `${cause}, faça login novamente`;
             console.warn('❌ Erro:' + error)
             throw new ApiError(message, 403)
         }
-        
+
         console.warn('❌ Erro:' + error)
         throw new ApiError('Algo deu errado, tente novamente mais tarde', HttpCode.InternalServerError)
     }

@@ -4,28 +4,28 @@ import { ICategoria } from "../interfaces/categoria";
 
 type CategoriaCreationalAttributes = Optional<ICategoria, "id">
 
-export class CategoriaModel extends Model<ICategoria, CategoriaCreationalAttributes>{
+export class CategoriaModel extends Model<ICategoria, CategoriaCreationalAttributes> {
     public id!: number;
     public nome!: string;
 }
 
 CategoriaModel.init(
-{
-    id : {
-        primaryKey : true,
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        field: "id",
+    {
+        id: {
+            primaryKey: true,
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            field: "id",
+        },
+        nome: {
+            allowNull: false,
+            type: DataTypes.STRING(50),
+            field: "nome"
+        },
     },
-    nome : {
-        allowNull : false,
-        type: DataTypes.STRING(50),
-        field: "nome"
-    },
-}, 
-{
-    tableName: "categoria",
-    sequelize,
-    timestamps: false
-})
+    {
+        tableName: "categoria",
+        sequelize,
+        timestamps: false
+    })

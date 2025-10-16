@@ -5,8 +5,8 @@ import { ImagemDenunciaModel } from "../models"
 // import fs from "fs/promises"
 // import path from "path"
 
-export const getImagesByComplaintId = async (id : number) : Promise<IImagemDenuncia[]> => {
-  return await ImagemDenunciaModel.findAll({where : {id_denuncia : id}})
+export const getImagesByComplaintId = async (id: number): Promise<IImagemDenuncia[]> => {
+  return await ImagemDenunciaModel.findAll({ where: { id_denuncia: id } })
 }
 
 
