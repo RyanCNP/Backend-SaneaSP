@@ -32,13 +32,14 @@ export const postFeedback = async (req: Request, res: Response) => {
     const newFeedback = await feedbackService.createFeedback(feedback)
     res.status(201).json(newFeedback)
 }
-
+/*
 export const putFeedback = async (req: Request, res: Response) => {
     const { id } = req.params
     const feedback: ICreateFeedback = req.body
     const updatedFeedback = await feedbackService.updateFeedback(Number(id), feedback)
     res.status(200).json(updatedFeedback)
 }
+*/
 
 export const deleteFeedback = async (req: Request, res: Response) => {
     const { id } = req.params
