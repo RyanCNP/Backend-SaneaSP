@@ -4,9 +4,9 @@ import {
   countCategorias,
   findCategoriaById,
   findCategoriaByName,
-  createNewCategoria,
-  updateCategoriaById,
-  deleteCategoriaById,
+  // createNewCategoria,
+  // updateCategoriaById,
+  // deleteCategoriaById,
 } from "../services/categoria.service"
 
 export const getCategoriaList = async (req: Request, res: Response) => {
@@ -31,31 +31,32 @@ export const getCategoriaByName = async (req: Request, res: Response) => {
   res.status(200).json(categoria)
 }
 
-export const createCategoria = async (req: Request, res: Response) => {
-  const { nome } = req.body
-  const created = await createNewCategoria(nome)
-  res.status(201).json({
-    error: false,
-    message: "Categoria criada com sucesso",
-    categoria: created,
-  })
-}
+/* NÃO SÃO MAIS UTILIZADOS  */
+// export const createCategoria = async (req: Request, res: Response) => {
+//   const { nome } = req.body
+//   const created = await createNewCategoria(nome)
+//   res.status(201).json({
+//     error: false,
+//     message: "Categoria criada com sucesso",
+//     categoria: created,
+//   })
+// }
 
-export const updateCategoria = async (req: Request, res: Response) => {
-  const { id } = req.params
-  const { nome } = req.body
-  await updateCategoriaById(Number(id), nome)
-  res.status(200).json({
-    error: false,
-    message: "Categoria atualizada com sucesso",
-  })
-}
+// export const updateCategoria = async (req: Request, res: Response) => {
+//   const { id } = req.params
+//   const { nome } = req.body
+//   await updateCategoriaById(Number(id), nome)
+//   res.status(200).json({
+//     error: false,
+//     message: "Categoria atualizada com sucesso",
+//   })
+// }
 
-export const deleteCategoria = async (req: Request, res: Response) => {
-  const { id } = req.params
-  await deleteCategoriaById(Number(id))
-  res.status(200).json({
-    error: false,
-    message: "Categoria excluída com sucesso",
-  })
-}
+// export const deleteCategoria = async (req: Request, res: Response) => {
+//   const { id } = req.params
+//   await deleteCategoriaById(Number(id))
+//   res.status(200).json({
+//     error: false,
+//     message: "Categoria excluída com sucesso",
+//   })
+// }
