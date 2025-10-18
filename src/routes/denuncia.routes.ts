@@ -18,7 +18,7 @@ router.get("/categorias", getByCategoria)
 router.get("/my", validateToken, getUserComplaint)
 router.get("/:id", getById)
 router.get("/usuario", getUserComplaint)
-router.post("/", postDenuncia)
+router.post("/", validateToken, postDenuncia)
 router.put("/:id", validateToken, uploadImages.array("imagens", 10), putDenuncia)
 router.delete("/:id", validateToken, deleteDenuncia)
 
