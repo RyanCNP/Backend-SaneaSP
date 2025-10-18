@@ -13,7 +13,7 @@ router.get("/feedback-cidadao/:id", feedbackController.getByCidadao)
 router.get("/feedback-denuncia/:id", feedbackController.getByDenuncia)
 
 router.post("/create-feedback", feedbackController.postFeedback)
-router.put("/:id", feedbackController.putFeedback)
+//router.put("/:id", feedbackController.putFeedback)
 router.delete("/:id", feedbackController.deleteFeedback)
 
 export default router
