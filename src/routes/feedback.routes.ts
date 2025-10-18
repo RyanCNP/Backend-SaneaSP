@@ -9,8 +9,8 @@ router.get("/:id", feedbackController.getById)
 
 router.use(validateToken)
 
-router.get("/feedback-cidadao/:id", feedbackController.getByCidadao)
-router.get("/feedback-denuncia/:id", feedbackController.getByDenuncia)
+//router.get("/feedback-cidadao/:id", feedbackController.getByCidadao)
+//router.get("/feedback-denuncia/:id", feedbackController.getByDenuncia)
 
 router.post("/create-feedback", feedbackController.postFeedback)
 //router.put("/:id", feedbackController.putFeedback)

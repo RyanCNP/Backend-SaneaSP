@@ -7,7 +7,7 @@ import { HttpCode } from "../enums/HttpCode.enum"
 export const findAllFeedbacks = async (): Promise<IFeedback[]> => {
     const feedbacks = await FeedbackModel.findAll()
 
-    if (!feedbacks) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+    if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
     return feedbacks
 }
@@ -19,14 +19,22 @@ export const findFeedbackById = async (id: number): Promise<IFeedback> => {
 
     return feedback
 }
-
+/*
 export const findFeedbackByIdDenuncia = async (idDenuncia: number): Promise<IFeedback> => {
-    const feedback = await FeedbackModel.findOne({ where: { fk_denuncia: idDenuncia } })
+    if (isNaN(idDenuncia) || idDenuncia <= 0) {
+        throw new ApiError("ID da denúncia inválido", HttpCode.BadRequest);
+    }
 
-    if (!feedback) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+    const feedback = await FeedbackModel.findOne({
+        where: { fk_denuncia: idDenuncia },
+    });
 
-    return feedback
-}
+    if (!feedback) {
+        throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound);
+    }
+
+    return feedback;
+};
 
 export const findFeedbacksByIdCidadao = async (idCidadao: number): Promise<IFeedback[]> => {
     const feedbacks = await FeedbackModel.findAll({ where: { fk_cidadao: idCidadao } })
@@ -35,7 +43,7 @@ export const findFeedbacksByIdCidadao = async (idCidadao: number): Promise<IFeed
 
     return feedbacks
 }
-
+*/
 export const createFeedback = async (body: ICreateFeedback): Promise<IFeedback> => {
     const {data_publicacao, ...fk_cidadao } = body;
 
@@ -44,17 +52,11 @@ export const createFeedback = async (body: ICreateFeedback): Promise<IFeedback> 
         ...fk_cidadao
     }
 
+    console.log(newFeedback);
+
     const feedback = await FeedbackModel.create(newFeedback)
 
     return feedback
-}
-
-export const updateFeedback = async (id: number, body: ICreateFeedback): Promise<IFeedback> => {
-    const feedbackFound = await FeedbackModel.findOne({ where: { id } })
-
-    if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
-
-    return await feedbackFound.update(body)
 }
 
 export const deleteFeedback = async (id: number): Promise<IFeedback> => {

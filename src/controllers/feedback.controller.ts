@@ -8,25 +8,25 @@ export const getAllFeedbacks = async (req: Request, res: Response) => {
     const feedbacks = await feedbackService.findAllFeedbacks()
     res.status(200).json(feedbacks)
 }
-
+/*
 export const getByCidadao = async (req: Request, res: Response) => {
     const { idCidadao } = req.params
     const feedbacks = await feedbackService.findFeedbacksByIdCidadao(Number(idCidadao))
     res.status(200).json(feedbacks)
 }
-
+*/
 export const getById = async (req: Request, res: Response) => {
     const { id } = req.params
     const feedback = await feedbackService.findFeedbackById(Number(id))
     res.status(200).json(feedback)
 }
-
+/*
 export const getByDenuncia = async (req: Request, res: Response) => {
     const { idDenuncia } = req.params
     const feedbacks = await feedbackService.findFeedbackByIdDenuncia(Number(idDenuncia))
     res.status(200).json(feedbacks)
 }
-
+*/
 export const postFeedback = async (req: Request, res: Response) => {
     const feedback: ICreateFeedback = req.body
     const newFeedback = await feedbackService.createFeedback(feedback)
