@@ -1,13 +1,26 @@
+import { IDenuncia } from "./denuncia";
 import { IUser } from "./usuario";
 
-export interface ComentarioInput{
+export interface IComentarioInput{
   descricao:string,
-  usuario: IUser
+  usuario: IUser,
+  denuncia : IDenuncia,
+  fkDenuncia : number,
+  fkUsuario : number,
+  dataPublicacao: Date,
 }
-export interface ComentarioRead{
-  id: number,
+export interface ICreateComentario{
   descricao:string,
-  data: Date,
-  usuario: IUser
+  dataPublicacao: Date,
+  fkDenuncia : number,
+  fkUsuario : number,
+}
+export interface IComentario{
+  id : number,
+  descricao:string,
+  dataPublicacao: Date,
+  fkDenuncia : number,
+  fkUsuario : number,
+  usuario ?: IUser
 }
 
