@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { IComentario, IComentarioInput } from "../interfaces/comentario";
 import { createComentario } from "../services/comentario.service";
+import { ComentarioModel } from "../models/comentario.model";
 
 export function initSockets(server: any) {
     const io = new Server(server, {

@@ -2,6 +2,8 @@ import { CategoriaModel } from "./categoria.model";
 import { DenunciaModel } from "./denuncia.model";
 import { CategoriaDenunciaModel } from "./categoria-denuncia.model";
 import { ImagemDenunciaModel } from "./imagem-denuncia.model";
+import { ComentarioModel } from "./comentario.model";
+import { UserModel } from "./user.model";
 
 //Adicionando associação entre Tag e Reclamações
 DenunciaModel.belongsToMany(CategoriaModel,
@@ -18,10 +20,13 @@ DenunciaModel.hasMany(ImagemDenunciaModel,
 ImagemDenunciaModel.belongsTo(DenunciaModel,
     { foreignKey: 'id_denuncia', as: 'denuncia' })
 
+ComentarioModel.belongsTo(UserModel, 
+    { foreignKey: 'fkUsuario', as: 'usuario'});
 //Fazendo o export dos models com as modificações
 export {
     DenunciaModel,
     CategoriaModel,
     CategoriaDenunciaModel,
-    ImagemDenunciaModel
+    ImagemDenunciaModel,
+    ComentarioModel
 };

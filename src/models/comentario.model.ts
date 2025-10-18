@@ -12,7 +12,7 @@ export class ComentarioModel extends Model<IComentario | ComentarioCreateAttribu
     public dataPublicacao !: Date;
     public fkDenuncia !: number;
     public fkUsuario !: number;
-    public usuario !: IUser;
+    public usuario ?: IUser;
 }
 
 ComentarioModel.init(

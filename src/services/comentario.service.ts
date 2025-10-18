@@ -1,4 +1,3 @@
-import { ApiError } from '../errors/ApiError.error';
 import { ComentarioModel } from '../models/comentario.model';
 import { IComentario, IComentarioInput, ICreateComentario } from './../interfaces/comentario';
 export const createComentario = async (mensage: IComentarioInput):Promise<IComentario>=>{
@@ -10,9 +9,7 @@ export const createComentario = async (mensage: IComentarioInput):Promise<IComen
         dataPublicacao: new Date(),
         descricao: mensage.descricao,
     };
-    console.log(newComentario)
     const result = await ComentarioModel.create(newComentario);
-    result.usuario = usuario;
     
     return result
 }

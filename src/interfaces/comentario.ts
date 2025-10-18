@@ -7,7 +7,7 @@ export interface IComentarioInput{
   denuncia : IDenuncia,
   fkDenuncia : number,
   fkUsuario : number,
-  dataPublicacao: Date,
+  dataPublicacao : Date,
 }
 export interface ICreateComentario{
   descricao:string,
