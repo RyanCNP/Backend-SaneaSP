@@ -3,3 +3,8 @@ export interface ICategoria {
     nome: string,
     id_grupo: number
 }
+
+export interface ICategoriaCriacao{
+    nome : string,
+    id_grupo : number
+}

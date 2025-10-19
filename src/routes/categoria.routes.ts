@@ -6,6 +6,7 @@ import {
   getCategoriaById,
   getCategoriaByName,
   getCategoriaList,
+  getGruposCategorias,
   // updateCategoria,
 } from "../controllers/categoria.controller";
 
@@ -13,8 +14,10 @@ const router = express.Router();
 
 router.get("/", getCategoriaList);
 router.get("/total", countAllCategorias);
-router.get("/:id", getCategoriaById);
 router.get("/nome/:nome", getCategoriaByName);
+router.get("/grupos", getGruposCategorias);
+router.get("/:id", getCategoriaById);
+//router.get("/grupos/:id", getCategoriaByName); A SER IMPLEMENTADO
 
 /* NÃO SÃO MAIS UTILIZADOS */
 // router.post("/", validateToken, createCategoria);

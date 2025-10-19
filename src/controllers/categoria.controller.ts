@@ -4,6 +4,7 @@ import {
   countCategorias,
   findCategoriaById,
   findCategoriaByName,
+  findAllGrupoCategorias,
   // createNewCategoria,
   // updateCategoriaById,
   // deleteCategoriaById,
@@ -29,6 +30,11 @@ export const getCategoriaByName = async (req: Request, res: Response) => {
   const { nome } = req.params
   const categoria = await findCategoriaByName(nome)
   res.status(200).json(categoria)
+}
+
+export const getGruposCategorias = async (req: Request, res: Response) => {
+  const categorias = await findAllGrupoCategorias()
+  res.status(200).json(categorias)
 }
 
 /* NÃO SÃO MAIS UTILIZADOS  */

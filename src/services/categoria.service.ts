@@ -1,11 +1,26 @@
-import { CategoriaModel } from "../models/categoria.model"
 import { Op } from "sequelize"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
-import { ICategoriaCriacao } from "../interfaces/categoria"
+import { GrupoCategoriaModel, CategoriaModel } from "../models"
+
+const categoriaIncludes = [
+  {
+    model: GrupoCategoriaModel,
+    as: "grupo",
+    attributes: { exclude: ['id'] },
+  }
+]
+
+const grupoCategoriaIncludes = [
+  {
+    model: CategoriaModel,
+    as: "categorias",
+    attributes: { exclude: ['id_grupo'] },
+  }
+]
 
 export const findAllCategorias = async () => {
-  return await CategoriaModel.findAll()
+  return await CategoriaModel.findAll({include : categoriaIncludes})
 }
 
 export const countCategorias = async () => {
@@ -29,6 +44,11 @@ export const findCategoriaByName = async (nome: string) => {
 
   return categoria
 }
+
+export const findAllGrupoCategorias = async () => {
+  return await GrupoCategoriaModel.findAll({include : grupoCategoriaIncludes})
+}
+
 /* NÃO ESTÃO SENDO UTILIZADOS MAIS */
 // export const createNewCategoria = async (novaCategoria : ICategoriaCriacao) => {
 //   const {nome, id_grupo} = novaCategoria;
