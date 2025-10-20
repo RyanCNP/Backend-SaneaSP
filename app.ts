@@ -5,6 +5,7 @@ import categoriaRoutes from "./src/routes/categoria.routes";
 import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
 import locationRoutes from "./src/routes/location.routes"
+import comentarioRoutes from "./src/routes/comentario.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
@@ -30,6 +31,7 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
+app.use("/comentario", comentarioRoutes);
 
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));

@@ -21,6 +21,7 @@ export interface IComentario{
   dataPublicacao: Date,
   fkDenuncia : number,
   fkUsuario : number,
-  usuario ?: IUser
+  usuario ?: IUser,
+  denuncia ?: IDenuncia,
 }
 

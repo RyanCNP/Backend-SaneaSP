@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import { IComentario, IComentarioInput } from "../interfaces/comentario";
-import { createComentario } from "../services/comentario.service";
+import { createComentario, findAllComententarios } from "../services/comentario.service";
 import { ComentarioModel } from "../models/comentario.model";
 
 export function initSockets(server: any) {
@@ -13,6 +13,10 @@ export function initSockets(server: any) {
 
     io.on('connection', socket => {
         console.log(`Cliente conectado: ${socket.id}`);
+        socket.on("allComentarios", async (id?:number)=>{
+            const comentarios:IComentario[] = await findAllComententarios(id);
+            io.emit("allComentarios", comentarios);
+        })
 
         socket.on("newComentario", async(msg : IComentarioInput) => {
             const newComentario = await createComentario(msg)
