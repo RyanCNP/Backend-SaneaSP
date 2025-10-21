@@ -54,13 +54,13 @@ export const findAllComententariosByDenuncia = async (id:number):Promise<IComent
     return comentarios
 }
 
-export const findAllComententarios = async (id?:number):Promise<IComentario[]> =>{
+export const findAllComententarios = async (idUsuario?:number):Promise<IComentario[]> =>{
     let where = {};
-    if(id){
-        where = {fkUsuario:id};
+    if(idUsuario){
+        where = {fkUsuario:idUsuario};
     }
     const comentarios = await ComentarioModel.findAll({
-        where: where,
+        where,
         order: ['dataPublicacao'],
         group:['fkDenuncia'],
         include: [

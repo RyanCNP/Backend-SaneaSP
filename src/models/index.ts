@@ -22,6 +22,11 @@ ImagemDenunciaModel.belongsTo(DenunciaModel,
 
 ComentarioModel.belongsTo(UserModel, 
     { foreignKey: 'fkUsuario', as: 'usuario'});
+
+ComentarioModel.belongsTo(DenunciaModel,
+    {foreignKey:"fkDenuncia",as:'denuncia'}
+    
+)
 //Fazendo o export dos models com as modificações
 export {
     DenunciaModel,
