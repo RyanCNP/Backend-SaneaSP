@@ -20,6 +20,8 @@ router.get("/my", validateToken, getUserComplaint)
 router.get("/export", exportExcel);
 router.get("/:id", getById)
 router.post("/", validateToken ,uploadImages.array("imagens", 10), postDenuncia)
+router.get("/usuario", getUserComplaint)
+router.post("/", validateToken, postDenuncia)
 router.put("/:id", validateToken, uploadImages.array("imagens", 10), putDenuncia)
 router.delete("/:id", validateToken, deleteDenuncia)
 

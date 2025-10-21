@@ -9,12 +9,12 @@ export interface IUser {
     email: string,
     senha: string,
     cpf: string,
-    cep ?: string,
-    cidade ?: string,
-    bairro ?: string,
-    rua ?: string,
-    numero ?: string,
-    complemento ?: string,
+    cep?: string,
+    cidade?: string,
+    bairro?: string,
+    rua?: string,
+    numero?: string,
+    complemento?: string,
     nivel: UserLevel,
     verified: boolean
 }

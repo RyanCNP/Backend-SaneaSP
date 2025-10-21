@@ -1,8 +1,8 @@
 export interface IImagemDenuncia {
-    id : number;
+    id: number;
     nome: string;
     id_denuncia: number;
-    url : string
+    url: string
 }
 
 export interface ICreateImagemDenuncia {

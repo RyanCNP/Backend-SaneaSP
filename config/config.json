@@ -1,7 +1,7 @@
 {
   "development": {
-    "dialect" :"sqlite",
-    "storage" : "./database.sqlite"
+    "dialect": "sqlite",
+    "storage": "./database.sqlite"
   },
   "production": {
     "url": "postgresql://saneasp_admin:EDyRW8MfV5VFJx1gwPndyeLBEg9AIozm@dpg-d1aq5duuk2gs7391r2b0-a.oregon-postgres.render.com/saneasp",

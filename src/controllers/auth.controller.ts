@@ -22,7 +22,7 @@ export const emailConfirmation = async (req: Request, res: Response) => {
 }
 
 export const getAuthenticatedUser = async (req: Request, res: Response) => {
-  if(!req.user)
+  if (!req.user)
     throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
   res.status(200).json(req.user)
 }
