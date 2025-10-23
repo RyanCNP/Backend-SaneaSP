@@ -42,6 +42,6 @@ export {
     CategoriaModel,
     CategoriaDenunciaModel,
     ImagemDenunciaModel,
-    ComentarioModel
+    ComentarioModel,
     GrupoCategoriaModel
 };
