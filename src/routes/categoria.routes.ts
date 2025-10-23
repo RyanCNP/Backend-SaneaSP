@@ -1,24 +1,27 @@
 import express from "express";
-import { validateToken } from "../middlewares/auth.middleware";
 import {
   countAllCategorias,
-  createCategoria,
-  deleteCategoria,
+  // createCategoria,
+  // deleteCategoria,
   getCategoriaById,
   getCategoriaByName,
   getCategoriaList,
-  updateCategoria,
+  getGruposCategorias,
+  // updateCategoria,
 } from "../controllers/categoria.controller";
 
 const router = express.Router();
 
 router.get("/", getCategoriaList);
-router.use(validateToken);
 router.get("/total", countAllCategorias);
-router.get("/:id", getCategoriaById);
 router.get("/nome/:nome", getCategoriaByName);
-router.post("/", createCategoria);
-router.put("/:id", updateCategoria);
-router.delete("/:id", deleteCategoria);
+router.get("/grupos", getGruposCategorias);
+router.get("/:id", getCategoriaById);
+//router.get("/grupos/:id", getCategoriaByName); A SER IMPLEMENTADO
+
+/* NÃO SÃO MAIS UTILIZADOS */
+// router.post("/", validateToken, createCategoria);
+// router.put("/:id", validateToken, updateCategoria);
+// router.delete("/:id", validateToken, deleteCategoria);
 
 export default router;

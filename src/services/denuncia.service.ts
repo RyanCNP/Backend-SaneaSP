@@ -61,11 +61,16 @@ export const findDenunciaById = async (idDenuncia: number): Promise<IDenuncia> =
   return denuncia
 }
 
-export const findDenunciasByUsuario = async (fkUsuario: number): Promise<IDenuncia[]> => {
-  return await DenunciaModel.findAll({
-    where: { idUsuario: fkUsuario },
+export const findUserComplaint = async (fkUsuario: number, filter ?: IFilterListDenuncia): Promise<IDenuncia[]> => {
+  const query: any = {
+    where: {idUsuario: fkUsuario},
     include: denunciaFindIncludes,
-  })
+  }
+  if (filter && filter.status) {
+    query.where.status = { [Op.like]: `%${filter.status}%` }
+  }
+  
+  return await DenunciaModel.findAll(query)
 }
 
 export const findDenunciasByCategoria = async (categorias: number[], idUsuario?: number): Promise<IDenuncia[]> => {
