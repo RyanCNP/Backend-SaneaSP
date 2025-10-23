@@ -52,8 +52,6 @@ export const createFeedback = async (body: ICreateFeedback): Promise<IFeedback> 
         ...fk_cidadao
     }
 
-    console.log(newFeedback);
-
     const feedback = await FeedbackModel.create(newFeedback)
 
     return feedback
