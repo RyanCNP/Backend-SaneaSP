@@ -35,7 +35,7 @@ export const findComentarioById = async (idComentario: number): Promise<IComenta
     return comentario
 }
 
-export const findAllComententariosByDenuncia = async (id:number):Promise<IComentario[]> =>{
+export const findAllComentariosByDenuncia = async (id:number):Promise<IComentario[]> =>{
     const comentarios = await ComentarioModel.findAll({
         where: {
             fkDenuncia: id
@@ -48,7 +48,7 @@ export const findAllComententariosByDenuncia = async (id:number):Promise<IComent
             },
         ]
     })
-    if(!comentarios){
+    if(comentarios.length === 0){
         throw new ApiError('Não foi possivel encontrar nenhum comentario relacionado a essa denuncia',HttpCode.NotFound)
     }
     return comentarios
