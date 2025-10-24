@@ -14,6 +14,12 @@ export const getUserById = async (req: Request, res: Response) => {
   res.status(200).json(userFound)
 }
 
+export const getUserNameById = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const userFound = await userService.getUserNameById(Number(id))
+  res.status(200).json(userFound)
+}
+
 export const getUserByName = async (req: Request, res: Response) => {
   const { nome } = req.params
   const userFound = await userService.getUserByName(nome)

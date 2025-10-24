@@ -1,18 +1,20 @@
 import express from "express";
 import cors from "cors";
 import path from "path";
-
 import categoriaRoutes from "./src/routes/categoria.routes";
 import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
 import locationRoutes from "./src/routes/location.routes"
+import comentarioRoutes from "./src/routes/comentario.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
 
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
-const app = express();
+import http from 'http'
+import { initSockets } from "./src/sockets";
+export const app = express();
 
 // Swagger
 setupSwagger(app);
@@ -29,6 +31,7 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
+app.use("/comentario", comentarioRoutes);
 
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));
@@ -36,8 +39,11 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 // Middleware de erro
 app.use(errorHandler);
 
-// Inicialização do servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const server = http.createServer(app);
+initSockets(server);
+
+const PORT = process.env.PORT;
+
+server.listen(PORT, () => {
   console.log(`Backend do SaneaSP está rodando na porta ${PORT}`);
 });
