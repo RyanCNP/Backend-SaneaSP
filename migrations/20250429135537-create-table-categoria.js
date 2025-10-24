@@ -16,6 +16,12 @@ module.exports = {
         nome: {
           allowNull: false,
           type: DataTypes.STRING(50)
+        },
+        id_grupo:{
+          allowNull: false,
+          type: DataTypes.INTEGER,
+          references: { model: 'grupo_categoria', key: 'id' },
+          onDelete: 'CASCADE',
         }
       });
   },

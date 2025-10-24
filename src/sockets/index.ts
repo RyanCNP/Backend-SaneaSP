@@ -13,14 +13,13 @@ export function initSockets(server: any) {
 
     io.on('connection', socket => {
         console.log(`Cliente conectado: ${socket.id}`);
-        socket.on("allComentarios", async (id?:number)=>{
-            const comentarios:IComentario[] = await findAllComententarios(id);
+        socket.on("allComentarios", async (idUsuario?:number)=>{
+            const comentarios:IComentario[] = await findAllComententarios(idUsuario);
             io.emit("allComentarios", comentarios);
         })
 
         socket.on("newComentario", async(msg : IComentarioInput) => {
             const newComentario = await createComentario(msg)
-            console.log("Mensagem recebida:", newComentario);
             io.emit('comentario',newComentario);
         });
         socket.on("disconnect", () => {
