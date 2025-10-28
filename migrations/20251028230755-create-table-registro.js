@@ -22,7 +22,7 @@ module.exports = {
       },
       tipo: {
         allowNull: false,
-        type: DataTypes.STRING(250),
+        type: DataTypes.INTEGER
       },
       arquivo:{
         allowNull:true,
