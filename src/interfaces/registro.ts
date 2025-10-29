@@ -6,7 +6,6 @@ export interface IRegistro{
     descricao:string,
     dataPublicacao: Date,
     tipo: number,
-    arquivo ?: string,
     Usuario?: IUser,
     Denuncia?: IDenuncia,
     fkUsuario: number,
@@ -17,7 +16,7 @@ export interface ICreateRegistro{
     descricao:string,
     dataPublicacao: Date,
     tipo: number,
-    arquivo ?: string,
+    arquivo ?: string[],
     fkUsuario: number,
     fkDenuncia: number,
 }

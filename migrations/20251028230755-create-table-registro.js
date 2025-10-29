@@ -24,10 +24,6 @@ module.exports = {
         allowNull: false,
         type: DataTypes.INTEGER
       },
-      arquivo:{
-        allowNull:true,
-        type:DataTypes.STRING(250)
-      },
       id_denuncia: {
         allowNull: false,
         type: DataTypes.INTEGER,

@@ -41,11 +41,6 @@ RegistroModel.init(
             allowNull: false,
             field: "tipo"
         },
-        arquivo: {
-            type: DataTypes.STRING(250),
-            allowNull: false,
-            field: "tipo"
-        },
         fkDenuncia: {
             allowNull: false,
             type: DataType.INTEGER,
