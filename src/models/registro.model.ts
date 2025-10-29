@@ -1,9 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { DataType } from "sequelize-typescript";
 import sequelize from "../config/database.config";
-import { IUser } from "../interfaces/usuario";
 import { IRegistro } from "../interfaces/registro";
-import { IDenuncia } from "../interfaces/denuncia";
 
 type RegistroCreateAttributes = Optional<IRegistro, "id">
 
@@ -11,7 +9,6 @@ export class RegistroModel extends Model<IRegistro | RegistroCreateAttributes> {
     public id !: number;
     public descricao !: string;
     public tipo !: number;
-    public arquivo !: string;
     public dataPublicacao !: Date;
     public fkDenuncia !: number;
     public fkUsuario !: number;
@@ -46,14 +43,14 @@ RegistroModel.init(
             type: DataType.INTEGER,
             references: { model: 'denuncia', key: 'id' },
             onDelete: 'CASCADE',
-            field: "fk_denuncia"
+            field: "id_denuncia"
         },
         fkUsuario: {
             allowNull: false,
             type: DataType.INTEGER,
             references: { model: 'usuario', key: 'id' },
             onDelete: 'CASCADE',
-            field: 'fk_usuario'
+            field: 'id_usuario'
         },
     },
     {
