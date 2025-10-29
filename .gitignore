@@ -139,3 +139,6 @@ dist
 node_modules
 
 database.sqlite
+
+# Multer
+public

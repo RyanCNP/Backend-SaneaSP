@@ -1,37 +1,13 @@
-import { Op } from "sequelize"
-import { ImagemDenunciaModel } from "../models"
+import * as imagemDenunciaService from "../services/imagem-denuncia.service"
 
-export const createImagemDenuncia = async (imagesNames : string[], id_denuncia : number) => {
-    //TODO: Adicionar forma de criação de nome único para imagem (como concatenação com timestamp)
-    const newImages = imagesNames.map(imageName => ({
-        nome :imageName, 
-        id_denuncia
-    }))
-
-    await ImagemDenunciaModel.bulkCreate(newImages)
+export const createImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
+  return await imagemDenunciaService.createImagemDenuncia(fileNames, id_denuncia)
 }
 
-export const updateImagemDenuncia = async(updatedImageNames : string[], id_denuncia : number) => {
-    const oldImages = await ImagemDenunciaModel.findAll({where : {id_denuncia}})
-    const oldImageNames = oldImages.map(img => img.nome)
+// export const updateImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
+//   return await imagemDenunciaService.updateImagemDenuncia(fileNames, id_denuncia)
+// }
 
-    //Verificando as imagens que já existiam
-    const imagesToRemove = oldImageNames.filter(oldImage => !updatedImageNames.includes(oldImage))
-
-    //Removendo todas imagens que não estão mais atreladas a reclamação
-    if(imagesToRemove.length > 0){
-        await ImagemDenunciaModel.destroy(
-        {
-            where : 
-            {
-                nome : {[Op.in] : imagesToRemove},
-                id_denuncia
-            }
-        })
-    }   
-
-    //Criando os relacionamentos que não existiam antes
-    const newImages = updatedImageNames.filter(imagem => !oldImageNames.includes(imagem))
-
-    if(newImages.length > 0)await createImagemDenuncia(newImages, id_denuncia)
-}
+// export const deleteImagemDenuncia = async (id_denuncia: number) => {
+//   return await imagemDenunciaService.deleteImagemDenuncia(id_denuncia)
+// }

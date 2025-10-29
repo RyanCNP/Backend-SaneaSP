@@ -1,10 +1,10 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from '../config/database'
+import sequelize from '../config/database.config'
 import { ICategoriaDenuncia } from "../interfaces/categoria-denuncia";
 
 type CategoriaDenunciaCreationalAttributes = Optional<ICategoriaDenuncia, "id">
 
-export class CategoriaDenunciaModel extends Model<ICategoriaDenuncia, CategoriaDenunciaCreationalAttributes>{
+export class CategoriaDenunciaModel extends Model<ICategoriaDenuncia, CategoriaDenunciaCreationalAttributes> {
     public id!: number;
     public id_categoria!: number;
     public id_denuncia!: number
@@ -36,8 +36,8 @@ CategoriaDenunciaModel.init({
         },
         onDelete: 'CASCADE'
     }
-},{
-    tableName : 'categoria_denuncia',
+}, {
+    tableName: 'categoria_denuncia',
     sequelize,
-    timestamps : false
+    timestamps: false
 })

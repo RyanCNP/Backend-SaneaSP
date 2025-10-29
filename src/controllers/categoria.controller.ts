@@ -1,84 +1,68 @@
-import { ICategoriaListFilter } from "../interfaces/categoria-list-filter";
-import { CategoriaModel } from "../models/categoria.model";
-import { FindOptions, Op } from "sequelize";
-import { ApiError } from "../errors/ApiError.error";
-import { HttpCode } from "../enums/HttpCode.enum";
-import { ICategoria } from "../interfaces/categoria";
+import type { Request, Response } from "express"
+import {
+  findAllCategorias,
+  countCategorias,
+  findCategoriaById,
+  findCategoriaByName,
+  findAllGrupoCategorias,
+  // createNewCategoria,
+  // updateCategoriaById,
+  // deleteCategoriaById,
+} from "../services/categoria.service"
 
-export const getCategoriaList = async (categoriaFilter : ICategoriaListFilter) : Promise<ICategoria[]> => {
-  const {nome, limit} = categoriaFilter;
-
-  const where : any = {};
-
-  if(nome){
-    where.nome = {
-      [Op.like]: `%${nome}%`
-    };
-  }
-
-  const query : FindOptions = {
-    where,
-    order : [['id', 'ASC']]
-  }
-
-  if(limit){
-    query.limit = Number(limit)
-  }
-  
-  return await CategoriaModel.findAll(query);
+export const getCategoriaList = async (req: Request, res: Response) => {
+  const categorias = await findAllCategorias()
+  res.status(200).json(categorias)
 }
 
-export const countAllCategorias = async () : Promise<number> => await CategoriaModel.count();
-
-export const getCategoriaById = async (categoriaId : number) => {
-  const categoria = await CategoriaModel.findOne({where : {id : categoriaId}})
-  if(!categoria) throw new ApiError("Nenhuma categoria encontrada", HttpCode.NotFound)
-  return categoria;
+export const countAllCategorias = async (req: Request, res: Response) => {
+  const count = await countCategorias()
+  res.status(200).json({ total: count })
 }
 
-export const getCategoriaByName = async (nameFilter : string) => {
-  const categoria = await CategoriaModel.findOne({where : {nome: nameFilter}})
-  if(!categoria) throw new ApiError("Nenhuma categoria encontrada", HttpCode.NotFound)
-  return categoria;
+export const getCategoriaById = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const categoria = await findCategoriaById(Number(id))
+  res.status(200).json(categoria)
 }
 
-export const createCategoria = async (newCategoriaName : string) : Promise<ICategoria> => {
-  const categoria = await CategoriaModel.findOne({where : {nome : {[Op.like] : `${newCategoriaName}`}}})
+export const getCategoriaByName = async (req: Request, res: Response) => {
+  const { nome } = req.params
+  const categoria = await findCategoriaByName(nome)
+  res.status(200).json(categoria)
+}
 
-  if(categoria){
-    throw new ApiError(`Esse nome já está em uso`, HttpCode.Conflict)
-  }
+export const getGruposCategorias = async (req: Request, res: Response) => {
+  const categorias = await findAllGrupoCategorias()
+  res.status(200).json(categorias)
+}
 
-  return await CategoriaModel.create({nome : newCategoriaName});
-};
+/* NÃO SÃO MAIS UTILIZADOS  */
+// export const createCategoria = async (req: Request, res: Response) => {
+//   const { nome } = req.body
+//   const created = await createNewCategoria(nome)
+//   res.status(201).json({
+//     error: false,
+//     message: "Categoria criada com sucesso",
+//     categoria: created,
+//   })
+// }
 
-export const updateCategoria = async (updatedCategoria : ICategoria) : Promise<ICategoria> => {
-  const categoria = await CategoriaModel.findOne({where : {id: updatedCategoria.id}})
+// export const updateCategoria = async (req: Request, res: Response) => {
+//   const { id } = req.params
+//   const { nome } = req.body
+//   await updateCategoriaById(Number(id), nome)
+//   res.status(200).json({
+//     error: false,
+//     message: "Categoria atualizada com sucesso",
+//   })
+// }
 
-  if(!categoria)
-    throw new ApiError('Nenhuma categoria encontrada', HttpCode.NotFound)
-
-  if(categoria.nome === updatedCategoria.nome)
-    throw new ApiError('Digite um novo nome para a categoria', HttpCode.BadRequest)
-
-  const categoriaNameExists = await CategoriaModel.findOne({
-    where: {
-      nome : {[Op.like] : `%${updatedCategoria.nome}%`},
-      id : {[Op.ne] : updatedCategoria.id}
-    }
-  })
-
-  if(categoriaNameExists)
-    throw new ApiError('Uma categoria já foi cadastrada com esse nome', HttpCode.Conflict)
-
-  return await categoria.update(updatedCategoria)
-};
-
-export const deleteCategoria = async (categoriaId : number) => {
-  const categoriaFound = await CategoriaModel.findByPk(categoriaId)
-
-  if(!categoriaFound)
-    throw new ApiError('Nenhuma categoria foi encontrada', HttpCode.NotFound)
-
-  await categoriaFound.destroy();
-};
+// export const deleteCategoria = async (req: Request, res: Response) => {
+//   const { id } = req.params
+//   await deleteCategoriaById(Number(id))
+//   res.status(200).json({
+//     error: false,
+//     message: "Categoria excluída com sucesso",
+//   })
+// }

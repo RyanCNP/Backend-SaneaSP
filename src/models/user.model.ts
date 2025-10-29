@@ -1,6 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "../config/database";
-import { IEndereco } from "../interfaces/endereco";
+import sequelize from "../config/database.config";
 import { IUser, UserLevel } from "../interfaces/usuario";
 
 export type IUserCreationAttributes = Optional<IUser, 'id'>;
@@ -12,9 +11,14 @@ export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public email!: string;
     public senha!: string;
     public cpf!: string;
-    public endereco?: IEndereco;
+    public cep?: string;
+    public cidade?: string;
+    public bairro?: string;
+    public rua?: string;
+    public numero?: string;
+    public complemento?: string;
     public nivel!: UserLevel;
-    public active!: boolean;
+    public verified!: boolean;
 }
 
 UserModel.init({
@@ -23,12 +27,12 @@ UserModel.init({
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
-        field: 'id_usuario'
+        field: 'id'
     },
     nome: {
         type: DataTypes.STRING(50),
         allowNull: false,
-        field: 'nome_usuario'
+        field: 'nome'
     },
     telefone: {
         type: DataTypes.STRING(14),
@@ -52,10 +56,35 @@ UserModel.init({
         unique: true,
         field: 'cpf'
     },
-    endereco: {
-        type: DataTypes.JSON,
+    cep: {
         allowNull: true,
-        field: 'endereco'
+        type: DataTypes.CHAR(9),
+        field: "cep"
+    },
+    cidade: {
+        allowNull: true,
+        type: DataTypes.STRING(100),
+        field: "cidade"
+    },
+    bairro: {
+        allowNull: true,
+        type: DataTypes.STRING(100),
+        field: "bairro"
+    },
+    rua: {
+        allowNull: true,
+        type: DataTypes.STRING(255),
+        field: "rua"
+    },
+    numero: {
+        allowNull: true,
+        type: DataTypes.STRING(5),
+        field: "numero"
+    },
+    complemento: {
+        allowNull: true,
+        type: DataTypes.STRING(20),
+        field: "complemento"
     },
     nivel: {
         type: DataTypes.INTEGER,
@@ -63,11 +92,11 @@ UserModel.init({
         defaultValue: UserLevel.COMMON,
         field: 'nivel'
     },
-    active: {
+    verified: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,
-        field: 'active'
+        field: 'verified'
     }
 }, {
     tableName: 'usuario',

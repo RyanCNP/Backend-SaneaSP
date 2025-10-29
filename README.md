@@ -4,6 +4,7 @@
 
 - Davy Oliveira Ribeiro
 - Matheus Augusto Santos Gueff
+- Matheus Nery de Camargo
 - Pedro Silva Martins   
 - Ryan Carlo Negretti Pereira
 
@@ -102,4 +103,49 @@ npm run migrate:undo
 Para desfazer todas as migrações
 ```
 npm run migrate:undo:all
+```
+
+## PADRÃO DE COMMIT
+
+Nova funcionalidade -->
+```
+feat: <breve-deacrição>
+```
+Correção de erro ou bug -->
+```
+fix: <breve-deacrição>
+```
+Documentação -->
+```
+docs: <breve-deacrição>
+```
+Refatoração de código -->
+```
+refactor: <breve-deacrição>
+```
+Nova funcionalidade que altera o modelo de negócio -->
+```
+feat!: <breve-descrição>
+```
+
+Alterações técnicas que não afetão o código fonte -->
+```
+chore(opicional):<breve-descrição>
+```
+
+## PADRÃO DE BRANCH
+
+Nova funcionalidade -->
+```
+feature/<nome-da-funcionalidade>
+```
+
+Correção de bug urgente -->
+```
+hotfix/<nome-da-correção>
+```
+
+Correção de bug -->
+```
+fix/<nome-do-bug>
 ```

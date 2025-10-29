@@ -1,219 +1,134 @@
-import { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia";
-import { Op} from "sequelize";
-import { CategoriaModel, ImagemDenunciaModel, DenunciaModel} from "../models";
-import { createCategoryDenuncia, updateCategoryDenuncia } from "./categoria-denuncia.controller";
-import { createImagemDenuncia, updateImagemDenuncia } from "./imagem-denuncia.controller";
-import { ApiError } from "../errors/ApiError.error";
-import { HttpCode } from "../enums/HttpCode.enum";
+import type { Request, Response } from "express"
+import type { ICreateDenuncia, IDenuncia, IFilterListDenuncia } from "../interfaces/denuncia"
+import {
+  findAllDenuncias,
+  findDenunciaById,
+  findUserComplaint,
+  findDenunciasByCategoria,
+  createNewDenuncia,
+  updateDenunciaById,
+  deleteDenunciaById,
+  exportDenunciasExcel,
+} from "../services/denuncia.service"
+import { createImagemDenuncia } from "./imagem-denuncia.controller"
+import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/categoria-denuncia.service"
+import { removeFile } from "../services/image-upload.service"
+import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
 
-const denunciaFindIncludes = [
-    {
-        //Trazer as categorias da reclamação
-        model: CategoriaModel,
-        as: 'Categorias',  
-        through: { attributes: [] } //Para dados da tabela associativa CategoriaDenuncias nao vierem juntos do resultado
-    },
-    {
-        //Trazer as imagens da reclamação
-        model: ImagemDenunciaModel,
-        as: 'Imagens',
-        attributes: {exclude : ['id_denuncia']},
-    }
-]
-
-export const getAllDenuncias = async (filtros : IFilterListDenuncia): Promise<IDenuncia[]> =>{
-    let query: any = {
-        where : {},
-        include: denunciaFindIncludes
-    }
-    if(filtros){
-        if (filtros.titulo) {
-            query.where.titulo = {
-                [Op.like]: `%${filtros.titulo}%`
-            };
-        }
-        if (filtros.rua) {
-            query.where.rua = {
-                [Op.like]: `%${filtros.rua}%`
-            };
-        }
-        if (filtros.cep) {
-            query.where.cep = {
-                [Op.like]: `%${filtros.cep}%`
-            };
-        }
-        if (filtros.bairro) {
-            query.where.bairro = {
-                [Op.like]: `%${filtros.bairro}%`
-            };
-        }
-        if (filtros.cidade) {
-            query.where.cidade = {
-                [Op.like]: `%${filtros.cidade}%`
-            };
-        }
-        if (filtros.status) {
-            query.where.status = {
-                [Op.like]: `%${filtros.status}%`
-            };
-        }
-        // if (filtros.data) {
-        //     const data = new Date(filtros.data);
-        //     query.where.data = {
-        //         [Op.like]: `%${filtros.data}%`
-        //     };
-        // }
-        if(filtros.pontuacao){
-            query.where.pontuacao = {
-                [Op.like]: `${filtros.pontuacao}`
-            }
-        }
-    }
-    const denuncias = await DenunciaModel.findAll(query);
-    return denuncias
-};
-
-export const getById = async (idDenuncia: number): Promise<IDenuncia | null> =>{
-    const denuncia = await DenunciaModel.findOne(
-    {
-        where:{id : idDenuncia},
-        include: denunciaFindIncludes
-    });
-
-    if(!denuncia)
-        throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound)
-
-    return denuncia;
+export const getAllDenuncias = async (req: Request, res: Response) => {
+  const query: IFilterListDenuncia = req.query
+  const foundDenuncias = await findAllDenuncias(query)
+  res.status(200).json(foundDenuncias)
 }
-export const getByCategoria = async(categorias:number[], idUsuario?: number)=>{
-    let query: any = {
-        where : {},
-        include: [
-    {
-        model: CategoriaModel,
-        as: 'categoriasSelecionadas',  
-        through: { attributes: [] },
-        where:{id:categorias},
-        require:true
-    },
-    {
-        model: CategoriaModel,
-        as: 'Categorias',
-        through: { attributes: [] },
 
-    },
-    {
-        //Trazer as imagens da reclamação
-        model: ImagemDenunciaModel,
-        as: 'Imagens',
-        attributes: {exclude : ['id_denuncia']},
-    }
-]
-    };
-    if(idUsuario){
-        query.where.idUsuario = idUsuario
-    }
-    const denuncias = await DenunciaModel.findAll(query);
-    return denuncias
+export const getById = async (req: Request, res: Response) => {
+  const id = Number(req.params.id)
+  const denuncia = await findDenunciaById(id)
+  res.status(200).json(denuncia)
 }
-export const getByUsuario = async(fkUsuario: number)=>{
-    const denuncias = await DenunciaModel.findAll({
-        where:{idUsuario:fkUsuario},
-        include: denunciaFindIncludes
+
+export const getUserComplaint = async (req: Request, res: Response) => {
+  const idUsuario = req.user.id as number
+  const filter : IFilterListDenuncia = req.query
+  const denuncias = await findUserComplaint(idUsuario, filter)
+  res.status(200).json(denuncias)
+}
+
+export const getByCategoria = async (req: Request, res: Response) => {
+  let listCategoriaId: number[] = []
+  let listaQuery!: string[]
+  let idUsuario: number | undefined
+
+  if (!req.query.categorias) {
+    res.status(400).json({
+      error: true,
+      message: `Nenhuma categoria foi informada`,
     })
-    return denuncias;
-}
-export const postDenuncia = async (body : ICreateDenuncia):Promise<IDenuncia | null> => {
-    const {Categorias, Imagens, ...denunciaBody} = body;
-    
-    const pontuacao = gerarPontuacao(body);
+    return
+  }
 
-    const newDenuncia = {
-      status: 0,
-      pontuacao,
-      data: new Date(),
-      ...denunciaBody
-    };
+  if (Array.isArray(req.query.categorias)) {
+    listaQuery = req.query.categorias as string[]
+    listCategoriaId = listaQuery.map((id) => Number(id))
+  } else {
+    listCategoriaId.push(Number(req.query.categorias as string))
+  }
 
-    //Cria reclamação
-    const denuncia = await DenunciaModel.create(newDenuncia);
+  if (req.query.idUsuario) {
+    idUsuario = Number(req.query.idUsuario)
+  }
 
-    if(Imagens && Imagens.length > 0){
-        await createImagemDenuncia(Imagens, denuncia.id);
-    }
-
-    // Criando registro de associação
-    if(Categorias && Categorias.length > 0)
-        await createCategoryDenuncia(Categorias, denuncia.id)
-
-    const response = await DenunciaModel.findByPk(denuncia.id, 
-    {
-        include: denunciaFindIncludes
-    })
-
-    if(!response)
-        throw new ApiError("Não foi possível cadastrar a reclamação", HttpCode.BadRequest)
-    
-    return response
+  const denuncias = await findDenunciasByCategoria(listCategoriaId, idUsuario)
+  res.json(denuncias)
 }
 
-export const putDenuncia = async(idDenuncia : number, body: IDenuncia):Promise<IDenuncia> => {
-    body.pontuacao = gerarPontuacao(body);
-    
-    await DenunciaModel.update(body, {
-        where :{
-            id: idDenuncia
-        }
-    })
+export const postDenuncia = async (req: Request, res: Response) => {
+  const body: ICreateDenuncia = req.body;
+  body.idUsuario = req.user.id as number;
+  let denuncia = await createNewDenuncia(body)
 
-    if(body.Categorias)
-        await updateCategoryDenuncia(body.Categorias, idDenuncia);
+  if (body.imagens && body.imagens.length > 0) {
+    const createdImages = await createImagemDenuncia(body.imagens, denuncia.id)
 
-    if(body.Imagens){
-        await updateImagemDenuncia(body.Imagens, idDenuncia)
+    if (createdImages.length > 0) {
+      denuncia = await findDenunciaById(denuncia.id)
     }
+  }
 
-    const response = await DenunciaModel.findByPk(idDenuncia, {
-        include: denunciaFindIncludes
-    })
+  if (body.categorias && body.categorias.length > 0) {
+    await createCategoryDenuncia(body.categorias, denuncia.id)
+    denuncia = await findDenunciaById(denuncia.id)
+  }
 
-    if(!response){
-        throw new ApiError("Não foi possível editar a reclamação", HttpCode.BadRequest)
-    }
-
-    return response
+  res.status(201).json(denuncia)
 }
 
-export const deleteDenuncia = async(idDenuncia : number): Promise<IDenuncia> => {
-    const denuncia = await DenunciaModel.findByPk(idDenuncia, {
-        include: denunciaFindIncludes
-    }); 
-    
-    if(!denuncia){
-        throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
-    }
-    
-    //Associações com categorias e reclamações são excluidas com cascade
-    await denuncia.destroy();
+export const putDenuncia = async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  const body = req.body as ICreateDenuncia;
 
-    return denuncia
+  await findDenunciaById(id);
+
+  await updateDenunciaById(id, body);
+
+  if (body.categorias) {
+    await updateCategoryDenuncia(body.categorias, id);
+  }
+
+  if (body.imagens && body.imagens.length > 0) {
+    let files:string[] = body.imagens;
+    const images = await getImagesByComplaintId(id)
+    await removeFile(images.map(img => img.nome));
+    await createImagemDenuncia(files, id)
+  }
+
+  const updatedDenuncia = await findDenunciaById(id)
+  res.status(200).json(updatedDenuncia)
 }
 
-function gerarPontuacao(bodyRequest : ICreateDenuncia | IDenuncia): number {
-    let pontuacao = 0;
-    // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
-    if(bodyRequest.Imagens && bodyRequest.Imagens?.length > 0){
-        pontuacao += 100 * bodyRequest.Imagens.length;
-    }
+export const deleteDenuncia = async (req: Request, res: Response) => {
+  const idDenuncia = Number(req.params.id)
 
-    // por enquanto a pontuação de categoria vai ser pela quantidade de categorias adicionadas nas reclamações
-    if(bodyRequest.Categorias && bodyRequest.Categorias?.length > 0){
-        pontuacao += 100 * bodyRequest.Categorias.length;
-    }
+  const denuncia = await findDenunciaById(idDenuncia)
+  const imagens = await getImagesByComplaintId(idDenuncia);
+  await removeFile(imagens.map(img => img.nome));
+  await deleteDenunciaById(idDenuncia)
 
-    if(bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade){
-        pontuacao += 200
-    }
-    
-    return pontuacao
+  res.status(200).json(denuncia)
+}
+
+export const exportExcel = async (req : Request, res : Response) => {
+   try {
+    const buffer = await exportDenunciasExcel(); // chama a função do controller
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", "attachment; filename=denuncias.xlsx");
+    res.send(buffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao gerar planilha Excel" });
+  }
 }

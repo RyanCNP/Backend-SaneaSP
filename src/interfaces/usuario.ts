@@ -1,17 +1,22 @@
 import { Op } from "sequelize"
 import { UserLevel } from "../enums/UserLevel.enum"
-import { IEndereco } from "./endereco"
+
 
 export interface IUser {
-    id?: number,
+    id: number,
     nome: string,
     telefone?: string,
     email: string,
     senha: string,
     cpf: string,
-    endereco?: IEndereco,
-    nivel: UserLevel
-    active: boolean
+    cep?: string,
+    cidade?: string,
+    bairro?: string,
+    rua?: string,
+    numero?: string,
+    complemento?: string,
+    nivel: UserLevel,
+    verified: boolean
 }
 
 export interface IUserListFilters {

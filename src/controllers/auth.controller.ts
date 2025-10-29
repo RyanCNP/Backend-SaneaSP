@@ -1,45 +1,28 @@
-import { IUserCreationAttributes, UserModel } from "../models/user.model";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import bcrypt from "bcryptjs";
-import { ApiError } from "../errors/ApiError.error";
-import { HttpCode } from "../enums/HttpCode.enum";
-import { IUser } from "../interfaces/usuario";
-import { uniqueUserValidator } from "./user.controller";
-dotenv.config();
+import type { Request, Response } from "express"
+import * as authService from "../services/auth.service"
+import { ApiError } from "../errors/ApiError.error"
+import { HttpCode } from "../enums/HttpCode.enum"
 
-export const autenticar = async (email: string, password: string) => {
-  const user = await UserModel.findOne({ where: { email } });
+export const autenticar = async (req: Request, res: Response) => {
+  const { email, senha } = req.body
+  const token = await authService.authenticateUser(email, senha)
+  res.status(200).json(token)
+}
 
-  const isMatch = user && (await bcrypt.compare(password, user.senha));
+export const registerUser = async (req: Request, res: Response) => {
+  const newUser = req.body
+  const result = await authService.registerUser(newUser)
+  res.status(201).json(result)
+}
 
-  if (!isMatch) {
-    throw new ApiError("Email ou senha estão incorretos", HttpCode.Unautorized);
-  }
+export const emailConfirmation = async (req: Request, res: Response) => {
+  const { token } = req.params
+  const result = await authService.confirmEmail(token)
+  res.json(result)
+}
 
-  const secretKey : string = process.env.SECRET_KEY || "";
-  const expiresIn : any = process.env.EXPIRES_IN || "";
-
-  if (!secretKey || !expiresIn) {
-    console.warn("❌ SECRET_KEY e EXPIRES_IN devem ser definidas, verifique o arquivo .env");
-    throw new Error("Erro interno de servidor");
-  }
-
-  const token = jwt.sign(
-    {id: user.id},
-    secretKey,
-    {expiresIn}
-  );
-
-  return token;
-};
-
-export const registerUser = async (newUser: IUserCreationAttributes): Promise<IUser> => {
-    const salt = await bcrypt.genSalt(10);
-    newUser.senha = await bcrypt.hash(newUser.senha, salt);
-   
-    //Verifica se o nome, email e CPF estão disponíveis, caso contrário lança ApiError
-    await uniqueUserValidator(newUser);
-    
-    return await UserModel.create(newUser);;
+export const getAuthenticatedUser = async (req: Request, res: Response) => {
+  if (!req.user)
+    throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  res.status(200).json(req.user)
 }
