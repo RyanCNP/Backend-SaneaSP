@@ -8,6 +8,7 @@ import {
   createNewDenuncia,
   updateDenunciaById,
   deleteDenunciaById,
+  exportDenunciasExcel,
 } from "../services/denuncia.service"
 import { createImagemDenuncia } from "./imagem-denuncia.controller"
 import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/categoria-denuncia.service"
@@ -28,8 +29,6 @@ export const getById = async (req: Request, res: Response) => {
 
 export const getUserComplaint = async (req: Request, res: Response) => {
   const idUsuario = req.user.id as number
-  console.log(req.user)
-  console.log(idUsuario)
   const filter : IFilterListDenuncia = req.query
   const denuncias = await findUserComplaint(idUsuario, filter)
   res.status(200).json(denuncias)
@@ -87,7 +86,6 @@ export const postDenuncia = async (req: Request, res: Response) => {
 export const putDenuncia = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const body = req.body as ICreateDenuncia;
-  console.log(body);
 
   await findDenunciaById(id);
 
@@ -117,4 +115,20 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
   await deleteDenunciaById(idDenuncia)
 
   res.status(200).json(denuncia)
+}
+
+export const exportExcel = async (req : Request, res : Response) => {
+   try {
+    const buffer = await exportDenunciasExcel(); // chama a função do controller
+
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader("Content-Disposition", "attachment; filename=denuncias.xlsx");
+    res.send(buffer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao gerar planilha Excel" });
+  }
 }

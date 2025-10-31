@@ -3,6 +3,8 @@ import { Op } from "sequelize"
 import { CategoriaModel, ImagemDenunciaModel, DenunciaModel } from "../models"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
+import ExcelJS from "exceljs";
+import { Buffer } from "buffer";
 
 const denunciaFindIncludes = [
   {
@@ -176,3 +178,51 @@ function calculatePontuacao(bodyRequest: ICreateDenuncia): number {
 
   return pontuacao
 }
+export const exportDenunciasExcel = async (): Promise<Buffer> => {
+  const denuncias = await DenunciaModel.findAll({
+    include: denunciaFindIncludes
+  });
+
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Denúncias");
+
+  sheet.columns = [
+    { header: "ID", key: "id", width: 10 },
+    { header: "Título", key: "titulo", width: 30 },
+    { header: "Descrição", key: "descricao", width: 40 },
+    { header: "Status", key: "status", width: 15 },
+    { header: "Pontuação", key: "pontuacao", width: 12 },
+    { header: "Data", key: "dataPublicacao", width: 20 },
+  ];
+
+  denuncias.forEach((d) => {
+    sheet.addRow({
+      id: d.id,
+      titulo: d.titulo,
+      descricao: d.descricao,
+      status: d.status,
+      pontuacao: d.pontuacao,
+      dataPublicacao : d.dataPublicacao
+    });
+  });
+
+  // Gera o arquivo em memória (Buffer | ArrayBuffer)
+  const bufferCandidate: any = await workbook.xlsx.writeBuffer();
+
+  // Se já for um Buffer do Node, retorna direto
+  if (Buffer.isBuffer(bufferCandidate)) {
+    return bufferCandidate as Buffer;
+  }
+
+  // Caso seja ArrayBuffer ou Uint8Array, converte para Buffer do Node
+  if (bufferCandidate instanceof ArrayBuffer) {
+    return Buffer.from(bufferCandidate);
+  }
+
+  if (bufferCandidate instanceof Uint8Array) {
+    return Buffer.from(bufferCandidate.buffer);
+  }
+
+  // Fallback: converte via Buffer.from
+  return Buffer.from(bufferCandidate);
+};

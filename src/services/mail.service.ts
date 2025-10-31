@@ -7,7 +7,7 @@ export async function sendRegistrationEmail(user: IUser, token: string) {
   const templatePath = path.join(__dirname, "..", "templates", "registrationConfirmation.html");
   let html = fs.readFileSync(templatePath, "utf-8");
 
-  const confirmationLink = `${process.env.FRONTEND_URL}/confirmar-cadastro?token=${token}`;
+  const confirmationLink = `${process.env.FRONTEND_URL}/register-confirmation?token=${token}`;
   html = html.replace(/{{nome}}/g, user.nome).replace(/\[LINK_CONFIRMACAO\]/g, confirmationLink);
 
   await transporter.sendMail({
