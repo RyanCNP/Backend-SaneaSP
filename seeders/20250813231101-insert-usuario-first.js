@@ -8,7 +8,7 @@ export async function up(queryInterface, Sequelize) {
       await queryInterface.bulkInsert("usuario", [{
         id: 1,
         nome: "Davy Oliveira Ribeiro",
-        telefone: "(19) 99655-3967",
+        telefone: "(19)99655-3967",
         email: "davy@gmail.com",
         senha: "$2b$10$LOQRWSEjJk0m0/EwRzgIGulqHgp2JP6pnQU87j3VV7xC11Oz8YwSu",
         cpf: "48739498824",
@@ -23,7 +23,7 @@ export async function up(queryInterface, Sequelize) {
       {
         id: 2,
         nome: "Math Augusto Gueff",
-        telefone: "(19) 99655-3967",
+        telefone: "(19)99655-3967",
         email: "math@gmail.com",
         senha: "$2b$10$6nontGwjMnAdRyTuEvVpsu7Y4C3QcPBZnJ4/vaZNt9rsVW3m15vra",
         cpf: "37491871852",
@@ -38,7 +38,7 @@ export async function up(queryInterface, Sequelize) {
       {
         id: 3,
         nome: "Ryan Carlo Pereira",
-        telefone: "(19) 99474-0505",
+        telefone: "(19)99474-0505",
         email: "ryan@gmail.com",
         senha: "$2b$10$WDwdCzFIYF4aBXIIvGfSnOMwSiuvdkTT/x8wimLLnPGNbJ6mDbnuK",
         cpf: "19353433860",
@@ -53,7 +53,7 @@ export async function up(queryInterface, Sequelize) {
       {
         id: 4,
         nome: "Pedro Martins",
-        telefone: "(19) 99474-0505",
+        telefone: "(19)99474-0505",
         email: "pedro@gmail.com",
         senha: "$2b$10$NG.x/4SMYP.o7WjVAeTB2eA55RguGVFRuWGYoi8huF4UxZxiQSZWm",
         cpf: "58993165866",
