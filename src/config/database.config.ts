@@ -7,9 +7,10 @@ const env = process.env.NODE_ENV || "development";
 let sequelize: Sequelize;
 
 if (env === "development") {
-  sequelize = new Sequelize({
-    dialect: "sqlite",
-    storage: "./database.sqlite",
+  sequelize = new Sequelize("postgresql://postgres:1234@localhost/postgres", {
+    dialect: "postgres",
+    protocol: "postgres",
+    dialectOptions: {},
     logging: false,
   });
 }
@@ -19,7 +20,6 @@ else if (env === "production") {
   if (!databaseUrl) {
     throw new Error("PROD_DATABASE_URL é necessário para ambiente de produção");
   }
-
   sequelize = new Sequelize(databaseUrl, {
     dialect: "postgres",
     protocol: "postgres",
