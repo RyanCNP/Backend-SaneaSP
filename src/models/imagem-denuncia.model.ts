@@ -11,7 +11,7 @@ export class ImagemDenunciaModel extends Model<IImagemDenuncia, ImagemDenunciaCr
     public id_denuncia!: number
 
     public get url(): string {
-        return `${IMAGE_BASE_URL}${this.nome}`;
+        return `${IMAGE_BASE_URL}/denuncias/${this.nome}`;
     }
 }
 
@@ -40,7 +40,7 @@ ImagemDenunciaModel.init({
     url: {
         type: DataTypes.VIRTUAL,
         get(this: ImagemDenunciaModel) {
-            return `${IMAGE_BASE_URL}/${this.getDataValue("nome")}`;
+            return `${IMAGE_BASE_URL}/denuncias/${this.getDataValue("nome")}`;
         }
     }
 }, {
