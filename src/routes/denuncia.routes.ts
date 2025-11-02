@@ -20,7 +20,6 @@ router.get("/export", exportExcel);
 router.get("/:id", getById)
 router.post("/", validateToken, postDenuncia)
 router.get("/usuario", getUserComplaint)
-router.post("/", validateToken, postDenuncia)
 router.put("/:id", validateToken, putDenuncia)
 router.delete("/:id", validateToken, deleteDenuncia)
 
