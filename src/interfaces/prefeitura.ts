@@ -1,7 +1,7 @@
 import { IUser, IUserListFilters } from "./usuario";
 
 export interface IPrefeitura extends IUser {
-    prefeituraId : number,
+    idPrefeitura : number,
     cidade : string,
     cnpj : string
 }

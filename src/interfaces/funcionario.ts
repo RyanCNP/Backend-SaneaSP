@@ -2,7 +2,7 @@ import { NivelFuncionario } from "../enums/NivelFuncionario.enum";
 import { IUser, IUserListFilters } from "./usuario";
 
 export interface IFuncionario extends IUser {
-    funcionarioId : number,
+    idFuncionario : number,
     nivel : NivelFuncionario
 }
 
