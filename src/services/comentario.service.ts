@@ -11,7 +11,7 @@ export const createComentario = async (mensage: IComentarioInput): Promise<ICome
     
     const newComentario: ICreateComentario = {
         fkDenuncia: denuncia.id,
-        fkUsuario: usuario.id,
+        fkUsuario: usuario.idUsuario,
         dataPublicacao: new Date(),
         descricao: mensage.descricao,
     };
