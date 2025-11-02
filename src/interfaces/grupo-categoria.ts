@@ -1,5 +1,6 @@
 export interface IGrupoCategoria {
     id: number,
     nome: string,
-    icone : string
+    icone : string,
+    url : string
 }
