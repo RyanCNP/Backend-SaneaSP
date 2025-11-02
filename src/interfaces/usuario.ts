@@ -1,4 +1,3 @@
-import { Op } from "sequelize"
 import { UserType } from "../enums/UserType.enum"
 export interface IUser {
     idUsuario: number,

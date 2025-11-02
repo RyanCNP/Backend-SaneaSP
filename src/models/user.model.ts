@@ -4,7 +4,6 @@ import { IUser } from "../interfaces/usuario";
 import { UserType } from "../enums/UserType.enum";
 
 export type IUserCreationAttributes = Optional<IUser, 'idUsuario' | 'verified'>;
-
 export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public idUsuario!: number;
     public nome!: string;
