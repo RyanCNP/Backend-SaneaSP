@@ -1,11 +1,10 @@
-import { IUser, IUserListFilters } from "./usuario";
-
-export interface IPrefeitura extends IUser {
+export interface IPrefeitura  {
     idPrefeitura : number,
+    idUsuario : number,
     cidade : string,
     cnpj : string
 }
 
-export interface IPrefeituraFilter extends IUserListFilters{
+export interface IPrefeituraFilter{
     cidade ?: IPrefeitura['cidade']
 }

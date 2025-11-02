@@ -1,7 +1,6 @@
-import { IUser, IUserListFilters } from "./usuario";
-
-export interface ICidadao extends IUser {
+export interface ICidadao {
     idCidadao : number,
+    idUsuario : number,
     cep ?: string,
     cidade ?: string,
     bairro ?: string,
@@ -12,7 +11,7 @@ export interface ICidadao extends IUser {
     telefone ?: string
 }
 
-export interface ICidadaoFilter extends IUserListFilters{
+export interface ICidadaoFilter{
     cidade ?: ICidadao['cidade']
     bairro ?: ICidadao['bairro']
 }
