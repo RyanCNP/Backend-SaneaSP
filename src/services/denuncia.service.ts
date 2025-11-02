@@ -23,6 +23,7 @@ export const findAllDenuncias = async (filtros: IFilterListDenuncia): Promise<ID
   const query: any = {
     where: {},
     include: denunciaFindIncludes,
+    order : [['dataPublicacao', "DESC"]]
   }
 
   if (filtros) {
