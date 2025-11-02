@@ -1,8 +1,14 @@
 import { UserModel } from "../models/user.model"
 import { Op } from "sequelize"
-import type { IUserListFilters, IUser, IUserExists } from "../interfaces/usuario"
+import type { IUserListFilters, IUser } from "../interfaces/usuario"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
+
+interface IUserExists {
+    where: {
+        [Op.or]: Array<Partial<Record<keyof IUserListFilters, string>>>; //Array com as chaves
+    }
+}
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
   const query: any = { where: {} }
