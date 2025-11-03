@@ -1,6 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database.config";
-import { IUser } from "../interfaces/usuario";
+import { IUser, TSafeUser } from "../interfaces/usuario";
 import { UserType } from "../enums/UserType.enum";
 
 export type IUserCreationAttributes = Optional<IUser, 'idUsuario' | 'verified'>;
@@ -11,6 +11,11 @@ export class UserModel extends Model<IUser, IUserCreationAttributes> {
     public senha!: string;
     public tipo!: UserType
     public verified!: boolean;
+
+    getSafeUser() : TSafeUser{
+        const { senha, ...safeUser } = this.get();
+        return safeUser;
+    }
 }
 
 UserModel.init({

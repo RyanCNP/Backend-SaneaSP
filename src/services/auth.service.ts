@@ -3,10 +3,11 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
-import type { IUser, IUserPayload } from "../interfaces/usuario"
-import { uniqueUserValidator } from "./user.service"
+import type { TSafeUser, TUserPayload } from "../interfaces/usuario"
+import { TCidadaoPayload } from "../interfaces/cidadao"
+import { CidadaoModel } from "../models"
 import { sendRegistrationEmail } from "./mail.service"
-import { UserType } from "../enums/UserType.enum"
+import { Transaction } from "sequelize"
 
 export const authenticateUser = async (email: string, senha: string): Promise<string> => {
   const user = await UserModel.findOne({ where: { email } })
@@ -38,24 +39,18 @@ export const authenticateUser = async (email: string, senha: string): Promise<st
   return token
 }
 
-export const registerUser = async (newUser: IUserPayload): Promise<{ error: boolean; message: string }> => {
+export const registerUser = async (newUser: TUserPayload, transaction?: Transaction): Promise<UserModel> => {
   const salt = await bcrypt.genSalt(10)
   newUser.senha = await bcrypt.hash(newUser.senha, salt)
+  return await UserModel.create(newUser, {transaction})
+}
 
-  //SOLUÇÃO MOMENTÂNEA -> PRECISO FAZER O FRONT MANDAR CERTO
-  if(!newUser.tipo) newUser.tipo = UserType.CIDADAO
-  await uniqueUserValidator(newUser)
-
-  const user = await UserModel.create(newUser)
-
+export const cadastroCidadao = async(newCidadao : TCidadaoPayload, user : TSafeUser, transaction ?: Transaction): Promise<CidadaoModel> => {
   const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
-  return {
-    error: false,
-    message: "Cadastro realizado! Verifique seu e-mail para ativar sua conta.",
-  }
+  return await CidadaoModel.create(newCidadao, {transaction})
 }
 
 export const confirmEmail = async (token: string): Promise<{ message: string }> => {

@@ -1,6 +1,6 @@
 import { UserModel } from "../models/user.model"
 import { Op } from "sequelize"
-import type { IUserListFilters, IUser, IUserPayload } from "../interfaces/usuario"
+import type { IUserListFilters, IUser, TUserPayload } from "../interfaces/usuario"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 
@@ -55,7 +55,7 @@ export const getUserByName = async (userName: string): Promise<IUser> => {
   return foundUser
 }
 
-export const updateUser = async (idUsuario: number, updatedUser: IUserPayload): Promise<IUser> => {
+export const updateUser = async (idUsuario: number, updatedUser: TUserPayload): Promise<IUser> => {
   const userFound = await UserModel.findOne({ where: { idUsuario } })
 
   if (!userFound) {
@@ -79,7 +79,7 @@ export const deleteUser = async (userId: number): Promise<IUser> => {
   return userFound
 }
 
-export const uniqueUserValidator = async (user : IUserPayload, idUsuario?: number): Promise<void> => {
+export const uniqueUserValidator = async (user : TUserPayload, idUsuario?: number): Promise<void> => {
   const query: IUserExists = {
     where: {
       [Op.or]: [],
