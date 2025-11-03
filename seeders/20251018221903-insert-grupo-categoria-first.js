@@ -9,22 +9,22 @@ module.exports = {
         {
           id: 1,
           nome : "Água",
-          icone: "water.webp"
+          icone: "water.png"
         },
         {
           id: 2,
           nome : "Drenagem",
-          icone: "drainage.webp"
+          icone: "drainage.png"
         },
         {
           id: 3,
           nome : "Esgoto",
-          icone: "sewage.webp"
+          icone: "sewage.png"
         },
         {
           id: 4,
           nome : "Limpeza",
-          icone: "cleaning.webp"
+          icone: "cleaning.png"
         }
       ], transaction)
       await transaction.commit();

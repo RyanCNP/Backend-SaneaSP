@@ -12,8 +12,9 @@ import {
 } from "../services/denuncia.service"
 import { createImagemDenuncia } from "./imagem-denuncia.controller"
 import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/categoria-denuncia.service"
-import { removeFile } from "../services/image-upload.service"
 import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
+import { removeFiles } from "../config/multer.config"
+import { UploadSubfolder } from "../enums/UploadSubFolder.enum"
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
   const query: IFilterListDenuncia = req.query
@@ -29,8 +30,6 @@ export const getById = async (req: Request, res: Response) => {
 
 export const getUserComplaint = async (req: Request, res: Response) => {
   const idUsuario = req.user.id as number
-  console.log(req.user)
-  console.log(idUsuario)
   const filter : IFilterListDenuncia = req.query
   const denuncias = await findUserComplaint(idUsuario, filter)
   res.status(200).json(denuncias)
@@ -88,7 +87,6 @@ export const postDenuncia = async (req: Request, res: Response) => {
 export const putDenuncia = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
   const body = req.body as ICreateDenuncia;
-  console.log(body);
 
   await findDenunciaById(id);
 
@@ -101,7 +99,7 @@ export const putDenuncia = async (req: Request, res: Response) => {
   if (body.imagens && body.imagens.length > 0) {
     let files:string[] = body.imagens;
     const images = await getImagesByComplaintId(id)
-    await removeFile(images.map(img => img.nome));
+    await removeFiles(images.map(img => img.nome), UploadSubfolder.Denuncias);
     await createImagemDenuncia(files, id)
   }
 
@@ -114,7 +112,7 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
 
   const denuncia = await findDenunciaById(idDenuncia)
   const imagens = await getImagesByComplaintId(idDenuncia);
-  await removeFile(imagens.map(img => img.nome));
+  await removeFiles(imagens.map(img => img.nome), UploadSubfolder.Denuncias);
   await deleteDenunciaById(idDenuncia)
 
   res.status(200).json(denuncia)
