@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { autenticar, cadastroCidadao, emailConfirmation, getAuthenticatedUser, testeCadastroUsuarioComum } from "../controllers/auth.controller";
 import { validateToken } from "../middlewares/auth.middleware";
 import { userCreateMid } from "../middlewares/user-create.middleware";
-import { userExistsMid } from "../middlewares/user-exists.middleware";
+import { userAlreadyExists } from "../middlewares/user-already-exists.middleware";
 import { withTransaction } from "../middlewares/transaction.middleware";
 dotenv.config();
 
@@ -13,8 +13,8 @@ export const authRoutes = express.Router();
 authRoutes.post("/login", autenticar);
 
 //Cadastro
-authRoutes.post("/register", userExistsMid, userCreateMid, testeCadastroUsuarioComum); //APENAS PARA TESTE
-authRoutes.post("/register/cidadao", withTransaction, userExistsMid, userCreateMid, cadastroCidadao);
+authRoutes.post("/register", userAlreadyExists, userCreateMid, testeCadastroUsuarioComum); //APENAS PARA TESTE
+authRoutes.post("/register/cidadao", withTransaction, userAlreadyExists, userCreateMid, cadastroCidadao);
 // authRoutes.post("/register/funcionario", withTransaction, userExistsMid, userCreateMid, cadastroFuncionario);
 // authRoutes.post("/register/prefeitura", withTransaction, userExistsMid, userCreateMid, cadastroPrefeitura);
 
