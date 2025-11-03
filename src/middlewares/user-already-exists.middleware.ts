@@ -4,7 +4,7 @@ import { HttpCode } from "../enums/HttpCode.enum";
 import { UserModel } from "../models";
 import { Op } from "sequelize";
 
-export const userExistsMid = async (
+export const userAlreadyExists = async (
   req: Request,
   res: Response,
   next: NextFunction
