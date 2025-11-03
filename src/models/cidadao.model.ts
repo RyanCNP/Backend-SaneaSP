@@ -32,22 +32,22 @@ CidadaoModel.init(
       field: "id_usuario",
     },
     cep: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.CHAR(8), //xxxxx-xxxx -> apenas números
       field: "cep",
     },
     cidade: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(50),
       field: "cidade",
     },
     bairro: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(50),
       field: "bairro",
     },
     rua: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING(100),
       field: "rua",
     },
