@@ -5,6 +5,7 @@ import { validateToken } from "../middlewares/auth.middleware";
 import { userCreateMid } from "../middlewares/user-create.middleware";
 import { userAlreadyExists } from "../middlewares/user-already-exists.middleware";
 import { withTransaction } from "../middlewares/transaction.middleware";
+import { UserType } from "../enums/UserType.enum";
 dotenv.config();
 
 export const authRoutes = express.Router();
@@ -13,10 +14,10 @@ export const authRoutes = express.Router();
 authRoutes.post("/login", autenticar);
 
 //Cadastro
-authRoutes.post("/register", userAlreadyExists, userCreateMid, testeCadastroUsuarioComum); //APENAS PARA TESTE
-authRoutes.post("/register/cidadao", withTransaction, userAlreadyExists, userCreateMid, cadastroCidadao);
-// authRoutes.post("/register/funcionario", withTransaction, userExistsMid, userCreateMid, cadastroFuncionario);
-// authRoutes.post("/register/prefeitura", withTransaction, userExistsMid, userCreateMid, cadastroPrefeitura);
+authRoutes.post("/register", withTransaction, userAlreadyExists, userCreateMid(UserType.CIDADAO), testeCadastroUsuarioComum); //APENAS PARA TESTE
+authRoutes.post("/register/cidadao", withTransaction, userAlreadyExists, userCreateMid(UserType.CIDADAO), cadastroCidadao);
+// authRoutes.post("/register/funcionario", withTransaction, userExistsMid, userCreateMid(UserType.FUNCIONARIO), cadastroFuncionario);
+// authRoutes.post("/register/prefeitura", withTransaction, userExistsMid, userCreateMid(UserType.PREFEITURA), cadastroPrefeitura);
 
 // Rota de confirmação de cadastro
 authRoutes.get("/confirm/:token", emailConfirmation);
