@@ -12,6 +12,7 @@ export const autenticar = async (req: Request, res: Response) => {
 }
 
 export const testeCadastroUsuarioComum = async(req: Request, res: Response) => {
+  await req.transaction?.commit();
   res.json({
     message : "Usuário cadastrado",
     data : req.newCommonUser
