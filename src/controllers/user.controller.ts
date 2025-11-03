@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import type { IUser, IUserListFilters, IUserPayload } from "../interfaces/usuario"
+import type { IUser, IUserListFilters, TUserPayload } from "../interfaces/usuario"
 import * as userService from "../services/user.service"
 
 export const getUsers = async (req: Request, res: Response) => {
@@ -32,7 +32,7 @@ export const getUserByName = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   const idUsuario = Number(req.params.id)
-  const user: IUserPayload = req.body
+  const user: TUserPayload = req.body
   const result = await userService.updateUser(idUsuario, user)
   res.status(200).json(result)
 }

@@ -33,11 +33,7 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
             throw new ApiError('Não autorizado. Usuário não encontrado', HttpCode.Unautorized)
         }
 
-        const plainUser = user.get({ plain: true })
-        const { senha, ...loggedUser } = plainUser
-
-
-        req.user = loggedUser
+        req.user = user.getSafeUser();
 
         next()
     } catch (error) {

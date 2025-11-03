@@ -11,6 +11,8 @@ export interface ICidadao {
     telefone ?: string
 }
 
+export type TCidadaoPayload = Omit<ICidadao, 'idCidadao'>;
+
 export interface ICidadaoFilter{
     cidade ?: ICidadao['cidade']
     bairro ?: ICidadao['bairro']

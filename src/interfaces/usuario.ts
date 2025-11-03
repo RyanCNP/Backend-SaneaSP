@@ -8,7 +8,9 @@ export interface IUser {
     verified: boolean
 }
 
-export type IUserPayload = Omit<IUser, 'idUsuario' | 'verified'>;
+export type TUserPayload = Omit<IUser, 'idUsuario' | 'verified'>;
+
+export type TSafeUser = Omit<IUser, 'senha'>;
 
 export interface IUserListFilters {
     nome?: IUser['nome'],
