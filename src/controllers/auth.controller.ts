@@ -3,6 +3,7 @@ import * as authService from "../services/auth.service"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import { TCidadaoPayload } from "../interfaces/cidadao"
+import { TransactionNotProvided } from "../errors/TransactionNotProvided.error"
 
 export const autenticar = async (req: Request, res: Response) => {
   const { email, senha } = req.body
@@ -18,9 +19,8 @@ export const testeCadastroUsuarioComum = async(req: Request, res: Response) => {
 }
 
 export const cadastroCidadao = async(req: Request, res: Response) => {
- const transaction = req.transaction;
- if(!transaction) throw new ApiError('Nenhuma transaction fornecida', HttpCode.InternalServerError);
-
+  const transaction = req.transaction;
+  if(!transaction) throw new TransactionNotProvided('Ocorreu um problema ao criar o seu usuário')
   try {
     const commonUser = req.newCommonUser;
     const {cep, bairro, cidade, numero, complemento, rua, telefone, cpf} = req.body;
