@@ -6,7 +6,7 @@ let config;
 
 if (env === "development") {
   config = {
-      url: "postgresql://postgres:1234@localhost/postgres",
+      url: "postgresql://postgres:1234@localhost:5423/postgres",
       dialect: "postgres",
       protocol: "postgres",
       dialectOptions: {}
