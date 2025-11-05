@@ -44,8 +44,10 @@ export const atualizaCidadao = async (req: Request, res: Response) => {
   })
 }
 
-export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.params
-  const result = await userService.deleteUser(Number(id))
-  res.status(200).json(result)
+export const removeCidadao = async (req: Request, res: Response) => {
+  const idUsuario = req.params.id
+  await userService.deleteUser(Number(idUsuario))
+  res.status(200).json({
+    message : 'Sua conta foi excluída com sucesso!'
+  })
 }

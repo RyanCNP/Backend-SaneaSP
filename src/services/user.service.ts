@@ -76,6 +76,17 @@ export const atualizaCidadao = async (
   return updatedCitizen;
 }
 
+export const removeCidadao = async (
+  idUsuario : IUser['idUsuario']
+) => {
+  const foundCitizen = await CidadaoModel.findByPk(idUsuario)
+  const foundUser = await UserModel.findByPk(idUsuario)
+
+  if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+
+  await CidadaoModel.destroy()
+}
+
 export const deleteUser = async (userId: number): Promise<IUser> => {
   const userFound = await UserModel.findByPk(userId)
 
