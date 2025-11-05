@@ -1,10 +1,10 @@
 export interface ICategoriaDenuncia {
-    id: number,
-    id_categoria?: number,
-    id_denuncia?: number
+  id: number;
+  id_categoria?: number;
+  id_denuncia?: number;
 }
 
 export interface ICreateCategoriaDenuncia {
-    id_categoria: number,
-    id_denuncia: number
+  id_categoria: number;
+  id_denuncia: number;
 }

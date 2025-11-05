@@ -2,104 +2,107 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database.config";
 import { IUser, UserLevel } from "../interfaces/usuario";
 
-export type IUserCreationAttributes = Optional<IUser, 'id'>;
+export type IUserCreationAttributes = Optional<IUser, "id">;
 
 export class UserModel extends Model<IUser, IUserCreationAttributes> {
-    public id!: number;
-    public nome!: string;
-    public telefone?: string;
-    public email!: string;
-    public senha!: string;
-    public cpf!: string;
-    public cep?: string;
-    public cidade?: string;
-    public bairro?: string;
-    public rua?: string;
-    public numero?: string;
-    public complemento?: string;
-    public nivel!: UserLevel;
-    public verified!: boolean;
+  public id!: number;
+  public nome!: string;
+  public telefone?: string;
+  public email!: string;
+  public senha!: string;
+  public cpf!: string;
+  public cep?: string;
+  public cidade?: string;
+  public bairro?: string;
+  public rua?: string;
+  public numero?: string;
+  public complemento?: string;
+  public nivel!: UserLevel;
+  public verified!: boolean;
 }
 
-UserModel.init({
+UserModel.init(
+  {
     id: {
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        field: 'id'
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      field: "id",
     },
     nome: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        field: 'nome'
+      type: DataTypes.STRING(50),
+      allowNull: false,
+      field: "nome",
     },
     telefone: {
-        type: DataTypes.STRING(14),
-        allowNull: true,
-        field: 'telefone'
+      type: DataTypes.STRING(14),
+      allowNull: true,
+      field: "telefone",
     },
     email: {
-        type: DataTypes.STRING(40),
-        allowNull: false,
-        unique: true,
-        field: 'email'
+      type: DataTypes.STRING(40),
+      allowNull: false,
+      unique: true,
+      field: "email",
     },
     senha: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-        field: 'senha'
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      field: "senha",
     },
     cpf: {
-        type: DataTypes.CHAR(11),
-        allowNull: true,
-        unique: true,
-        field: 'cpf'
+      type: DataTypes.CHAR(11),
+      allowNull: true,
+      unique: true,
+      field: "cpf",
     },
     cep: {
-        allowNull: true,
-        type: DataTypes.CHAR(9),
-        field: "cep"
+      allowNull: true,
+      type: DataTypes.CHAR(9),
+      field: "cep",
     },
     cidade: {
-        allowNull: true,
-        type: DataTypes.STRING(100),
-        field: "cidade"
+      allowNull: true,
+      type: DataTypes.STRING(100),
+      field: "cidade",
     },
     bairro: {
-        allowNull: true,
-        type: DataTypes.STRING(100),
-        field: "bairro"
+      allowNull: true,
+      type: DataTypes.STRING(100),
+      field: "bairro",
     },
     rua: {
-        allowNull: true,
-        type: DataTypes.STRING(255),
-        field: "rua"
+      allowNull: true,
+      type: DataTypes.STRING(255),
+      field: "rua",
     },
     numero: {
-        allowNull: true,
-        type: DataTypes.STRING(5),
-        field: "numero"
+      allowNull: true,
+      type: DataTypes.STRING(5),
+      field: "numero",
     },
     complemento: {
-        allowNull: true,
-        type: DataTypes.STRING(20),
-        field: "complemento"
+      allowNull: true,
+      type: DataTypes.STRING(20),
+      field: "complemento",
     },
     nivel: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        defaultValue: UserLevel.COMMON,
-        field: 'nivel'
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: UserLevel.COMMON,
+      field: "nivel",
     },
     verified: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-        field: 'verified'
-    }
-}, {
-    tableName: 'usuario',
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "verified",
+    },
+  },
+  {
+    tableName: "usuario",
     sequelize,
-    timestamps: false
-})
+    timestamps: false,
+  },
+);

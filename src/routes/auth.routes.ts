@@ -1,6 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
-import { autenticar, emailConfirmation, getAuthenticatedUser, registerUser } from "../controllers/auth.controller";
+import {
+  autenticar,
+  emailConfirmation,
+  getAuthenticatedUser,
+  registerUser,
+} from "../controllers/auth.controller";
 import { validateToken } from "../middlewares/auth.middleware";
 dotenv.config();
 

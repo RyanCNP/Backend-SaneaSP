@@ -3,6 +3,6 @@ import { validateToken } from "../middlewares/auth.middleware";
 import { getAllComentario } from "../controllers/comentario.controller";
 export const routes = express.Router();
 
-routes.get("/:id",getAllComentario);
+routes.get("/:id", getAllComentario);
 
 export default routes;

@@ -1,8 +1,17 @@
-import type { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia"
-import { Op } from "sequelize"
-import { CategoriaModel, ImagemDenunciaModel, DenunciaModel, GrupoCategoriaModel } from "../models"
-import { ApiError } from "../errors/ApiError.error"
-import { HttpCode } from "../enums/HttpCode.enum"
+import type {
+  ICreateDenuncia,
+  IFilterListDenuncia,
+  IDenuncia,
+} from "../interfaces/denuncia";
+import { Op } from "sequelize";
+import {
+  CategoriaModel,
+  ImagemDenunciaModel,
+  DenunciaModel,
+  GrupoCategoriaModel,
+} from "../models";
+import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
 import ExcelJS from "exceljs";
 import { Buffer } from "buffer";
 
@@ -15,75 +24,86 @@ const denunciaFindIncludes = [
       {
         model: GrupoCategoriaModel,
         as: "grupo",
-        attributes: { exclude: ['id'] },
-      }
-    ]
+        attributes: { exclude: ["id"] },
+      },
+    ],
   },
   {
     model: ImagemDenunciaModel,
     as: "imagens",
     attributes: { exclude: ["id_denuncia"] },
   },
-]
+];
 
-export const findAllDenuncias = async (filtros: IFilterListDenuncia): Promise<IDenuncia[]> => {
+export const findAllDenuncias = async (
+  filtros: IFilterListDenuncia,
+): Promise<IDenuncia[]> => {
   const query: any = {
     where: {},
     include: denunciaFindIncludes,
-    order : [['dataPublicacao', "DESC"]]
-  }
+    order: [["dataPublicacao", "DESC"]],
+  };
 
   if (filtros) {
     if (filtros.titulo) {
-      query.where.titulo = { [Op.like]: `%${filtros.titulo}%` }
+      query.where.titulo = { [Op.like]: `%${filtros.titulo}%` };
     }
     if (filtros.rua) {
-      query.where.rua = { [Op.like]: `%${filtros.rua}%` }
+      query.where.rua = { [Op.like]: `%${filtros.rua}%` };
     }
     if (filtros.cep) {
-      query.where.cep = { [Op.like]: `%${filtros.cep}%` }
+      query.where.cep = { [Op.like]: `%${filtros.cep}%` };
     }
     if (filtros.bairro) {
-      query.where.bairro = { [Op.like]: `%${filtros.bairro}%` }
+      query.where.bairro = { [Op.like]: `%${filtros.bairro}%` };
     }
     if (filtros.cidade) {
-      query.where.cidade = { [Op.like]: `%${filtros.cidade}%` }
+      query.where.cidade = { [Op.like]: `%${filtros.cidade}%` };
     }
     if (filtros.status) {
-      query.where.status = { [Op.like]: `%${filtros.status}%` }
+      query.where.status = { [Op.like]: `%${filtros.status}%` };
     }
     if (filtros.pontuacao) {
-      query.where.pontuacao = { [Op.like]: `${filtros.pontuacao}` }
+      query.where.pontuacao = { [Op.like]: `${filtros.pontuacao}` };
     }
   }
 
-  return await DenunciaModel.findAll(query)
-}
+  return await DenunciaModel.findAll(query);
+};
 
-export const findDenunciaById = async (idDenuncia: number): Promise<IDenuncia> => {
+export const findDenunciaById = async (
+  idDenuncia: number,
+): Promise<IDenuncia> => {
   const denuncia = await DenunciaModel.findOne({
     where: { id: idDenuncia },
     include: denunciaFindIncludes,
-  })
+  });
 
-  if (!denuncia) throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound)
+  if (!denuncia)
+    throw new ApiError("Nenhuma reclamação encontrada", HttpCode.NotFound);
 
-  return denuncia
-}
+  return denuncia;
+};
 
-export const findUserComplaint = async (fkUsuario: number, filter ?: IFilterListDenuncia): Promise<IDenuncia[]> => {
+export const findUserComplaint = async (
+  fkUsuario: number,
+  filter?: IFilterListDenuncia,
+): Promise<IDenuncia[]> => {
   const query: any = {
-    where: {idUsuario: fkUsuario},
+    where: { idUsuario: fkUsuario },
     include: denunciaFindIncludes,
-  }
+  };
   if (filter && filter.status) {
-    query.where.status = { [Op.like]: `%${filter.status}%` }
+    query.where.status = { [Op.like]: `%${filter.status}%` };
   }
-  
-  return await DenunciaModel.findAll(query)
-}
 
-export const findDenunciasByCategoria = async (categorias: number[], idUsuario?: number): Promise<IDenuncia[]> => {
+  return await DenunciaModel.findAll(query);
+};
+
+export const findDenunciasByCategoria = async (
+  categorias: number[],
+  idUsuario?: number,
+): Promise<IDenuncia[]> => {
   const query: any = {
     where: {},
     include: [
@@ -105,90 +125,110 @@ export const findDenunciasByCategoria = async (categorias: number[], idUsuario?:
         attributes: { exclude: ["id_denuncia"] },
       },
     ],
-  }
+  };
 
   if (idUsuario) {
-    query.where.idUsuario = idUsuario
+    query.where.idUsuario = idUsuario;
   }
 
-  return await DenunciaModel.findAll(query)
-}
+  return await DenunciaModel.findAll(query);
+};
 
-export const createNewDenuncia = async (body: ICreateDenuncia): Promise<IDenuncia> => {
-  const { categorias, imagens, ...denunciaBody } = body
+export const createNewDenuncia = async (
+  body: ICreateDenuncia,
+): Promise<IDenuncia> => {
+  const { categorias, imagens, ...denunciaBody } = body;
 
-  body.pontuacao = calculatePontuacao(body)
-  const { pontuacao, ...denunciaBodyWithoutPontuacao } = denunciaBody
+  body.pontuacao = calculatePontuacao(body);
+  const { pontuacao, ...denunciaBodyWithoutPontuacao } = denunciaBody;
 
   const newDenuncia = {
     status: 0,
     dataPublicacao: new Date(),
     pontuacao: body.pontuacao,
     ...denunciaBodyWithoutPontuacao,
-  }
+  };
 
-  const denuncia = await DenunciaModel.create(newDenuncia)
+  const denuncia = await DenunciaModel.create(newDenuncia);
 
   const response = await DenunciaModel.findByPk(denuncia.id, {
     include: denunciaFindIncludes,
-  })
+  });
 
-  if (!response) throw new ApiError("Não foi possível cadastrar a reclamação", HttpCode.BadRequest)
+  if (!response)
+    throw new ApiError(
+      "Não foi possível cadastrar a reclamação",
+      HttpCode.BadRequest,
+    );
 
-  return response
-}
+  return response;
+};
 
-export const updateDenunciaById = async (idDenuncia: number, body: ICreateDenuncia): Promise<IDenuncia> => {
-  body.pontuacao = calculatePontuacao(body)
+export const updateDenunciaById = async (
+  idDenuncia: number,
+  body: ICreateDenuncia,
+): Promise<IDenuncia> => {
+  body.pontuacao = calculatePontuacao(body);
 
   await DenunciaModel.update(body, {
     where: { id: idDenuncia },
-  })
+  });
 
   const response = await DenunciaModel.findByPk(idDenuncia, {
     include: denunciaFindIncludes,
-  })
+  });
 
   if (!response) {
-    throw new ApiError("Não foi possível editar a reclamação", HttpCode.BadRequest)
+    throw new ApiError(
+      "Não foi possível editar a reclamação",
+      HttpCode.BadRequest,
+    );
   }
 
-  return response
-}
+  return response;
+};
 
-export const deleteDenunciaById = async (idDenuncia: number): Promise<IDenuncia> => {
+export const deleteDenunciaById = async (
+  idDenuncia: number,
+): Promise<IDenuncia> => {
   const denuncia = await DenunciaModel.findByPk(idDenuncia, {
     include: denunciaFindIncludes,
-  })
+  });
 
   if (!denuncia) {
-    throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
+    throw new ApiError("Reclamação não encontrada", HttpCode.NotFound);
   }
 
-  await denuncia.destroy()
-  return denuncia
-}
+  await denuncia.destroy();
+  return denuncia;
+};
 
 function calculatePontuacao(bodyRequest: ICreateDenuncia): number {
-  let pontuacao = 0
+  let pontuacao = 0;
 
   if (bodyRequest.imagens && bodyRequest.imagens?.length > 0) {
-    pontuacao += 100 * bodyRequest.imagens.length
+    pontuacao += 100 * bodyRequest.imagens.length;
   }
 
   if (bodyRequest.categorias && bodyRequest.categorias?.length > 0) {
-    pontuacao += 100 * bodyRequest.categorias.length
+    pontuacao += 100 * bodyRequest.categorias.length;
   }
 
-  if (bodyRequest.cep && bodyRequest.rua && bodyRequest.numero && bodyRequest.bairro && bodyRequest.cidade) {
-    pontuacao += 200
+  if (
+    bodyRequest.cep &&
+    bodyRequest.rua &&
+    bodyRequest.numero &&
+    bodyRequest.bairro &&
+    bodyRequest.cidade
+  ) {
+    pontuacao += 200;
   }
 
-  return pontuacao
+  return pontuacao;
 }
 export const exportDenunciasExcel = async (): Promise<Buffer> => {
   const denuncias = await DenunciaModel.findAll({
-    include: denunciaFindIncludes
+    include: denunciaFindIncludes,
   });
 
   const workbook = new ExcelJS.Workbook();
@@ -210,7 +250,7 @@ export const exportDenunciasExcel = async (): Promise<Buffer> => {
       descricao: d.descricao,
       status: d.status,
       pontuacao: d.pontuacao,
-      dataPublicacao : d.dataPublicacao
+      dataPublicacao: d.dataPublicacao,
     });
   });
 

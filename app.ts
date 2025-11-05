@@ -4,8 +4,8 @@ import path from "path";
 import categoriaRoutes from "./src/routes/categoria.routes";
 import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
-import locationRoutes from "./src/routes/location.routes"
-import comentarioRoutes from "./src/routes/comentario.routes"
+import locationRoutes from "./src/routes/location.routes";
+import comentarioRoutes from "./src/routes/comentario.routes";
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
@@ -14,7 +14,7 @@ import registroRoutes from "./src/routes/registro.routes";
 
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
-import http from 'http'
+import http from "http";
 import { initSockets } from "./src/sockets";
 export const app = express();
 
@@ -31,8 +31,8 @@ app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
-app.use('/upload',uploadRoutes);
-app.use("/location",locationRoutes);
+app.use("/upload", uploadRoutes);
+app.use("/location", locationRoutes);
 app.use("/feedback", feedbackRoutes);
 app.use("/comentario", comentarioRoutes);
 app.use("/registro", registroRoutes);

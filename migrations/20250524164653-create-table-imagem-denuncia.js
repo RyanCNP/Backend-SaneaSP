@@ -1,35 +1,34 @@
-'use strict';
+"use strict";
 
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('imagem_denuncia',
-      {
-        id: {
-          primaryKey: true,
-          autoIncrement: true,
-          allowNull: false,
-          type: DataTypes.INTEGER,
+    await queryInterface.createTable("imagem_denuncia", {
+      id: {
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+        type: DataTypes.INTEGER,
+      },
+      nome: {
+        allowNull: false,
+        type: DataTypes.STRING(100),
+      },
+      id_denuncia: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        references: {
+          model: "denuncia",
+          key: "id",
         },
-        nome: {
-          allowNull: false,
-          type: DataTypes.STRING(100),
-        },
-        id_denuncia: {
-          allowNull: false,
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'denuncia',
-            key: 'id'
-          },
-          onDelete: 'CASCADE'
-        },
-      });
+        onDelete: "CASCADE",
+      },
+    });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('imagem_denuncia');
-  }
+    await queryInterface.dropTable("imagem_denuncia");
+  },
 };

@@ -1,25 +1,35 @@
 // import { uploadDir } from "../config/multer.config"
-import type { ICreateImagemDenuncia, IImagemDenuncia } from "../interfaces/imagem-denuncia"
-import { ImagemDenunciaModel } from "../models"
+import type {
+  ICreateImagemDenuncia,
+  IImagemDenuncia,
+} from "../interfaces/imagem-denuncia";
+import { ImagemDenunciaModel } from "../models";
 // import { Op } from "sequelize"
 // import fs from "fs/promises"
 // import path from "path"
 
-export const getImagesByComplaintId = async (id: number): Promise<IImagemDenuncia[]> => {
-  return await ImagemDenunciaModel.findAll({ where: { id_denuncia: id } })
-}
+export const getImagesByComplaintId = async (
+  id: number,
+): Promise<IImagemDenuncia[]> => {
+  return await ImagemDenunciaModel.findAll({ where: { id_denuncia: id } });
+};
 
-
-export const createImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
+export const createImagemDenuncia = async (
+  fileNames: string[],
+  id_denuncia: number,
+) => {
   if (!fileNames || fileNames.length === 0) {
-    throw new Error("Nenhum arquivo enviado.")
+    throw new Error("Nenhum arquivo enviado.");
   }
 
-  const newImages: ICreateImagemDenuncia[] = fileNames.map((nome) => ({ nome, id_denuncia }))
-  await ImagemDenunciaModel.bulkCreate(newImages)
+  const newImages: ICreateImagemDenuncia[] = fileNames.map((nome) => ({
+    nome,
+    id_denuncia,
+  }));
+  await ImagemDenunciaModel.bulkCreate(newImages);
 
-  return newImages
-}
+  return newImages;
+};
 
 // export const updateImagemDenuncia = async (fileNames: string[], id_denuncia: number) => {
 //   const oldImages = await ImagemDenunciaModel.findAll({ where: { id_denuncia } })

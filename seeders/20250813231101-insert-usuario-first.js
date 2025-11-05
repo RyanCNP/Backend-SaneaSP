@@ -4,8 +4,9 @@
 
 export async function up(queryInterface, Sequelize) {
   const transaction = await queryInterface.sequelize.transaction();
-    try {
-      await queryInterface.bulkInsert("usuario", [{
+  try {
+    await queryInterface.bulkInsert("usuario", [
+      {
         id: 1,
         nome: "Davy Oliveira Ribeiro",
         telefone: "(19) 99655-3967",
@@ -78,17 +79,21 @@ export async function up(queryInterface, Sequelize) {
         cep: "13087-540",
         nivel: 1,
         verified: true,
-      }]);
-      await transaction.commit();
-    } catch (error) {
-       await transaction.rollback();
-      console.log('Erro na seed INSERT-USUARIO - rollback realizado:', error.errors || error.message);
-      throw error;
-    }
+      },
+    ]);
+    await transaction.commit();
+  } catch (error) {
+    await transaction.rollback();
+    console.log(
+      "Erro na seed INSERT-USUARIO - rollback realizado:",
+      error.errors || error.message,
+    );
+    throw error;
+  }
 }
 export async function down(queryInterface, Sequelize) {
   await queryInterface.bulkDelete("usuario", null, {});
   await queryInterface.sequelize.query(
-    "DELETE FROM sqlite_sequence WHERE name='usuario';"
+    "DELETE FROM sqlite_sequence WHERE name='usuario';",
   );
 }

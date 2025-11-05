@@ -1,53 +1,55 @@
-import { Op } from "sequelize"
-import { ApiError } from "../errors/ApiError.error"
-import { HttpCode } from "../enums/HttpCode.enum"
-import { GrupoCategoriaModel, CategoriaModel } from "../models"
+import { Op } from "sequelize";
+import { ApiError } from "../errors/ApiError.error";
+import { HttpCode } from "../enums/HttpCode.enum";
+import { GrupoCategoriaModel, CategoriaModel } from "../models";
 
 const categoriaIncludes = [
   {
     model: GrupoCategoriaModel,
     as: "grupo",
-    attributes: { exclude: ['id'] },
-  }
-]
+    attributes: { exclude: ["id"] },
+  },
+];
 
 const grupoCategoriaIncludes = [
   {
     model: CategoriaModel,
     as: "categorias",
-    attributes: { exclude: ['id_grupo'] },
-  }
-]
+    attributes: { exclude: ["id_grupo"] },
+  },
+];
 
 export const findAllCategorias = async () => {
-  return await CategoriaModel.findAll({include : categoriaIncludes})
-}
+  return await CategoriaModel.findAll({ include: categoriaIncludes });
+};
 
 export const countCategorias = async () => {
-  return await CategoriaModel.count()
-}
+  return await CategoriaModel.count();
+};
 
 export const findCategoriaById = async (id: number) => {
-  const categoria = await CategoriaModel.findByPk(id)
+  const categoria = await CategoriaModel.findByPk(id);
 
-  if (!categoria) throw new ApiError("Nenhuma categoria encontrada", HttpCode.NotFound)
+  if (!categoria)
+    throw new ApiError("Nenhuma categoria encontrada", HttpCode.NotFound);
 
-  return categoria
-}
+  return categoria;
+};
 
 export const findCategoriaByName = async (nome: string) => {
   const categoria = await CategoriaModel.findOne({
     where: { nome: { [Op.like]: `%${nome}%` } },
-  })
+  });
 
-  if (!categoria) throw new ApiError("Nenhuma categoria encontrada", HttpCode.NotFound)
+  if (!categoria)
+    throw new ApiError("Nenhuma categoria encontrada", HttpCode.NotFound);
 
-  return categoria
-}
+  return categoria;
+};
 
 export const findAllGrupoCategorias = async () => {
-  return await GrupoCategoriaModel.findAll({include : grupoCategoriaIncludes})
-}
+  return await GrupoCategoriaModel.findAll({ include: grupoCategoriaIncludes });
+};
 
 /* NÃO ESTÃO SENDO UTILIZADOS MAIS */
 // export const createNewCategoria = async (novaCategoria : ICategoriaCriacao) => {

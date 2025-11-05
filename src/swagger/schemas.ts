@@ -108,7 +108,7 @@
  *           items:
  *             type: string
  *             example: "imagem.png"
- *         Tags: 
+ *         Tags:
  *           type: array
  *           items:
  *             type: number

@@ -1,6 +1,6 @@
 "use strict";
 
-const { DataTypes } = require('sequelize');
+const { DataTypes } = require("sequelize");
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
       },
       tipo: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
       },
       id_denuncia: {
         allowNull: false,
@@ -33,7 +33,7 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      id_usuario:{
+      id_usuario: {
         allowNull: false,
         type: DataTypes.INTEGER,
         references: {
@@ -41,13 +41,11 @@ module.exports = {
           key: "id",
         },
         onDelete: "CASCADE",
-      }
+      },
     });
   },
 
   async down(queryInterface, Sequelize) {
-
-    await queryInterface.dropTable('registro');
-
+    await queryInterface.dropTable("registro");
   },
 };

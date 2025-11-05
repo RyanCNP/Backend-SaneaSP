@@ -1,4 +1,4 @@
-import express from "express"
+import express from "express";
 import {
   deleteDenuncia,
   getAllDenuncias,
@@ -8,19 +8,19 @@ import {
   putDenuncia,
   getByCategoria,
   exportExcel,
-} from "../controllers/denuncia.controller"
-import { validateToken } from "../middlewares/auth.middleware"
+} from "../controllers/denuncia.controller";
+import { validateToken } from "../middlewares/auth.middleware";
 
-const router = express.Router()
+const router = express.Router();
 
-router.get("/", getAllDenuncias)
-router.get("/categorias", getByCategoria)
-router.get("/my", validateToken, getUserComplaint)
+router.get("/", getAllDenuncias);
+router.get("/categorias", getByCategoria);
+router.get("/my", validateToken, getUserComplaint);
 router.get("/export", exportExcel);
-router.get("/:id", getById)
-router.post("/", validateToken, postDenuncia)
-router.get("/usuario", getUserComplaint)
-router.put("/:id", validateToken, putDenuncia)
-router.delete("/:id", validateToken, deleteDenuncia)
+router.get("/:id", getById);
+router.post("/", validateToken, postDenuncia);
+router.get("/usuario", getUserComplaint);
+router.put("/:id", validateToken, putDenuncia);
+router.delete("/:id", validateToken, deleteDenuncia);
 
-export default router
+export default router;

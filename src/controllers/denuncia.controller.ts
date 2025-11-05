@@ -1,5 +1,9 @@
-import type { Request, Response } from "express"
-import type { ICreateDenuncia, IDenuncia, IFilterListDenuncia } from "../interfaces/denuncia"
+import type { Request, Response } from "express";
+import type {
+  ICreateDenuncia,
+  IDenuncia,
+  IFilterListDenuncia,
+} from "../interfaces/denuncia";
 import {
   findAllDenuncias,
   findDenunciaById,
@@ -9,80 +13,83 @@ import {
   updateDenunciaById,
   deleteDenunciaById,
   exportDenunciasExcel,
-} from "../services/denuncia.service"
-import { createImagemDenuncia } from "./imagem-denuncia.controller"
-import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/categoria-denuncia.service"
-import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
-import { removeFiles } from "../config/multer.config"
-import { UploadSubfolder } from "../enums/UploadSubFolder.enum"
+} from "../services/denuncia.service";
+import { createImagemDenuncia } from "./imagem-denuncia.controller";
+import {
+  createCategoryDenuncia,
+  updateCategoryDenuncia,
+} from "../services/categoria-denuncia.service";
+import { getImagesByComplaintId } from "../services/imagem-denuncia.service";
+import { removeFiles } from "../config/multer.config";
+import { UploadSubfolder } from "../enums/UploadSubFolder.enum";
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
-  const query: IFilterListDenuncia = req.query
-  const foundDenuncias = await findAllDenuncias(query)
-  res.status(200).json(foundDenuncias)
-}
+  const query: IFilterListDenuncia = req.query;
+  const foundDenuncias = await findAllDenuncias(query);
+  res.status(200).json(foundDenuncias);
+};
 
 export const getById = async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
-  const denuncia = await findDenunciaById(id)
-  res.status(200).json(denuncia)
-}
+  const id = Number(req.params.id);
+  const denuncia = await findDenunciaById(id);
+  res.status(200).json(denuncia);
+};
 
 export const getUserComplaint = async (req: Request, res: Response) => {
-  const idUsuario = req.user.id as number
-  const filter : IFilterListDenuncia = req.query
-  const denuncias = await findUserComplaint(idUsuario, filter)
-  res.status(200).json(denuncias)
-}
+  const idUsuario = req.user.id as number;
+  const filter: IFilterListDenuncia = req.query;
+  const denuncias = await findUserComplaint(idUsuario, filter);
+  res.status(200).json(denuncias);
+};
 
 export const getByCategoria = async (req: Request, res: Response) => {
-  let listCategoriaId: number[] = []
-  let listaQuery!: string[]
-  let idUsuario: number | undefined
+  let listCategoriaId: number[] = [];
+  let listaQuery!: string[];
+  let idUsuario: number | undefined;
 
   if (!req.query.categorias) {
     res.status(400).json({
       error: true,
       message: `Nenhuma categoria foi informada`,
-    })
-    return
+    });
+    return;
   }
 
   if (Array.isArray(req.query.categorias)) {
-    listaQuery = req.query.categorias as string[]
-    listCategoriaId = listaQuery.map((id) => Number(id))
+    listaQuery = req.query.categorias as string[];
+    listCategoriaId = listaQuery.map((id) => Number(id));
   } else {
-    listCategoriaId.push(Number(req.query.categorias as string))
+    listCategoriaId.push(Number(req.query.categorias as string));
   }
 
   if (req.query.idUsuario) {
-    idUsuario = Number(req.query.idUsuario)
+    idUsuario = Number(req.query.idUsuario);
   }
 
-  const denuncias = await findDenunciasByCategoria(listCategoriaId, idUsuario)
-  res.json(denuncias)
-}
+  const denuncias = await findDenunciasByCategoria(listCategoriaId, idUsuario);
+  res.json(denuncias);
+};
 
 export const postDenuncia = async (req: Request, res: Response) => {
   const body: ICreateDenuncia = req.body;
   body.idUsuario = req.user.id as number;
-  let denuncia = await createNewDenuncia(body)
+  let denuncia = await createNewDenuncia(body);
 
   if (body.imagens && body.imagens.length > 0) {
-    const createdImages = await createImagemDenuncia(body.imagens, denuncia.id)
+    const createdImages = await createImagemDenuncia(body.imagens, denuncia.id);
 
     if (createdImages.length > 0) {
-      denuncia = await findDenunciaById(denuncia.id)
+      denuncia = await findDenunciaById(denuncia.id);
     }
   }
 
   if (body.categorias && body.categorias.length > 0) {
-    await createCategoryDenuncia(body.categorias, denuncia.id)
-    denuncia = await findDenunciaById(denuncia.id)
+    await createCategoryDenuncia(body.categorias, denuncia.id);
+    denuncia = await findDenunciaById(denuncia.id);
   }
 
-  res.status(201).json(denuncia)
-}
+  res.status(201).json(denuncia);
+};
 
 export const putDenuncia = async (req: Request, res: Response) => {
   const id = Number(req.params.id);
@@ -97,34 +104,40 @@ export const putDenuncia = async (req: Request, res: Response) => {
   }
 
   if (body.imagens && body.imagens.length > 0) {
-    let files:string[] = body.imagens;
-    const images = await getImagesByComplaintId(id)
-    await removeFiles(images.map(img => img.nome), UploadSubfolder.Denuncias);
-    await createImagemDenuncia(files, id)
+    let files: string[] = body.imagens;
+    const images = await getImagesByComplaintId(id);
+    await removeFiles(
+      images.map((img) => img.nome),
+      UploadSubfolder.Denuncias,
+    );
+    await createImagemDenuncia(files, id);
   }
 
-  const updatedDenuncia = await findDenunciaById(id)
-  res.status(200).json(updatedDenuncia)
-}
+  const updatedDenuncia = await findDenunciaById(id);
+  res.status(200).json(updatedDenuncia);
+};
 
 export const deleteDenuncia = async (req: Request, res: Response) => {
-  const idDenuncia = Number(req.params.id)
+  const idDenuncia = Number(req.params.id);
 
-  const denuncia = await findDenunciaById(idDenuncia)
+  const denuncia = await findDenunciaById(idDenuncia);
   const imagens = await getImagesByComplaintId(idDenuncia);
-  await removeFiles(imagens.map(img => img.nome), UploadSubfolder.Denuncias);
-  await deleteDenunciaById(idDenuncia)
+  await removeFiles(
+    imagens.map((img) => img.nome),
+    UploadSubfolder.Denuncias,
+  );
+  await deleteDenunciaById(idDenuncia);
 
-  res.status(200).json(denuncia)
-}
+  res.status(200).json(denuncia);
+};
 
-export const exportExcel = async (req : Request, res : Response) => {
-   try {
+export const exportExcel = async (req: Request, res: Response) => {
+  try {
     const buffer = await exportDenunciasExcel(); // chama a função do controller
 
     res.setHeader(
       "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     );
     res.setHeader("Content-Disposition", "attachment; filename=denuncias.xlsx");
     res.send(buffer);
@@ -132,4 +145,4 @@ export const exportExcel = async (req : Request, res : Response) => {
     console.error(err);
     res.status(500).json({ error: "Erro ao gerar planilha Excel" });
   }
-}
+};

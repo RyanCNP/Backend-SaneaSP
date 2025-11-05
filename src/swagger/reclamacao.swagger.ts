@@ -81,7 +81,6 @@
  *         description: Erro interno do servidor
  */
 
-
 /**
  * @swagger
  * /denuncia/usuario:

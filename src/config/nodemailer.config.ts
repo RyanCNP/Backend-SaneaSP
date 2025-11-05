@@ -4,8 +4,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 function createTransporter(): Transporter {
-  if (!process.env.SMTP_HOST || !process.env.SMTP_PORT || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    throw new Error("❌ As variáveis SMTP_HOST, SMTP_PORT, SMTP_USER e SMTP_PASS devem estar definidas no .env");
+  if (
+    !process.env.SMTP_HOST ||
+    !process.env.SMTP_PORT ||
+    !process.env.SMTP_USER ||
+    !process.env.SMTP_PASS
+  ) {
+    throw new Error(
+      "❌ As variáveis SMTP_HOST, SMTP_PORT, SMTP_USER e SMTP_PASS devem estar definidas no .env",
+    );
   }
 
   const port = Number(process.env.SMTP_PORT);

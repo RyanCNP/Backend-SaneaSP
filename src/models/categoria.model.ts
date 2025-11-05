@@ -1,5 +1,5 @@
 import { Optional, Model, DataTypes } from "sequelize";
-import sequelize from '../config/database.config'
+import sequelize from "../config/database.config";
 import { ICategoria } from "../interfaces/categoria";
 
 type CategoriaCreationalAttributes = Optional<ICategoria, "id">;
@@ -26,15 +26,15 @@ CategoriaModel.init(
       type: DataTypes.STRING(50),
       field: "nome",
     },
-    id_grupo:{
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        field: "id_grupo"
-    }
+    id_grupo: {
+      allowNull: false,
+      type: DataTypes.INTEGER,
+      field: "id_grupo",
+    },
   },
   {
     tableName: "categoria",
     sequelize,
     timestamps: false,
-  }
+  },
 );

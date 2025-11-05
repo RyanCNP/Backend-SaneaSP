@@ -1,6 +1,6 @@
 export enum StatusDenuncia {
-    Aberto,
-    Visualizada,
-    Analise,
-    Resolvida
+  Aberto,
+  Visualizada,
+  Analise,
+  Resolvida,
 }

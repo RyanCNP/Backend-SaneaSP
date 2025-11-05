@@ -2,7 +2,7 @@ name: CI / CD - develop (preview)
 
 on:
   push:
-    branches: 
+    branches:
       - develop
 
 jobs:

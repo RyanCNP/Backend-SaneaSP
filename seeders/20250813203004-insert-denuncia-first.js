@@ -1,14 +1,15 @@
-'use strict';
+"use strict";
 
 module.exports = {
   async up(queryInterface, Sequelize) {
     const transaction = await queryInterface.sequelize.transaction();
     try {
-      await queryInterface.bulkInsert('denuncia', [
+      await queryInterface.bulkInsert("denuncia", [
         {
           id: 1,
           titulo: "Esgoto a céu aberto",
-          descricao: "O esgoto corre no meio da rua há semanas, espalhando mau cheiro e mosquitos. Crianças não conseguem brincar na calçada e todos temem doenças. Já tentei ligar na Prefeitura e abri protocolo na Sabesp, mas nada foi resolvido.",
+          descricao:
+            "O esgoto corre no meio da rua há semanas, espalhando mau cheiro e mosquitos. Crianças não conseguem brincar na calçada e todos temem doenças. Já tentei ligar na Prefeitura e abri protocolo na Sabesp, mas nada foi resolvido.",
           dataPublicacao: new Date("2025-09-01"),
           status: 0,
           cep: "01001-000",
@@ -18,12 +19,13 @@ module.exports = {
           numero: "123",
           complemento: "Próximo à praça",
           pontuacao: 845,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 2,
           titulo: "Falta de abastecimento de água",
-          descricao: "Estamos há três dias sem água nas torneiras. Precisei comprar galões e buscar em bairros vizinhos. Liguei várias vezes para o 0800 da Sabesp, mas só dizem que estão verificando.",
+          descricao:
+            "Estamos há três dias sem água nas torneiras. Precisei comprar galões e buscar em bairros vizinhos. Liguei várias vezes para o 0800 da Sabesp, mas só dizem que estão verificando.",
           dataPublicacao: new Date("2025-09-02"),
           status: 1,
           cep: "18010-000",
@@ -33,12 +35,13 @@ module.exports = {
           numero: "45",
           complemento: "Bloco B",
           pontuacao: 920,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 3,
           titulo: "Vazamento em cano de rua",
-          descricao: "Um cano estourou em frente à minha casa e a água escorre sem parar, formando buracos no asfalto e desperdiçando litros por dia. Já abri protocolo no aplicativo da Sabesp, mas ninguém apareceu.",
+          descricao:
+            "Um cano estourou em frente à minha casa e a água escorre sem parar, formando buracos no asfalto e desperdiçando litros por dia. Já abri protocolo no aplicativo da Sabesp, mas ninguém apareceu.",
           dataPublicacao: new Date("2025-09-03"),
           status: 2,
           cep: "13010-000",
@@ -48,12 +51,13 @@ module.exports = {
           numero: "999",
           complemento: null,
           pontuacao: 678,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 4,
           titulo: "Enchente recorrente",
-          descricao: "Basta chover forte que a rua fica completamente alagada. A água invade casas, destrói móveis e causa medo a cada tempestade.",
+          descricao:
+            "Basta chover forte que a rua fica completamente alagada. A água invade casas, destrói móveis e causa medo a cada tempestade.",
           dataPublicacao: new Date("2025-09-04"),
           status: 3,
           cep: "15010-000",
@@ -63,12 +67,13 @@ module.exports = {
           numero: "200",
           complemento: "Casa",
           pontuacao: 812,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 5,
           titulo: "Coleta de lixo irregular",
-          descricao: "O caminhão não passa há duas semanas. Sacolas acumuladas atraem ratos e baratas, além do cheiro insuportável. Já ligamos para a empresa responsável, mas nada foi feito.",
+          descricao:
+            "O caminhão não passa há duas semanas. Sacolas acumuladas atraem ratos e baratas, além do cheiro insuportável. Já ligamos para a empresa responsável, mas nada foi feito.",
           dataPublicacao: new Date("2025-09-05"),
           status: 1,
           cep: "19010-000",
@@ -78,12 +83,13 @@ module.exports = {
           numero: "56",
           complemento: null,
           pontuacao: 734,
-          id_usuario: 5
+          id_usuario: 5,
         },
         {
           id: 6,
           titulo: "Falta de tratamento de esgoto",
-          descricao: "Os moradores despejam esgoto direto em um córrego próximo. O cheiro é insuportável no calor e todos têm medo de doenças transmitidas pela água.",
+          descricao:
+            "Os moradores despejam esgoto direto em um córrego próximo. O cheiro é insuportável no calor e todos têm medo de doenças transmitidas pela água.",
           dataPublicacao: new Date("2025-09-06"),
           status: 0,
           cep: "18025-000",
@@ -93,12 +99,13 @@ module.exports = {
           numero: "12",
           complemento: null,
           pontuacao: 999,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 7,
           titulo: "Água com coloração estranha",
-          descricao: "A água das torneiras está amarelada, com gosto e cheiro fortes. Roupas lavadas ficam manchadas e ninguém se sente seguro para beber.",
+          descricao:
+            "A água das torneiras está amarelada, com gosto e cheiro fortes. Roupas lavadas ficam manchadas e ninguém se sente seguro para beber.",
           dataPublicacao: new Date("2025-09-07"),
           status: 2,
           cep: "14010-000",
@@ -108,12 +115,13 @@ module.exports = {
           numero: "88",
           complemento: "Apto 34",
           pontuacao: 550,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 8,
           titulo: "Bueiros entupidos",
-          descricao: "Bueiros estão entupidos e a rua alaga até em chuvas fracas. O cheiro toma conta. Fizemos abaixo-assinado e entregamos na Prefeitura, mas sem retorno.",
+          descricao:
+            "Bueiros estão entupidos e a rua alaga até em chuvas fracas. O cheiro toma conta. Fizemos abaixo-assinado e entregamos na Prefeitura, mas sem retorno.",
           dataPublicacao: new Date("2025-09-08"),
           status: 3,
           cep: "17010-000",
@@ -123,12 +131,13 @@ module.exports = {
           numero: "321",
           complemento: null,
           pontuacao: 865,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 9,
           titulo: "Falta de coleta de recicláveis",
-          descricao: "Há meses não passa caminhão de coleta seletiva. O lixo reciclável se acumula e os moradores acabam jogando tudo no lixo comum.",
+          descricao:
+            "Há meses não passa caminhão de coleta seletiva. O lixo reciclável se acumula e os moradores acabam jogando tudo no lixo comum.",
           dataPublicacao: new Date("2025-09-09"),
           status: 1,
           cep: "11010-000",
@@ -138,12 +147,13 @@ module.exports = {
           numero: "150",
           complemento: "Sala 2",
           pontuacao: 472,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 10,
           titulo: "Poço artesiano irregular",
-          descricao: "Moradores abriram poço clandestino e a água já apresenta gosto estranho. Há risco de contaminação no lençol freático, mas ninguém fiscaliza.",
+          descricao:
+            "Moradores abriram poço clandestino e a água já apresenta gosto estranho. Há risco de contaminação no lençol freático, mas ninguém fiscaliza.",
           dataPublicacao: new Date("2025-09-10"),
           status: 0,
           cep: "12010-000",
@@ -153,14 +163,15 @@ module.exports = {
           numero: "777",
           complemento: null,
           pontuacao: 1000,
-          id_usuario: 5
+          id_usuario: 5,
         },
-  
+
         // ================== 11 a 20 ==================
         {
           id: 11,
           titulo: "Esgoto entupido em viela",
-          descricao: "A viela atrás das casas está com esgoto transbordando. O cheiro é insuportável e a água suja corre até a porta de algumas casas. Já registrei ocorrência na Prefeitura, mas nada foi feito.",
+          descricao:
+            "A viela atrás das casas está com esgoto transbordando. O cheiro é insuportável e a água suja corre até a porta de algumas casas. Já registrei ocorrência na Prefeitura, mas nada foi feito.",
           dataPublicacao: new Date("2025-09-11"),
           status: 2,
           cep: "08500-000",
@@ -170,12 +181,13 @@ module.exports = {
           numero: "210",
           complemento: null,
           pontuacao: 710,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 12,
           titulo: "Água com baixa pressão",
-          descricao: "A água chega fraca nas torneiras, impossibilitando até tomar banho. Moradores precisam encher baldes de madrugada para ter água no dia seguinte.",
+          descricao:
+            "A água chega fraca nas torneiras, impossibilitando até tomar banho. Moradores precisam encher baldes de madrugada para ter água no dia seguinte.",
           dataPublicacao: new Date("2025-09-12"),
           status: 1,
           cep: "06010-000",
@@ -185,12 +197,13 @@ module.exports = {
           numero: "35",
           complemento: null,
           pontuacao: 430,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 13,
           titulo: "Coleta de lixo suspensa",
-          descricao: "A coleta de lixo foi suspensa por mais de 10 dias. O lixo tomou as calçadas e animais começaram a rasgar os sacos. Já ligamos para a Prefeitura e disseram que não havia caminhões disponíveis.",
+          descricao:
+            "A coleta de lixo foi suspensa por mais de 10 dias. O lixo tomou as calçadas e animais começaram a rasgar os sacos. Já ligamos para a Prefeitura e disseram que não havia caminhões disponíveis.",
           dataPublicacao: new Date("2025-09-13"),
           status: 0,
           cep: "09510-000",
@@ -200,12 +213,13 @@ module.exports = {
           numero: "999",
           complemento: null,
           pontuacao: 678,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 14,
           titulo: "Infiltração por rede de esgoto",
-          descricao: "Um prédio inteiro está sofrendo com infiltração causada por rede de esgoto antiga. Paredes estão mofadas e moradores temem por saúde respiratória.",
+          descricao:
+            "Um prédio inteiro está sofrendo com infiltração causada por rede de esgoto antiga. Paredes estão mofadas e moradores temem por saúde respiratória.",
           dataPublicacao: new Date("2025-09-14"),
           status: 3,
           cep: "04010-000",
@@ -215,12 +229,13 @@ module.exports = {
           numero: "1200",
           complemento: "Apto 101",
           pontuacao: 892,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 15,
           titulo: "Contaminação em córrego",
-          descricao: "O córrego que passa no bairro está cheio de espuma branca e cheiro químico. Crianças brincam perto e há medo de intoxicação.",
+          descricao:
+            "O córrego que passa no bairro está cheio de espuma branca e cheiro químico. Crianças brincam perto e há medo de intoxicação.",
           dataPublicacao: new Date("2025-09-15"),
           status: 0,
           cep: "08090-000",
@@ -230,12 +245,13 @@ module.exports = {
           numero: "2300",
           complemento: null,
           pontuacao: 950,
-          id_usuario: 5
+          id_usuario: 5,
         },
         {
           id: 16,
           titulo: "Água intermitente",
-          descricao: "A água só chega em determinados horários. Não é possível programar tarefas básicas como lavar roupa ou cozinhar.",
+          descricao:
+            "A água só chega em determinados horários. Não é possível programar tarefas básicas como lavar roupa ou cozinhar.",
           dataPublicacao: new Date("2025-09-16"),
           status: 1,
           cep: "13210-000",
@@ -245,12 +261,13 @@ module.exports = {
           numero: "145",
           complemento: null,
           pontuacao: 380,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 17,
           titulo: "Lixo hospitalar descartado",
-          descricao: "Foram encontrados seringas e resíduos hospitalares em um terreno baldio. A comunidade teme contaminação. Já acionamos a Vigilância Sanitária, mas não houve retorno.",
+          descricao:
+            "Foram encontrados seringas e resíduos hospitalares em um terreno baldio. A comunidade teme contaminação. Já acionamos a Vigilância Sanitária, mas não houve retorno.",
           dataPublicacao: new Date("2025-09-17"),
           status: 2,
           cep: "13300-000",
@@ -260,12 +277,13 @@ module.exports = {
           numero: "10",
           complemento: null,
           pontuacao: 890,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 18,
           titulo: "Poço de água irregular",
-          descricao: "Um vizinho construiu poço clandestino. A água é usada para irrigação e pode estar contaminando o lençol freático. A fiscalização nunca apareceu, mesmo após denúncias anteriores.",
+          descricao:
+            "Um vizinho construiu poço clandestino. A água é usada para irrigação e pode estar contaminando o lençol freático. A fiscalização nunca apareceu, mesmo após denúncias anteriores.",
           dataPublicacao: new Date("2025-09-18"),
           status: 3,
           cep: "13400-000",
@@ -275,12 +293,13 @@ module.exports = {
           numero: "321",
           complemento: null,
           pontuacao: 770,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 19,
           titulo: "Cheiro forte na rede de água",
-          descricao: "A água chega com cheiro de esgoto em várias casas. Moradores têm medo de cozinhar e beber, ficando obrigados a comprar galões.",
+          descricao:
+            "A água chega com cheiro de esgoto em várias casas. Moradores têm medo de cozinhar e beber, ficando obrigados a comprar galões.",
           dataPublicacao: new Date("2025-09-19"),
           status: 0,
           cep: "13500-000",
@@ -290,12 +309,13 @@ module.exports = {
           numero: "777",
           complemento: null,
           pontuacao: 615,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 20,
           titulo: "Cisterna contaminada",
-          descricao: "A cisterna comunitária apresenta cheiro ruim. A água usada para banho causa coceiras e irritações na pele.",
+          descricao:
+            "A cisterna comunitária apresenta cheiro ruim. A água usada para banho causa coceiras e irritações na pele.",
           dataPublicacao: new Date("2025-09-20"),
           status: 1,
           cep: "13600-000",
@@ -305,12 +325,13 @@ module.exports = {
           numero: "12",
           complemento: null,
           pontuacao: 505,
-          id_usuario: 5
+          id_usuario: 5,
         },
         {
           id: 21,
           titulo: "Córrego poluído",
-          descricao: "Córrego local está recebendo despejo irregular de resíduos.",
+          descricao:
+            "Córrego local está recebendo despejo irregular de resíduos.",
           dataPublicacao: new Date("2025-09-21"),
           status: 0,
           cep: "17500-000",
@@ -320,7 +341,7 @@ module.exports = {
           numero: "777",
           complemento: null,
           pontuacao: 915,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 22,
@@ -335,7 +356,7 @@ module.exports = {
           numero: "67",
           complemento: null,
           pontuacao: 740,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 23,
@@ -350,12 +371,13 @@ module.exports = {
           numero: "101",
           complemento: null,
           pontuacao: 664,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 24,
           titulo: "Água parada atrai mosquitos",
-          descricao: "Caixas d'água abertas servindo de criadouro de mosquitos.",
+          descricao:
+            "Caixas d'água abertas servindo de criadouro de mosquitos.",
           dataPublicacao: new Date("2025-09-24"),
           status: 1,
           cep: "11700-000",
@@ -365,7 +387,7 @@ module.exports = {
           numero: "321",
           complemento: null,
           pontuacao: 578,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 25,
@@ -380,7 +402,7 @@ module.exports = {
           numero: "500",
           complemento: null,
           pontuacao: 983,
-          id_usuario: 5
+          id_usuario: 5,
         },
         {
           id: 26,
@@ -395,7 +417,7 @@ module.exports = {
           numero: "120",
           complemento: null,
           pontuacao: 694,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 27,
@@ -410,12 +432,13 @@ module.exports = {
           numero: "50",
           complemento: null,
           pontuacao: 745,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 28,
           titulo: "Infiltração em reservatório",
-          descricao: "Reservatório municipal apresenta infiltrações nas paredes.",
+          descricao:
+            "Reservatório municipal apresenta infiltrações nas paredes.",
           dataPublicacao: new Date("2025-09-28"),
           status: 3,
           cep: "13460-000",
@@ -425,7 +448,7 @@ module.exports = {
           numero: "87",
           complemento: null,
           pontuacao: 820,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 29,
@@ -440,7 +463,7 @@ module.exports = {
           numero: "222",
           complemento: null,
           pontuacao: 976,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 30,
@@ -455,7 +478,7 @@ module.exports = {
           numero: "999",
           complemento: null,
           pontuacao: 812,
-          id_usuario: 5
+          id_usuario: 5,
         },
         {
           id: 31,
@@ -470,7 +493,7 @@ module.exports = {
           numero: "33",
           complemento: null,
           pontuacao: 688,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 32,
@@ -485,7 +508,7 @@ module.exports = {
           numero: "66",
           complemento: null,
           pontuacao: 745,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 33,
@@ -500,7 +523,7 @@ module.exports = {
           numero: "10",
           complemento: null,
           pontuacao: 799,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 34,
@@ -515,7 +538,7 @@ module.exports = {
           numero: "44",
           complemento: null,
           pontuacao: 889,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 35,
@@ -530,7 +553,7 @@ module.exports = {
           numero: "77",
           complemento: null,
           pontuacao: 655,
-          id_usuario: 5
+          id_usuario: 5,
         },
         {
           id: 36,
@@ -545,7 +568,7 @@ module.exports = {
           numero: "11",
           complemento: null,
           pontuacao: 902,
-          id_usuario: 1
+          id_usuario: 1,
         },
         {
           id: 37,
@@ -560,12 +583,13 @@ module.exports = {
           numero: "55",
           complemento: null,
           pontuacao: 921,
-          id_usuario: 2
+          id_usuario: 2,
         },
         {
           id: 38,
           titulo: "Descarte de óleo no esgoto",
-          descricao: "Comércios descartando óleo de cozinha diretamente no esgoto.",
+          descricao:
+            "Comércios descartando óleo de cozinha diretamente no esgoto.",
           dataPublicacao: new Date("2025-09-30"),
           status: 0,
           cep: "15040-000",
@@ -575,7 +599,7 @@ module.exports = {
           numero: "89",
           complemento: null,
           pontuacao: 933,
-          id_usuario: 3
+          id_usuario: 3,
         },
         {
           id: 39,
@@ -590,12 +614,13 @@ module.exports = {
           numero: "102",
           complemento: null,
           pontuacao: 814,
-          id_usuario: 4
+          id_usuario: 4,
         },
         {
           id: 40,
           titulo: "Infiltração em caixa d’água",
-          descricao: "Caixa d’água comunitária apresenta infiltrações e rachaduras.",
+          descricao:
+            "Caixa d’água comunitária apresenta infiltrações e rachaduras.",
           dataPublicacao: new Date("2025-09-30"),
           status: 3,
           cep: "19020-000",
@@ -605,21 +630,24 @@ module.exports = {
           numero: "300",
           complemento: null,
           pontuacao: 975,
-          id_usuario: 5
-        }
-      ],);
+          id_usuario: 5,
+        },
+      ]);
       await transaction.commit();
     } catch (error) {
-       await transaction.rollback();
-      console.log('Erro na seed INSERT-DENUNCIA - rollback realizado:', error.errors || error.message);
+      await transaction.rollback();
+      console.log(
+        "Erro na seed INSERT-DENUNCIA - rollback realizado:",
+        error.errors || error.message,
+      );
       throw error;
     }
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('denuncia', null, {});
+    await queryInterface.bulkDelete("denuncia", null, {});
     await queryInterface.sequelize.query(
-      "DELETE FROM sqlite_sequence WHERE name='denuncia';"
+      "DELETE FROM sqlite_sequence WHERE name='denuncia';",
     );
-  }
+  },
 };

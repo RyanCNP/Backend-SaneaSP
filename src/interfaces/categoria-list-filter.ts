@@ -1,4 +1,4 @@
 export interface ICategoriaListFilter {
-    nome?: string,
-    limit?: number
+  nome?: string;
+  limit?: number;
 }

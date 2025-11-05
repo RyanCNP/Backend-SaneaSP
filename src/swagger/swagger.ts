@@ -11,7 +11,7 @@ const options = {
         TokenAuth: {
           type: "apiKey",
           in: "header",
-          name: "Authorization"
+          name: "Authorization",
         },
       },
     },
