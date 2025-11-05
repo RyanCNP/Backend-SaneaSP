@@ -178,3 +178,15 @@ Correção de bug -->
 ```
 fix/<nome-do-bug>
 ```
+
+## Prettier
+
+Corrigir indentação -->
+```
+npx prettier . --write
+```
+
+Verificar correções -->
+```
+npx prettier . --check
+```
