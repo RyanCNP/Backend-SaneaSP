@@ -1,8 +1,10 @@
-import { TCidadaoPayload } from './../interfaces/cidadao';
+import { TCidadaoPayload, TCidadaoUpdate } from './../interfaces/cidadao';
 import type { Request, Response } from "express"
 import type { IUser, IUserListFilters, TUserPayload } from "../interfaces/usuario"
 import * as userService from "../services/user.service"
 import { TransactionNotProvided } from '../errors/TransactionNotProvided.error';
+import { ApiError } from '../errors/ApiError.error';
+import { HttpCode } from '../enums/HttpCode.enum';
 
 export const getUsers = async (req: Request, res: Response) => {
   const userFilter = req.query as unknown as IUserListFilters
@@ -25,12 +27,21 @@ export const getUserNameById = async (req: Request, res: Response) => {
 export const atualizaCidadao = async (req: Request, res: Response) => {
   const idUsuario  = Number(req.params.id)
 
-  const {cep, cidade, rua, bairro, numero, complemento, cpf, telefone} = req.body
-  const citizenToUpdate : TCidadaoPayload = {idUsuario ,cep, cidade, rua, bairro, complemento, numero, cpf, telefone}
+  const body = req.body ?? {};
+  const { cep, cidade, rua, bairro, numero, complemento, cpf, telefone } = body;
 
-  await userService.atualizaCidadao(citizenToUpdate)
+  if (Object.keys(body).length === 0) {
+    throw new ApiError('Informe um dado para ser atualizado', HttpCode.BadRequest)
+  }
+  const citizenToUpdate : Partial<TCidadaoUpdate> = { cep, cidade, rua, bairro, complemento, numero, cpf, telefone}
 
-  res.status(200).json()
+  const updated = await userService.atualizaCidadao(idUsuario, citizenToUpdate)
+
+  res.status(200).json({
+    message : 'Seus dados foram atualizados com sucesso',
+    error : false,
+    data : updated
+  })
 }
 
 export const deleteUser = async (req: Request, res: Response) => {

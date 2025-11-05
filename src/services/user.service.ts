@@ -4,7 +4,7 @@ import type { IUserListFilters, IUser, TUserPayload } from "../interfaces/usuari
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import { CidadaoModel } from "../models"
-import { TCidadaoPayload } from "../interfaces/cidadao"
+import { ICidadao, TCidadaoPayload, TCidadaoUpdate } from "../interfaces/cidadao"
 import sequelize from "../config/database.config"
 
 const userCitizenIncludes = [
@@ -57,12 +57,23 @@ export const getUserNameById = async (userId: number): Promise<string> => {
 }
 
 export const atualizaCidadao = async (
-  cidadaoPayload: TCidadaoPayload
+  idUsuario : IUser['idUsuario'],
+  cidadaoUpdate: Partial<TCidadaoUpdate>
 ) => {
-  const foundUser = await UserModel
-  
 
-  return updatedUser;
+  const foundCitizen = await CidadaoModel.findByPk(idUsuario)
+  const foundUser = await UserModel.findByPk(idUsuario)
+
+  if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  
+  const payload = Object.fromEntries(
+    Object.entries(cidadaoUpdate).filter(([_, v]) => v !== undefined)
+  );
+
+  await CidadaoModel.update(payload, { where: { idUsuario } });
+  
+  const updatedCitizen = await CidadaoModel.findByPk(idUsuario);
+  return updatedCitizen;
 }
 
 export const deleteUser = async (userId: number): Promise<IUser> => {

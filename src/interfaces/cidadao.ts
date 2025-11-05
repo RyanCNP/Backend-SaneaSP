@@ -13,6 +13,8 @@ export interface ICidadao {
 
 export type TCidadaoPayload = Omit<ICidadao, 'idCidadao'>;
 
+export type TCidadaoUpdate = Omit<ICidadao, 'idCidadao' | 'idUsuario'>
+
 export interface ICidadaoFilter{
     cidade ?: ICidadao['cidade']
     bairro ?: ICidadao['bairro']
