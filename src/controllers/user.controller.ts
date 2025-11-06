@@ -26,7 +26,7 @@ export const getUserNameById = async (req: Request, res: Response) => {
 }
 
 export const atualizaCidadao = async (req: Request, res: Response) => {
-  const idUsuario  = Number(req.params.id)
+  const idUsuario  = Number(req.user.idUsuario)
 
   const body = req.body ?? {};
   const { cep, cidade, rua, bairro, numero, complemento, cpf, telefone } = body;
@@ -46,7 +46,7 @@ export const atualizaCidadao = async (req: Request, res: Response) => {
 }
 
 export const removeCidadao = async (req: Request, res: Response) => {
-  const idUsuario = req.params.id
+  const idUsuario  = Number(req.user.idUsuario)
   await userService.removeCidadao(Number(idUsuario))
   res.status(200).json({
     message : 'Sua conta foi excluída com sucesso!'
@@ -54,7 +54,7 @@ export const removeCidadao = async (req: Request, res: Response) => {
 }
 
 export const atualizaFuncionario = async (req: Request, res: Response) => {
-  const idUsuario  = Number(req.params.id)
+  const idUsuario  = Number(req.user.idUsuario)
 
   const body = req.body ?? {};
   const { nivel } = body;
@@ -74,7 +74,7 @@ export const atualizaFuncionario = async (req: Request, res: Response) => {
 }
 
 export const removeFuncionario = async (req: Request, res: Response) => {
-  const idUsuario = req.params.id
+  const idUsuario  = Number(req.user.idUsuario)
   await userService.removeFuncionario(Number(idUsuario))
   res.status(200).json({
     message : 'Sua conta foi excluída com sucesso!'

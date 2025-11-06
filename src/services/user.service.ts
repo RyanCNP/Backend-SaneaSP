@@ -94,10 +94,14 @@ export const atualizaFuncionario = async (
   funcionarioUpdate: Partial<TFuncionarioUpdate>
 ) => {
 
-  const foundCitizen = await FuncionarioModel.findOne({where : {idUsuario}})
+  const foundEmployee = await FuncionarioModel.findOne({where : {idUsuario}})
   const foundUser = await UserModel.findByPk(idUsuario)
 
-  if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  console.log(idUsuario)
+  console.log("foundUser", foundUser)
+  console.log("foundEmployee", foundEmployee)
+  
+  if(!foundEmployee || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
   
   const payload = Object.fromEntries(
     Object.entries(funcionarioUpdate).filter(([_, v]) => v !== undefined)
