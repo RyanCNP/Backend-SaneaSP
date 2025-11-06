@@ -8,6 +8,8 @@ import { TCidadaoPayload } from "../interfaces/cidadao"
 import { CidadaoModel } from "../models"
 import { sendRegistrationEmail } from "./mail.service"
 import { Transaction } from "sequelize"
+import { FuncionarioModel } from "../models/funcionario.model"
+import { TFuncionarioPayload } from "../interfaces/funcionario"
 
 export const authenticateUser = async (email: string, senha: string): Promise<string> => {
   const user = await UserModel.findOne({ where: { email } })
@@ -51,6 +53,14 @@ export const cadastroCidadao = async(newCidadao : TCidadaoPayload, user : TSafeU
   await sendRegistrationEmail(user, verificationToken)
 
   return await CidadaoModel.create(newCidadao, {transaction})
+}
+
+export const cadastroFuncionario = async(newEmployee : TFuncionarioPayload, user : TSafeUser, transaction ?: Transaction): Promise<FuncionarioModel> => {
+  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+
+  await sendRegistrationEmail(user, verificationToken)
+
+  return await FuncionarioModel.create(newEmployee, {transaction})
 }
 
 export const confirmEmail = async (token: string): Promise<{ message: string }> => {

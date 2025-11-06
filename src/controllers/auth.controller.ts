@@ -4,6 +4,7 @@ import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import { TCidadaoPayload } from "../interfaces/cidadao"
 import { TransactionNotProvided } from "../errors/TransactionNotProvided.error"
+import { TFuncionarioPayload } from "../interfaces/funcionario"
 
 export const autenticar = async (req: Request, res: Response) => {
   const { email, senha } = req.body
@@ -36,6 +37,31 @@ export const cadastroCidadao = async(req: Request, res: Response) => {
     res.json({
       error: false,
       message: "Cadastro realizado! Verifique seu e-mail para poder criar suas denúncias.",
+    });
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+}
+
+export const cadastroFuncionario = async(req: Request, res: Response) => {
+  const transaction = req.transaction;
+  if(!transaction) throw new TransactionNotProvided('Ocorreu um problema ao criar o seu usuário')
+  try {
+    const commonUser = req.newCommonUser;
+    const {nivel} = req.body;
+    
+    const newEmployee : TFuncionarioPayload = {
+      idUsuario : commonUser.idUsuario,
+      nivel
+    };
+
+    await authService.cadastroFuncionario(newEmployee, commonUser, transaction);
+
+    await transaction.commit();
+    res.json({
+      error: false,
+      message: "Cadastro realizado! Verifique seu e-mail para poder acessar seu dashboard.",
     });
   } catch (error) {
     await transaction.rollback();
