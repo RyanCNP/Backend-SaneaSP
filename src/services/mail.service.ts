@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
 import { transporter } from "../config/nodemailer.config";
-import { IUser } from "../interfaces/usuario";
+import { IUser, TSafeUser } from "../interfaces/usuario";
 
-export async function sendRegistrationEmail(user: IUser, token: string) {
+export async function sendRegistrationEmail(user: TSafeUser, token: string) {
   const templatePath = path.join(__dirname, "..", "templates", "registrationConfirmation.html");
   let html = fs.readFileSync(templatePath, "utf-8");
 
