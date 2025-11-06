@@ -6,6 +6,8 @@ import { HttpCode } from "../enums/HttpCode.enum"
 import { CidadaoModel } from "../models"
 import { ICidadao, TCidadaoPayload, TCidadaoUpdate } from "../interfaces/cidadao"
 import sequelize from "../config/database.config"
+import { TFuncionarioUpdate } from "../interfaces/funcionario"
+import { FuncionarioModel } from "../models/funcionario.model"
 
 const userCitizenIncludes = [
   {
@@ -85,6 +87,37 @@ export const removeCidadao = async (
   if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
 
   await CidadaoModel.destroy()
+}
+
+export const atualizaFuncionario = async (
+  idUsuario : IUser['idUsuario'],
+  funcionarioUpdate: Partial<TFuncionarioUpdate>
+) => {
+
+  const foundCitizen = await FuncionarioModel.findByPk(idUsuario)
+  const foundUser = await UserModel.findByPk(idUsuario)
+
+  if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  
+  const payload = Object.fromEntries(
+    Object.entries(funcionarioUpdate).filter(([_, v]) => v !== undefined)
+  );
+
+  await FuncionarioModel.update(payload, { where: { idUsuario } });
+  
+  const updatedCitizen = await FuncionarioModel.findByPk(idUsuario);
+  return updatedCitizen;
+}
+
+export const removeFuncionario = async (
+  idUsuario : IUser['idUsuario']
+) => {
+  const foundEmployee = await FuncionarioModel.findByPk(idUsuario)
+  const foundUser = await UserModel.findByPk(idUsuario)
+
+  if(!foundEmployee || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+
+  await FuncionarioModel.destroy()
 }
 
 export const deleteUser = async (userId: number): Promise<IUser> => {

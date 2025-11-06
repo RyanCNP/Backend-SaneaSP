@@ -5,6 +5,7 @@ import * as userService from "../services/user.service"
 import { TransactionNotProvided } from '../errors/TransactionNotProvided.error';
 import { ApiError } from '../errors/ApiError.error';
 import { HttpCode } from '../enums/HttpCode.enum';
+import { TFuncionarioUpdate } from '../interfaces/funcionario';
 
 export const getUsers = async (req: Request, res: Response) => {
   const userFilter = req.query as unknown as IUserListFilters
@@ -46,7 +47,35 @@ export const atualizaCidadao = async (req: Request, res: Response) => {
 
 export const removeCidadao = async (req: Request, res: Response) => {
   const idUsuario = req.params.id
-  await userService.deleteUser(Number(idUsuario))
+  await userService.removeCidadao(Number(idUsuario))
+  res.status(200).json({
+    message : 'Sua conta foi excluída com sucesso!'
+  })
+}
+
+export const atualizaFuncionario = async (req: Request, res: Response) => {
+  const idUsuario  = Number(req.params.id)
+
+  const body = req.body ?? {};
+  const { nivel } = body;
+
+  if (Object.keys(body).length === 0) {
+    throw new ApiError('Informe um dado para ser atualizado', HttpCode.BadRequest)
+  }
+  const employeeToUpdate : Partial<TFuncionarioUpdate> = { nivel }
+
+  const updated = await userService.atualizaFuncionario(idUsuario, employeeToUpdate)
+
+  res.status(200).json({
+    message : 'Seus dados foram atualizados com sucesso',
+    error : false,
+    data : updated
+  })
+}
+
+export const removeFuncionario = async (req: Request, res: Response) => {
+  const idUsuario = req.params.id
+  await userService.removeFuncionario(Number(idUsuario))
   res.status(200).json({
     message : 'Sua conta foi excluída com sucesso!'
   })
