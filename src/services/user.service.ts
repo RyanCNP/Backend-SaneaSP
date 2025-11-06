@@ -63,7 +63,7 @@ export const atualizaCidadao = async (
   cidadaoUpdate: Partial<TCidadaoUpdate>
 ) => {
 
-  const foundCitizen = await CidadaoModel.findByPk(idUsuario)
+  const foundCitizen = await CidadaoModel.findOne({where : {idUsuario}})
   const foundUser = await UserModel.findByPk(idUsuario)
 
   if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
@@ -94,7 +94,7 @@ export const atualizaFuncionario = async (
   funcionarioUpdate: Partial<TFuncionarioUpdate>
 ) => {
 
-  const foundCitizen = await FuncionarioModel.findByPk(idUsuario)
+  const foundCitizen = await FuncionarioModel.findOne({where : {idUsuario}})
   const foundUser = await UserModel.findByPk(idUsuario)
 
   if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
@@ -105,8 +105,8 @@ export const atualizaFuncionario = async (
 
   await FuncionarioModel.update(payload, { where: { idUsuario } });
   
-  const updatedCitizen = await FuncionarioModel.findByPk(idUsuario);
-  return updatedCitizen;
+  const updatedEmployee = await FuncionarioModel.findByPk(idUsuario);
+  return updatedEmployee;
 }
 
 export const removeFuncionario = async (
