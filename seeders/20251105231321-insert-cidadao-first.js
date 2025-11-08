@@ -37,28 +37,6 @@ module.exports = {
         cpf: '34567890123',
         telefone: '15987777777'
       },
-      {
-        id_usuario: 4,
-        cep: '18200000',
-        cidade: 'Itu',
-        bairro: 'Vila Nova',
-        rua: 'Rua das Palmeiras',
-        numero: '101',
-        complemento: null,
-        cpf: '45678901234',
-        telefone: '15986666666'
-      },
-      {
-        id_usuario: 5,
-        cep: '18300000',
-        cidade: 'Salto',
-        bairro: 'Jd. América',
-        rua: 'Av. Brasil',
-        numero: '202',
-        complemento: 'Bloco B',
-        cpf: '56789012345',
-        telefone: '15985555555'
-      }
     ], {});
   },
 

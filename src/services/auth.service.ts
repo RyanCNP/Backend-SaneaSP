@@ -8,8 +8,8 @@ import { TCidadaoPayload } from "../interfaces/cidadao"
 import { CidadaoModel } from "../models"
 import { sendRegistrationEmail } from "./mail.service"
 import { Transaction } from "sequelize"
-import { FuncionarioModel } from "../models/funcionario.model"
 import { TFuncionarioPayload } from "../interfaces/funcionario"
+import { FuncionarioModel } from "../models/funcionario.model"
 
 export const authenticateUser = async (email: string, senha: string): Promise<string> => {
   const user = await UserModel.findOne({ where: { email } })
@@ -36,7 +36,7 @@ export const authenticateUser = async (email: string, senha: string): Promise<st
     throw new Error("Erro interno de servidor")
   }
 
-  const token = jwt.sign({ id: user.idUsuario }, secretKey, { expiresIn })
+  const token = jwt.sign({ id: user.id }, secretKey, { expiresIn })
 
   return token
 }
@@ -48,7 +48,7 @@ export const registerUser = async (newUser: TUserPayload, transaction?: Transact
 }
 
 export const cadastroCidadao = async(newCidadao : TCidadaoPayload, user : TSafeUser, transaction ?: Transaction): Promise<CidadaoModel> => {
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+  const verificationToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
@@ -56,7 +56,7 @@ export const cadastroCidadao = async(newCidadao : TCidadaoPayload, user : TSafeU
 }
 
 export const cadastroFuncionario = async(newEmployee : TFuncionarioPayload, user : TSafeUser, transaction ?: Transaction): Promise<FuncionarioModel> => {
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+  const verificationToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
@@ -67,7 +67,7 @@ export const confirmEmail = async (token: string): Promise<{ message: string }> 
   const secretKey = process.env.SECRET_KEY || ""
   const decoded: any = jwt.verify(token, secretKey)
 
-  await UserModel.update({ verified: true }, { where: { idUsuario: decoded.id } })
+  await UserModel.update({ verified: true }, { where: { id: decoded.id } })
 
   return { message: "Conta verificada com sucesso!" }
 }
