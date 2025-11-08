@@ -45,9 +45,9 @@ export const atualizaCidadao = async (req: Request, res: Response) => {
   })
 }
 
-export const removeCidadao = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response) => {
   const idUsuario  = Number(req.user.idUsuario)
-  await userService.removeCidadao(Number(idUsuario))
+  await userService.deleteUser(Number(idUsuario))
   res.status(200).json({
     message : 'Sua conta foi excluída com sucesso!'
   })
@@ -70,13 +70,5 @@ export const atualizaFuncionario = async (req: Request, res: Response) => {
     message : 'Seus dados foram atualizados com sucesso',
     error : false,
     data : updated
-  })
-}
-
-export const removeFuncionario = async (req: Request, res: Response) => {
-  const idUsuario  = Number(req.user.idUsuario)
-  await userService.removeFuncionario(Number(idUsuario))
-  res.status(200).json({
-    message : 'Sua conta foi excluída com sucesso!'
   })
 }
