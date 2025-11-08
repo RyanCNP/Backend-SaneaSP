@@ -48,12 +48,14 @@ export const atualizaFuncionario = async (req: Request, res: Response) => {
   const idUsuario  = Number(req.user.id)
 
   const body = req.body ?? {};
-  const { nivel } = body;
 
   if (Object.keys(body).length === 0) {
     throw new ApiError('Informe um dado para ser atualizado', HttpCode.BadRequest)
   }
-  const employeeToUpdate : Partial<TFuncionarioUpdate> = { nivel }
+
+  const { nivel,  telefone, cpf } = body as TFuncionarioUpdate;
+
+  const employeeToUpdate : Partial<TFuncionarioUpdate> = {nivel, telefone, cpf }
 
   const updated = await userService.atualizaFuncionario(idUsuario, employeeToUpdate)
 

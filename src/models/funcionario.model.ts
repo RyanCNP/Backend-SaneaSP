@@ -4,10 +4,11 @@ import { IFuncionario } from "../interfaces/funcionario";
 import { NivelFuncionario } from "../enums/NivelFuncionario.enum";
 
 export type ICriacaoFuncionario = Optional<IFuncionario, "idFuncionario">;
-
 export class FuncionarioModel extends Model<IFuncionario, ICriacaoFuncionario> {
-  public idfuncionario!: number;
+  public idFuncionario!: number;
   public idUsuario!: number;
+  public cpf !: string;
+  public telefone !: string;
   public nivel!: NivelFuncionario;
 }
 
@@ -25,10 +26,22 @@ FuncionarioModel.init(
       allowNull: false,
       field: "id_usuario",
     },
-    nivel: {
-      type: DataTypes.STRING(50),
+    idPrefeitura: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: "atendente",
+      field: "id_prefeitura",
+    },
+    cpf: {
+      type: DataTypes.STRING(11), //xxx.xxx.xxx-xx
+      allowNull: false,
+    },
+    telefone: {
+      type: DataTypes.STRING(11), //(xx)xxxxx-xxxx
+      allowNull: true,
+    },
+    nivel: {
+      type: DataTypes.STRING(30),
+      allowNull: false
     },
   },
   {

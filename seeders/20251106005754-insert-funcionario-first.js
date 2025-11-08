@@ -6,11 +6,17 @@ module.exports = {
    await queryInterface.bulkInsert('funcionario', [
       {
         id_usuario: 4,
-        nivel: 'Analista'
+        id_prefeitura: 1,
+        cpf: '12345678901',
+        telefone: '11999999999',
+        nivel: 'Administrador'
       },
       {
         id_usuario: 5,
-        nivel: 'Coordenador'
+        id_prefeitura: 1,
+        cpf: '98765432100',
+        telefone: '11988888888',
+        nivel: 'Gestor'
       }
     ], {});
   },
