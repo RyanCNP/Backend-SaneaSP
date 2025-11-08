@@ -75,6 +75,12 @@ export const emailConfirmation = async (req: Request, res: Response) => {
   res.json(result)
 }
 
+export const lostPassword = async (req: Request, res: Response) => {
+  const { email } = req.body
+  const result = await authService.lostPassword(email)
+  res.json(result)
+}
+
 export const getAuthenticatedUser = async (req: Request, res: Response) => {
   if (!req.user)
     throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
