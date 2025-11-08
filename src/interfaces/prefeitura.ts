@@ -1,5 +1,5 @@
 export interface IPrefeitura  {
-    idPrefeitura: number;
+    id: number;
     nomeOficial: string; // enviado no primeiro formulário
     emailInstitucional: string; // enviado no primeiro formulário
     cnpj: string; // enviado no primeiro formulário
@@ -14,6 +14,10 @@ export interface IPrefeitura  {
     complemento?: string;
     statusAssinatura: string;
 }
+
+export type TPrefeituraUpdate = Omit<IPrefeitura, 'id' | 'codigoIbge'>
+
+export type IPrefeituraPayload = Omit<IPrefeitura, 'id'>
 
 export interface IPrefeituraFilter {
   nomeOficial?: string; 

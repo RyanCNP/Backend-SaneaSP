@@ -109,5 +109,7 @@ export {
   RegistroModel,
   ImagemRegistroModel,
   UserModel,
-  CidadaoModel
+  CidadaoModel,
+  FuncionarioModel,
+  PrefeituraModel
 };

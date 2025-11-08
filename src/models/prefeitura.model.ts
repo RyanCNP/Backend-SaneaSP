@@ -2,10 +2,10 @@ import { Optional, Model, DataTypes } from "sequelize";
 import sequelize from "../config/database.config";
 import { IPrefeitura } from "../interfaces/prefeitura";
 
-export type ICriacaoPrefeitura = Optional<IPrefeitura, "idPrefeitura">;
+export type ICriacaoPrefeitura = Optional<IPrefeitura, "id">;
 
 export class PrefeituraModel extends Model<IPrefeitura, ICriacaoPrefeitura> {
-  public idPrefeitura!: number;
+  public id!: number;
   public nomeOficial!: string;
   public emailInstitucional!: string;
   public cnpj!: string;
@@ -23,7 +23,7 @@ export class PrefeituraModel extends Model<IPrefeitura, ICriacaoPrefeitura> {
 
 PrefeituraModel.init(
   {
-    idPrefeitura: {
+    id: {
       primaryKey: true,
       type: DataTypes.INTEGER,
       autoIncrement: true,

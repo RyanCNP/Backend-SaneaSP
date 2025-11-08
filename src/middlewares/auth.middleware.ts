@@ -33,7 +33,6 @@ export const validateToken = async (req: Request, res: Response, next: NextFunct
         throw new ApiError(message, HttpCode.Unautorized);
     }
 
-    console.log(decoded)
     const user: UserModel | null = await UserModel.findByPk(decoded.id);
     if (!user) {
         throw new ApiError('Não autorizado. Usuário não encontrado', HttpCode.Unautorized)
