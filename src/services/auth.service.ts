@@ -6,7 +6,7 @@ import { HttpCode } from "../enums/HttpCode.enum"
 import type { TSafeUser, TUserPayload } from "../interfaces/usuario"
 import { TCidadaoPayload } from "../interfaces/cidadao"
 import { CidadaoModel } from "../models"
-import { sendRegistrationEmail } from "./mail.service"
+import { sendLostPasswordEmail, sendRegistrationEmail } from "./mail.service"
 import { Transaction } from "sequelize"
 import { FuncionarioModel } from "../models/funcionario.model"
 import { TFuncionarioPayload } from "../interfaces/funcionario"
@@ -70,4 +70,18 @@ export const confirmEmail = async (token: string): Promise<{ message: string }> 
   await UserModel.update({ verified: true }, { where: { idUsuario: decoded.id } })
 
   return { message: "Conta verificada com sucesso!" }
+}
+
+export const lostPassword = async (email: string): Promise<{ message: string }> => {
+  const user = await UserModel.findOne({ where: { email } })
+
+  if (!user) {
+    throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
+  }
+  
+  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+
+  await sendLostPasswordEmail(user, verificationToken);
+
+  return {message: "Instruções enviadas para o seu e-mail!"}
 }
