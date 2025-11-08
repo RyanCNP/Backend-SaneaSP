@@ -1,8 +1,7 @@
-import { TCidadaoPayload, TCidadaoUpdate } from './../interfaces/cidadao';
+import { TCidadaoUpdate } from './../interfaces/cidadao';
 import type { Request, Response } from "express"
-import type { IUser, IUserListFilters, TUserPayload } from "../interfaces/usuario"
+import type { IUserListFilters } from "../interfaces/usuario"
 import * as userService from "../services/user.service"
-import { TransactionNotProvided } from '../errors/TransactionNotProvided.error';
 import { ApiError } from '../errors/ApiError.error';
 import { HttpCode } from '../enums/HttpCode.enum';
 import { TFuncionarioUpdate } from '../interfaces/funcionario';
@@ -26,7 +25,7 @@ export const getUserNameById = async (req: Request, res: Response) => {
 }
 
 export const atualizaCidadao = async (req: Request, res: Response) => {
-  const idUsuario  = Number(req.user.idUsuario)
+  const idUsuario  = Number(req.user.id)
 
   const body = req.body ?? {};
   const { cep, cidade, rua, bairro, numero, complemento, cpf, telefone } = body;
@@ -45,16 +44,8 @@ export const atualizaCidadao = async (req: Request, res: Response) => {
   })
 }
 
-export const deleteUser = async (req: Request, res: Response) => {
-  const idUsuario  = Number(req.user.idUsuario)
-  await userService.deleteUser(Number(idUsuario))
-  res.status(200).json({
-    message : 'Sua conta foi excluída com sucesso!'
-  })
-}
-
 export const atualizaFuncionario = async (req: Request, res: Response) => {
-  const idUsuario  = Number(req.user.idUsuario)
+  const idUsuario  = Number(req.user.id)
 
   const body = req.body ?? {};
   const { nivel } = body;
@@ -72,3 +63,13 @@ export const atualizaFuncionario = async (req: Request, res: Response) => {
     data : updated
   })
 }
+
+export const deleteUser = async (req: Request, res: Response) => {
+  const idUsuario  = Number(req.user.id)
+  await userService.deleteUser(Number(idUsuario))
+  res.status(200).json({
+    message : 'Sua conta foi excluída com sucesso!'
+  })
+}
+
+

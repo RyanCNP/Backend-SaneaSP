@@ -32,7 +32,7 @@ export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]
 }
 
 export const getUserById = async (userId: number): Promise<IUser> => {
-  const foundUser = await UserModel.findOne({ where: { idUsuario: userId } })
+  const foundUser = await UserModel.findOne({ where: { id: userId } })
 
   if (!foundUser) {
     throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
@@ -42,7 +42,7 @@ export const getUserById = async (userId: number): Promise<IUser> => {
 }
 
 export const getUserNameById = async (userId: number): Promise<string> => {
-  const foundUser = await UserModel.findOne({ where: { idUsuario: userId }, attributes : ["nome"]})
+  const foundUser = await UserModel.findOne({ where: { id: userId }, attributes : ["nome"]})
 
   if (!foundUser) {
     throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
@@ -52,7 +52,7 @@ export const getUserNameById = async (userId: number): Promise<string> => {
 }
 
 export const atualizaCidadao = async (
-  idUsuario : IUser['idUsuario'],
+  idUsuario : IUser['id'],
   cidadaoUpdate: Partial<TCidadaoUpdate>
 ) => {
 
@@ -67,12 +67,13 @@ export const atualizaCidadao = async (
 
   await CidadaoModel.update(payload, { where: { idUsuario } });
   
-  const updatedCitizen = await CidadaoModel.findByPk(idUsuario);
+  const updatedCitizen = await CidadaoModel.findOne({where : {idUsuario}})
+
   return updatedCitizen;
 }
 
 export const atualizaFuncionario = async (
-  idUsuario : IUser['idUsuario'],
+  idUsuario : IUser['id'],
   funcionarioUpdate: Partial<TFuncionarioUpdate>
 ) => {
 
@@ -87,7 +88,7 @@ export const atualizaFuncionario = async (
 
   await FuncionarioModel.update(payload, { where: { idUsuario } });
   
-  const updatedEmployee = await FuncionarioModel.findByPk(idUsuario);
+  const updatedEmployee = await FuncionarioModel.findOne({where : {idUsuario}})
   return updatedEmployee;
 }
 

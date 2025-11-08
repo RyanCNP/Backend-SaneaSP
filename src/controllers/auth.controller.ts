@@ -27,7 +27,7 @@ export const cadastroCidadao = async(req: Request, res: Response) => {
     const commonUser = req.newCommonUser;
     const {cep, bairro, cidade, numero, complemento, rua, telefone, cpf} = req.body;
     const newCitizen : TCidadaoPayload = {
-      idUsuario : commonUser.idUsuario,
+      idUsuario : commonUser.id,
       cep, bairro, cidade, rua, numero, complemento, telefone, cpf
     };
 
@@ -52,7 +52,7 @@ export const cadastroFuncionario = async(req: Request, res: Response) => {
     const {nivel} = req.body;
     
     const newEmployee : TFuncionarioPayload = {
-      idUsuario : commonUser.idUsuario,
+      idUsuario : commonUser.id,
       nivel
     };
 
