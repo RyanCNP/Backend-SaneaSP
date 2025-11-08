@@ -24,7 +24,17 @@
         }
 
         .header {
-            background-image: url('background.svg');
+            background: linear-gradient(45deg,
+                    #005E79 0%,
+                    #2b3456 20%,
+                    #2E5470 20%,
+                    #35406A 40%,
+                    #236276 40%,
+                    #2E5470 60%,
+                    #18717C 60%,
+                    #236276 80%,
+                    #1c8e9d 80%,
+                    #2b3456 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -166,7 +176,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="content">
+                        <td class="content" style="border-left: 2px solid #333333; border-right: 2px solid #333333;">
                             <h2>Olá, {{nome}}!</h2>
 
                             <p>Obrigado por se cadastrar em nossa plataforma. Para ativar sua conta e começar a
