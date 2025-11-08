@@ -21,12 +21,7 @@ export async function sendRegistrationEmail(user: TSafeUser, token: string) {
 }
 
 export async function sendLostPasswordEmail(user: IUser, token: string) {
-  const templatePath = path.join(
-    __dirname,
-    "..",
-    "templates",
-    "lostPassword.html",
-  );
+  const templatePath = path.join( __dirname, "..", "templates", "lostPassword.html");
   let html = fs.readFileSync(templatePath, "utf-8");
   const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
   html = html
