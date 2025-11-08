@@ -8,8 +8,8 @@ import { TCidadaoPayload } from "../interfaces/cidadao"
 import { CidadaoModel } from "../models"
 import { sendRegistrationEmail } from "./mail.service"
 import { Transaction } from "sequelize"
-import { FuncionarioModel } from "../models/funcionario.model"
 import { TFuncionarioPayload } from "../interfaces/funcionario"
+import { FuncionarioModel } from "../models/funcionario.model"
 
 export const authenticateUser = async (email: string, senha: string): Promise<string> => {
   const user = await UserModel.findOne({ where: { email } })

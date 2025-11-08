@@ -8,6 +8,8 @@ import { GrupoCategoriaModel } from "./grupo-categoria.model";
 import { RegistroModel } from "./registro.model";
 import { ImagemRegistroModel } from "./imagem-registro.model";
 import { CidadaoModel } from "./cidadao.model";
+import { PrefeituraModel } from "./prefeitura.model";
+import { FuncionarioModel } from "./funcionario.model";
 
 //CATEGORIAS E DENUNCIAS
 DenunciaModel.belongsToMany(CategoriaModel, {
@@ -61,7 +63,7 @@ CategoriaModel.belongsTo(GrupoCategoriaModel, {
   onDelete: "CASCADE",
 });
 
-//USUARIO E CIDADÃO/PREFEITURA/FUNCIONARIO
+//USUARIO E CIDADÃO
 UserModel.hasOne(CidadaoModel, {
   foreignKey: "idUsuario",
   as: "cidadao",
@@ -74,6 +76,20 @@ CidadaoModel.belongsTo(UserModel, {
     onDelete: "CASCADE"
 });
 
+//FUNCIONARIO E PREFEITURA
+PrefeituraModel.hasMany(FuncionarioModel, {
+  foreignKey: "id_prefeitura", 
+  as: "funcionarios",
+  onDelete: "CASCADE",
+});
+
+FuncionarioModel.belongsTo(PrefeituraModel, {
+  foreignKey: "id_prefeitura",
+  as: "prefeitura",
+  onDelete: "CASCADE",
+});
+
+//Registros
 RegistroModel.belongsTo(DenunciaModel,{foreignKey:'id_denuncia',as:'denuncia'})
 RegistroModel.belongsTo(UserModel,{foreignKey:'id_usuario',as:'usuario'})
 
@@ -90,8 +106,8 @@ export {
   ImagemDenunciaModel,
   ComentarioModel,
   GrupoCategoriaModel,
-    RegistroModel,
-    ImagemRegistroModel,
+  RegistroModel,
+  ImagemRegistroModel,
   UserModel,
   CidadaoModel
 };
