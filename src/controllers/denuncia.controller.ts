@@ -29,7 +29,7 @@ export const getById = async (req: Request, res: Response) => {
 }
 
 export const getUserComplaint = async (req: Request, res: Response) => {
-  const idUsuario = req.user.idUsuario as number
+  const idUsuario = req.user.id as number
   const filter : IFilterListDenuncia = req.query
   const denuncias = await findUserComplaint(idUsuario, filter)
   res.status(200).json(denuncias)
@@ -65,7 +65,7 @@ export const getByCategoria = async (req: Request, res: Response) => {
 
 export const postDenuncia = async (req: Request, res: Response) => {
   const body: ICreateDenuncia = req.body;
-  body.idUsuario = req.user.idUsuario as number;
+  body.idUsuario = req.user.id as number;
   let denuncia = await createNewDenuncia(body)
 
   if (body.imagens && body.imagens.length > 0) {
