@@ -86,3 +86,14 @@ export const getAuthenticatedUser = async (req: Request, res: Response) => {
     throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
   res.status(200).json(req.user)
 }
+
+export const resetPasswordTokenConfirmation = async (req: Request, res: Response) => {
+  const { token } = req.params
+
+  try {
+    const result = await authService.resetPasswordContirmationToken(token)
+    res.json({ valid: true, data: result })
+  } catch (error) {
+    res.status(401).json({ valid: false, message: "Token inválido ou expirado" })
+  }
+}

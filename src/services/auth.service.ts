@@ -48,7 +48,7 @@ export const registerUser = async (newUser: TUserPayload, transaction?: Transact
 }
 
 export const cadastroCidadao = async(newCidadao : TCidadaoPayload, user : TSafeUser, transaction ?: Transaction): Promise<CidadaoModel> => {
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
@@ -56,7 +56,7 @@ export const cadastroCidadao = async(newCidadao : TCidadaoPayload, user : TSafeU
 }
 
 export const cadastroFuncionario = async(newEmployee : TFuncionarioPayload, user : TSafeUser, transaction ?: Transaction): Promise<FuncionarioModel> => {
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
@@ -79,9 +79,19 @@ export const lostPassword = async (email: string): Promise<{ message: string }> 
     throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
   }
   
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "24h" })
+  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
 
   await sendLostPasswordEmail(user, verificationToken);
 
   return {message: "Instruções enviadas para o seu e-mail!"}
+}
+
+export const resetPasswordContirmationToken = async (token: string) => {
+  try {
+    const secretKey = process.env.SECRET_KEY || ""
+    const decoded = jwt.verify(token, secretKey) as { id: number }
+    return { id: decoded.id }
+  } catch {
+    throw new ApiError("Token inválido ou expirado", HttpCode.Unautorized)
+  }
 }
