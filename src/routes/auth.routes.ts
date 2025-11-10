@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import { autenticar, cadastroCidadao, cadastroFuncionario, emailConfirmation, getAuthenticatedUser, testeCadastroUsuarioComum, lostPassword, resetPasswordTokenConfirmation } from "../controllers/auth.controller";
+import { autenticar, cadastroCidadao, cadastroFuncionario, emailConfirmation, getAuthenticatedUser, testeCadastroUsuarioComum, lostPassword, resetPasswordTokenConfirmation, resetPassword } from "../controllers/auth.controller";
 import { validateToken } from "../middlewares/auth.middleware";
 import { userCreateMid } from "../middlewares/user-create.middleware";
 import { userAlreadyExists } from "../middlewares/user-already-exists.middleware";
@@ -23,7 +23,7 @@ authRoutes.post("/register/funcionario", withTransaction, userAlreadyExists, use
 authRoutes.get("/registrationConfirm/:token", emailConfirmation);
 authRoutes.post("/lost-password", lostPassword);
 authRoutes.get("/lost-password/:token", resetPasswordTokenConfirmation);
-//authRoutes.put("/reset-password", resetPassword);
+authRoutes.put("/reset-password", resetPassword);
 
 //Dados do usuário logado
 authRoutes.get("/me", validateToken, getAuthenticatedUser);

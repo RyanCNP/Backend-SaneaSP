@@ -97,3 +97,9 @@ export const resetPasswordTokenConfirmation = async (req: Request, res: Response
     res.status(401).json({ valid: false, message: "Token inválido ou expirado" })
   }
 }
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body
+  const result = await authService.resetPassword(token, newPassword)
+  res.json(result)
+}
