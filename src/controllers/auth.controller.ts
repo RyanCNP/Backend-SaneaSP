@@ -27,7 +27,7 @@ export const cadastroCidadao = async(req: Request, res: Response) => {
     const commonUser = req.newCommonUser;
     const {cep, bairro, cidade, numero, complemento, rua, telefone, cpf} = req.body;
     const newCitizen : TCidadaoPayload = {
-      idUsuario : commonUser.idUsuario,
+      idUsuario : commonUser.id,
       cep, bairro, cidade, rua, numero, complemento, telefone, cpf
     };
 
@@ -49,11 +49,14 @@ export const cadastroFuncionario = async(req: Request, res: Response) => {
   if(!transaction) throw new TransactionNotProvided('Ocorreu um problema ao criar o seu usuário')
   try {
     const commonUser = req.newCommonUser;
-    const {nivel} = req.body;
+    const {nivel, cpf, idPrefeitura, telefone} = req.body as TFuncionarioPayload;
     
     const newEmployee : TFuncionarioPayload = {
-      idUsuario : commonUser.idUsuario,
-      nivel
+      idUsuario : commonUser.id,
+      idPrefeitura,
+      nivel,
+      telefone,
+      cpf
     };
 
     await authService.cadastroFuncionario(newEmployee, commonUser, transaction);

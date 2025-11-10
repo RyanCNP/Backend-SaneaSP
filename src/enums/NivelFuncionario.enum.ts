@@ -1,5 +1,5 @@
-export enum NivelFuncionario{
-    ATENDENTE = "atendente",
-    ANALISTA = "analista",
-    ADMINISTRADOR = "administrador"
+export enum NivelFuncionario {
+  OPERACIONAL = "Operacional",
+  GESTOR = "Gestor",
+  ADMINISTRADOR = "Administrador"
 }

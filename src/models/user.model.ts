@@ -3,9 +3,9 @@ import sequelize from "../config/database.config";
 import { IUser, TSafeUser } from "../interfaces/usuario";
 import { UserType } from "../enums/UserType.enum";
 
-export type IUserCreationAttributes = Optional<IUser, 'idUsuario' | 'verified'>;
+export type IUserCreationAttributes = Optional<IUser, 'id' | 'verified'>;
 export class UserModel extends Model<IUser, IUserCreationAttributes> {
-    public idUsuario!: number;
+    public id!: number;
     public nome!: string;
     public email!: string;
     public senha!: string;
@@ -19,12 +19,11 @@ export class UserModel extends Model<IUser, IUserCreationAttributes> {
 }
 
 UserModel.init({
-    idUsuario: {
+    id: {
         primaryKey: true,
         type: DataTypes.INTEGER,
         autoIncrement: true,
         allowNull: false,
-        field: 'id'
     },
     nome: {
         type: DataTypes.STRING(50),

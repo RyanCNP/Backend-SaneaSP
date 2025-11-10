@@ -4,6 +4,7 @@ import path from "path";
 import categoriaRoutes from "./src/routes/categoria.routes";
 import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
+import prefeituraRoutes from "./src/routes/prefeitura.routes";
 import locationRoutes from "./src/routes/location.routes"
 import comentarioRoutes from "./src/routes/comentario.routes"
 import { authRoutes } from "./src/routes/auth.routes";
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use("/categoria", categoriaRoutes);
 app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes);
+app.use("/prefeitura", prefeituraRoutes);
 app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);

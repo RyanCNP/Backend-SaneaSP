@@ -1,6 +1,6 @@
 import { UserType } from "../enums/UserType.enum"
 export interface IUser {
-    idUsuario: number,
+    id: number,
     nome: string,
     email: string,
     senha: string,
@@ -8,7 +8,7 @@ export interface IUser {
     verified: boolean
 }
 
-export type TUserPayload = Omit<IUser, 'idUsuario' | 'verified'>;
+export type TUserPayload = Omit<IUser, 'id' | 'verified'>;
 
 export type TSafeUser = Omit<IUser, 'senha'>;
 
