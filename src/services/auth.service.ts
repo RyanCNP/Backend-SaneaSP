@@ -49,7 +49,7 @@ export const registerUser = async (newUser: TUserPayload, transaction?: Transact
 }
 
 export const cadastroCidadao = async (newCidadao: TCidadaoPayload, user: TSafeUser, transaction?: Transaction): Promise<CidadaoModel> => {
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
+  const verificationToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
@@ -57,7 +57,7 @@ export const cadastroCidadao = async (newCidadao: TCidadaoPayload, user: TSafeUs
 }
 
 export const cadastroFuncionario = async (newEmployee: TFuncionarioPayload, user: TSafeUser, transaction?: Transaction): Promise<FuncionarioModel> => {
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
+  const verificationToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
 
   await sendRegistrationEmail(user, verificationToken)
 
@@ -80,7 +80,7 @@ export const lostPassword = async (email: string): Promise<{ message: string }> 
     throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
   }
 
-  const verificationToken = jwt.sign({ id: user.idUsuario }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
+  const verificationToken = jwt.sign({ id: user.id }, process.env.SECRET_KEY || "", { expiresIn: "1h" })
 
   await sendLostPasswordEmail(user, verificationToken);
 
@@ -123,9 +123,9 @@ export const resetPassword = async (token: string, newPassword: string): Promise
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    await UserModel.update({ senha: hashedPassword }, { where: { idUsuario: decoded.id } });
+    await UserModel.update({ senha: hashedPassword }, { where: { id: decoded.id } });
 
-    return { idUsuario: user.idUsuario, senha: hashedPassword };
+    return { id: user.id, senha: hashedPassword };
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
       throw new ApiError("Token expirado. Solicite uma nova redefinição.", HttpCode.Unautorized);
