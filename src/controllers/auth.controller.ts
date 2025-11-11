@@ -78,8 +78,31 @@ export const emailConfirmation = async (req: Request, res: Response) => {
   res.json(result)
 }
 
+export const lostPassword = async (req: Request, res: Response) => {
+  const { email } = req.body
+  const result = await authService.lostPassword(email)
+  res.json(result)
+}
+
 export const getAuthenticatedUser = async (req: Request, res: Response) => {
   if (!req.user)
     throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
   res.status(200).json(req.user)
+}
+
+export const resetPasswordTokenConfirmation = async (req: Request, res: Response) => {
+  const { token } = req.params
+
+  try {
+    const result = await authService.resetPasswordContirmationToken(token)
+    res.json({ valid: true, data: result })
+  } catch (error) {
+    res.status(401).json({ valid: false, message: "Token inválido ou expirado" })
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body
+  const result = await authService.resetPassword(token, newPassword)
+  res.json(result)
 }

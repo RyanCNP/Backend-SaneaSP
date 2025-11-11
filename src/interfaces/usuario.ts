@@ -12,6 +12,8 @@ export type TUserPayload = Omit<IUser, 'id' | 'verified'>;
 
 export type TSafeUser = Omit<IUser, 'senha'>;
 
+export type TSafePassword = Pick<IUser, 'idUsuario' | 'senha'>;
+
 export interface IUserListFilters {
     nome?: IUser['nome'],
     email?: IUser['email'],
