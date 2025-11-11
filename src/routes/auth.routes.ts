@@ -23,7 +23,7 @@ authRoutes.post("/register/funcionario", withTransaction, userAlreadyExists, use
 authRoutes.get("/registrationConfirm/:token", emailConfirmation);
 authRoutes.post("/lost-password", lostPassword);
 authRoutes.get("/lost-password/:token", resetPasswordTokenConfirmation);
-authRoutes.put("/reset-password", resetPassword);
+authRoutes.patch("/reset-password", resetPassword);
 
 //Dados do usuário logado
 authRoutes.get("/me", validateToken, getAuthenticatedUser);
