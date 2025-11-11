@@ -7,7 +7,7 @@ const env = process.env.NODE_ENV || "development";
 let sequelize: Sequelize;
 
 if (env === "development") {
-  sequelize = new Sequelize("postgresql://postgres:1234@localhost/postgres", {
+  sequelize = new Sequelize(`//postgres:1234@${process.env.DB}:5423/postgres`, {
     dialect: "postgres",
     protocol: "postgres",
     dialectOptions: {},

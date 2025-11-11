@@ -1,0 +1,24 @@
+services:
+  front-sanea:
+    image: saneasp/front-sanea:latest
+    ports:
+      - '4200:4200'
+    container_name: front-sanea
+  back-sanea:
+    image: saneasp/back-sanea:latest
+    container_name: back-sanea
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - banco
+  banco:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - '5423:5432'
+    environment:
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_HOST=localhost
+      - POSTGRES_USERNAME=postgres
