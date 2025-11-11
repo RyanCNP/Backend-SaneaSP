@@ -8,9 +8,9 @@ import { TCidadaoPayload } from "../interfaces/cidadao"
 import { CidadaoModel } from "../models"
 import { sendLostPasswordEmail, sendRegistrationEmail } from "./mail.service"
 import { Transaction } from "sequelize"
-import { FuncionarioModel } from "../models/funcionario.model"
 import { TFuncionarioPayload } from "../interfaces/funcionario"
 import * as userService from "./user.service"
+import { FuncionarioModel } from "../models/funcionario.model"
 
 export const authenticateUser = async (email: string, senha: string): Promise<string> => {
   const user = await UserModel.findOne({ where: { email } })
@@ -37,7 +37,7 @@ export const authenticateUser = async (email: string, senha: string): Promise<st
     throw new Error("Erro interno de servidor")
   }
 
-  const token = jwt.sign({ id: user.idUsuario }, secretKey, { expiresIn })
+  const token = jwt.sign({ id: user.id }, secretKey, { expiresIn })
 
   return token
 }
@@ -68,7 +68,7 @@ export const confirmEmail = async (token: string): Promise<{ message: string }> 
   const secretKey = process.env.SECRET_KEY || ""
   const decoded: any = jwt.verify(token, secretKey)
 
-  await UserModel.update({ verified: true }, { where: { idUsuario: decoded.id } })
+  await UserModel.update({ verified: true }, { where: { id: decoded.id } })
 
   return { message: "Conta verificada com sucesso!" }
 }

@@ -1,11 +1,12 @@
 import { UserModel } from "../models/user.model"
-import { Op, Transaction } from "sequelize"
-import type { IUserListFilters, IUser, TUserPayload } from "../interfaces/usuario"
+import { Op } from "sequelize"
+import type { IUserListFilters, IUser } from "../interfaces/usuario"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import { CidadaoModel } from "../models"
-import { ICidadao, TCidadaoPayload, TCidadaoUpdate } from "../interfaces/cidadao"
-import sequelize from "../config/database.config"
+import { TCidadaoUpdate } from "../interfaces/cidadao"
+import { TFuncionarioUpdate } from "../interfaces/funcionario"
+import { FuncionarioModel } from "../models/funcionario.model"
 
 const userCitizenIncludes = [
   {
@@ -14,12 +15,6 @@ const userCitizenIncludes = [
     attributes: {exclude : ["idUsuario"]}
   },
 ]
-
-interface IUserExists {
-    where: {
-        [Op.or]: Array<Partial<Record<keyof IUserListFilters, string>>>; //Array com as chaves
-    }
-}
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
   const query: any = { where: {}, include : userCitizenIncludes}
@@ -37,7 +32,7 @@ export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]
 }
 
 export const getUserById = async (userId: number): Promise<IUser> => {
-  const foundUser = await UserModel.findOne({ where: { idUsuario: userId } })
+  const foundUser = await UserModel.findOne({ where: { id: userId } })
 
   if (!foundUser) {
     throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
@@ -47,7 +42,7 @@ export const getUserById = async (userId: number): Promise<IUser> => {
 }
 
 export const getUserNameById = async (userId: number): Promise<string> => {
-  const foundUser = await UserModel.findOne({ where: { idUsuario: userId }, attributes : ["nome"]})
+  const foundUser = await UserModel.findOne({ where: { id: userId }, attributes : ["nome"]})
 
   if (!foundUser) {
     throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
@@ -57,11 +52,11 @@ export const getUserNameById = async (userId: number): Promise<string> => {
 }
 
 export const atualizaCidadao = async (
-  idUsuario : IUser['idUsuario'],
+  idUsuario : IUser['id'],
   cidadaoUpdate: Partial<TCidadaoUpdate>
 ) => {
 
-  const foundCitizen = await CidadaoModel.findByPk(idUsuario)
+  const foundCitizen = await CidadaoModel.findOne({where : {idUsuario}})
   const foundUser = await UserModel.findByPk(idUsuario)
 
   if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
@@ -72,22 +67,32 @@ export const atualizaCidadao = async (
 
   await CidadaoModel.update(payload, { where: { idUsuario } });
   
-  const updatedCitizen = await CidadaoModel.findByPk(idUsuario);
+  const updatedCitizen = await CidadaoModel.findOne({where : {idUsuario}})
+
   return updatedCitizen;
 }
 
-export const removeCidadao = async (
-  idUsuario : IUser['idUsuario']
+export const atualizaFuncionario = async (
+  idUsuario : IUser['id'],
+  funcionarioUpdate: Partial<TFuncionarioUpdate>
 ) => {
-  const foundCitizen = await CidadaoModel.findByPk(idUsuario)
+
+  const foundEmployee = await FuncionarioModel.findOne({where : {idUsuario}})
   const foundUser = await UserModel.findByPk(idUsuario)
+  
+  if(!foundEmployee || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  
+  const payload = Object.fromEntries(
+    Object.entries(funcionarioUpdate).filter(([_, v]) => v !== undefined)
+  );
 
-  if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
-
-  await CidadaoModel.destroy()
+  await FuncionarioModel.update(payload, { where: { idUsuario } });
+  
+  const updatedEmployee = await FuncionarioModel.findOne({where : {idUsuario}})
+  return updatedEmployee;
 }
 
-export const deleteUser = async (userId: number): Promise<IUser> => {
+export const deleteUser = async (userId: number): Promise<void> => {
   const userFound = await UserModel.findByPk(userId)
 
   if (!userFound) {
@@ -95,6 +100,4 @@ export const deleteUser = async (userId: number): Promise<IUser> => {
   }
 
   await userFound.destroy()
-
-  return userFound
 }
