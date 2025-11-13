@@ -1,6 +1,10 @@
+import { TCidadaoUpdate } from './../interfaces/cidadao';
 import type { Request, Response } from "express"
-import type { IUser, IUserListFilters } from "../interfaces/usuario"
+import type { IUserListFilters } from "../interfaces/usuario"
 import * as userService from "../services/user.service"
+import { ApiError } from '../errors/ApiError.error';
+import { HttpCode } from '../enums/HttpCode.enum';
+import { TFuncionarioUpdate } from '../interfaces/funcionario';
 
 export const getUsers = async (req: Request, res: Response) => {
   const userFilter = req.query as unknown as IUserListFilters
@@ -20,27 +24,54 @@ export const getUserNameById = async (req: Request, res: Response) => {
   res.status(200).json(userFound)
 }
 
-export const getUserByName = async (req: Request, res: Response) => {
-  const { nome } = req.params
-  const userFound = await userService.getUserByName(nome)
+export const atualizaCidadao = async (req: Request, res: Response) => {
+  const idUsuario  = Number(req.user.id)
+
+  const body = req.body ?? {};
+  const { cep, cidade, rua, bairro, numero, complemento, cpf, telefone } = body;
+
+  if (Object.keys(body).length === 0) {
+    throw new ApiError('Informe um dado para ser atualizado', HttpCode.BadRequest)
+  }
+  const citizenToUpdate : Partial<TCidadaoUpdate> = { cep, cidade, rua, bairro, complemento, numero, cpf, telefone}
+
+  const updated = await userService.atualizaCidadao(idUsuario, citizenToUpdate)
+
   res.status(200).json({
-    error: false,
-    message: "Usuário encontrado",
-    data: userFound,
+    message : 'Seus dados foram atualizados com sucesso',
+    error : false,
+    data : updated
   })
 }
 
-export const updateUser = async (req: Request, res: Response) => {
-  const id = Number(req.params.id)
-  const user: IUser = req.body
-  const result = await userService.updateUser({ id, ...user })
-  res.status(200).json(result)
+export const atualizaFuncionario = async (req: Request, res: Response) => {
+  const idUsuario  = Number(req.user.id)
+
+  const body = req.body ?? {};
+
+  if (Object.keys(body).length === 0) {
+    throw new ApiError('Informe um dado para ser atualizado', HttpCode.BadRequest)
+  }
+
+  const { nivel,  telefone, cpf } = body as TFuncionarioUpdate;
+
+  const employeeToUpdate : Partial<TFuncionarioUpdate> = {nivel, telefone, cpf }
+
+  const updated = await userService.atualizaFuncionario(idUsuario, employeeToUpdate)
+
+  res.status(200).json({
+    message : 'Seus dados foram atualizados com sucesso',
+    error : false,
+    data : updated
+  })
 }
 
 export const deleteUser = async (req: Request, res: Response) => {
-  const { id } = req.params
-  const result = await userService.deleteUser(Number(id))
-  res.status(200).json(result)
+  const idUsuario  = Number(req.user.id)
+  await userService.deleteUser(Number(idUsuario))
+  res.status(200).json({
+    message : 'Sua conta foi excluída com sucesso!'
+  })
 }
 
-export const uniqueUserValidator = userService.uniqueUserValidator
+

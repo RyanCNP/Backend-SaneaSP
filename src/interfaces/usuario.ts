@@ -1,34 +1,20 @@
-import { Op } from "sequelize"
-import { UserLevel } from "../enums/UserLevel.enum"
-
-
+import { UserType } from "../enums/UserType.enum"
 export interface IUser {
     id: number,
     nome: string,
-    telefone?: string,
     email: string,
     senha: string,
-    cpf: string,
-    cep?: string,
-    cidade?: string,
-    bairro?: string,
-    rua?: string,
-    numero?: string,
-    complemento?: string,
-    nivel: UserLevel,
+    tipo: UserType,
     verified: boolean
 }
 
+export type TUserPayload = Omit<IUser, 'id' | 'verified'>;
+
+export type TSafeUser = Omit<IUser, 'senha'>;
+
+export type TSafePassword = Pick<IUser, 'id' | 'senha'>;
+
 export interface IUserListFilters {
-    nome?: string,
-    email?: string,
-    cpf?: string
+    nome?: IUser['nome'],
+    email?: IUser['email'],
 }
-
-export interface IUserExists {
-    where: {
-        [Op.or]: Array<Partial<Record<keyof IUserListFilters, string>>>; //Array com as chaves
-    }
-}
-
-export { UserLevel }
