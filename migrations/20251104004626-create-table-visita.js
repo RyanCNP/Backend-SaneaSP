@@ -32,18 +32,12 @@ module.exports = {
         allowNull: false,
         // Configurando a Chave Estrangeira (Foreign Key) para a tabela 'registros'
         references: {
-          model: 'registros', // Nome da tabela que possui a chave primária
+          model: 'registro', // Nome da tabela que possui a chave primária
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
-      // Como seu modelo está com timestamps: false, eu não incluí 'createdAt' e 'updatedAt'.
-      // Se você decidir ativá-los, adicione-os aqui.
-    }, {
-        // Seus modelos usam o nome 'visitas', então a tabela será 'visitas'.
-        tableName: 'visitas',
-        timestamps: false,
     });
   },
 

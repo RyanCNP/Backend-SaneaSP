@@ -1,16 +1,16 @@
 
-import { Visita } from '../models/visita.model';
+import { VisitaModel } from '../models/visita.model';
 import { IVisita } from '../interfaces/visita';
 
 import { ValidationError } from 'sequelize'; 
 
-type VisitaReturnType = Visita | null;
+type VisitaReturnType = VisitaModel | null;
 
 
-export const criarVisita = async (dados: IVisita): Promise<Visita> => {
+export const criarVisita = async (dados: IVisita): Promise<VisitaModel> => {
     try {
         
-        const novaVisita = await Visita.create(dados as any);
+        const novaVisita = await VisitaModel.create(dados as any);
         return novaVisita;
     } catch (error: any) {
         
@@ -29,20 +29,20 @@ export const criarVisita = async (dados: IVisita): Promise<Visita> => {
 };
 
 
-export const listarVisitas = async (): Promise<Visita[]> => {
+export const listarVisitas = async (): Promise<VisitaModel[]> => {
     
-    return Visita.findAll();
+    return VisitaModel.findAll();
 };
 
 
 export const obterVisitaPorId = async (id: number): Promise<VisitaReturnType> => {
     
-    return Visita.findByPk(id);
+    return VisitaModel.findByPk(id);
 };
 
 
 export const atualizarVisita = async (id: number, dados: Partial<IVisita>): Promise<VisitaReturnType> => {
-    const [affectedCount] = await Visita.update(dados, {
+    const [affectedCount] = await VisitaModel.update(dados, {
         where: { id: id },
     });
 
@@ -51,13 +51,13 @@ export const atualizarVisita = async (id: number, dados: Partial<IVisita>): Prom
     }
 
     
-    const visitaAtualizada = await Visita.findByPk(id);
+    const visitaAtualizada = await VisitaModel.findByPk(id);
     return visitaAtualizada;
 };
 
 
 export const excluirVisita = async (id: number): Promise<void> => {
-    const result = await Visita.destroy({
+    const result = await VisitaModel.destroy({
         where: { id: id },
     });
 

@@ -13,8 +13,8 @@ import locationRoutes from "./src/routes/location.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
-import visitaRoutes from './src/routes/visita.routes';
-
+import RegistroRoutes from './src/routes/registro.routes';
+import VisitasRoutes from './src/routes/visita.routes';
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
 const app = express();
@@ -39,7 +39,9 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
-app.use('/visitas', visitaRoutes); 
+
+app.use('/visitas', VisitasRoutes); 
+app.use('/registro', RegistroRoutes ); 
 
 
 app.use("/public", express.static(path.join(__dirname, "public")));

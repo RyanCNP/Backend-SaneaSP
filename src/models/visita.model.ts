@@ -15,7 +15,7 @@ interface VisitaAttributes {
 interface VisitaCreationAttributes extends Optional<VisitaAttributes, 'id'> {}
 
 
-export class Visita extends Model<VisitaAttributes, VisitaCreationAttributes>
+export class VisitaModel extends Model<VisitaAttributes, VisitaCreationAttributes>
     implements VisitaAttributes {
     public id!: number;
     public motivo!: string;
@@ -27,7 +27,7 @@ export class Visita extends Model<VisitaAttributes, VisitaCreationAttributes>
 }
 
 
-Visita.init(
+VisitaModel.init(
     {
         id: {
             type: DataTypes.INTEGER,
