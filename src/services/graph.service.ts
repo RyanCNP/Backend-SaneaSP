@@ -26,3 +26,12 @@ export const getBigPoints = async (params: IGraphFilter): Promise<BigPoints[]> =
   const bigPoints: BigPoints[] = result.map(item => item.get({ plain: true }));
   return bigPoints;
 }
+
+export const getCities = async () => {
+  const result = await DenunciaModel.findAll({
+    attributes: ['cidade'],
+    group: 'cidade'
+  })
+  const cities = result.map(c => c.cidade)
+  return cities
+}

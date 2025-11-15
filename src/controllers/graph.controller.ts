@@ -18,3 +18,8 @@ export const getMaioresPontuacoes = async (req: Request, res: Response) => {
   const result = await graphService.getBigPoints(filter)
   res.json(result)
 }
+
+export const getCidades = async (req: Request, res: Response) => {
+  const cities = await graphService.getCities()
+  res.json(cities);
+}
