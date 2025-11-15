@@ -1,6 +1,6 @@
 import { StatusDenuncia } from './../enums/statusDenuncia.enum';
 
-export interface IfilterGraph {
+export interface IGraphFilter {
     cidade?: string,
     status?: StatusDenuncia,
     pontuacao?: number,

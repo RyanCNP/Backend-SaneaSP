@@ -1,27 +1,28 @@
 import sequelize, { type FindAttributeOptions } from "sequelize"
-import type { BigPoints, IfilterGraph } from "../interfaces/graph"
+import type { BigPoints, IGraphFilter } from "../interfaces/graph"
 import { DenunciaModel } from "../models"
 
-export const getBigPoints = async (params: IfilterGraph): Promise<BigPoints[]> => {
+export const getBigPoints = async (params: IGraphFilter): Promise<BigPoints[]> => {
   let groupBy = "cidade"
   let whereCidade: any = {}
-  const selects: FindAttributeOptions = ["cidade", [sequelize.fn("SUM", sequelize.col("pontuacao")), "pontuacao"]]
+  const attributes: FindAttributeOptions = ["cidade", [sequelize.fn("AVG", sequelize.col("pontuacao")), "pontuacao"]]
 
   if (params.cidade) {
     whereCidade = {
       cidade: params.cidade,
     }
     groupBy = "bairro"
-    selects.push("bairro")
+    attributes.push("bairro")
   }
 
   const result = await DenunciaModel.findAll({
-    attributes: selects,
+    attributes,
     where: whereCidade,
     order: [["pontuacao", "DESC"]],
     group: groupBy,
     limit: params?.limit || 10,
   })
 
-  return result as unknown as BigPoints[]
+  const bigPoints: BigPoints[] = result.map(item => item.get({ plain: true }));
+  return bigPoints;
 }

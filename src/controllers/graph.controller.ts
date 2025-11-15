@@ -1,9 +1,20 @@
 import type { Request, Response } from "express"
-import type { IfilterGraph } from "../interfaces/graph"
+import type { IGraphFilter } from "../interfaces/graph"
 import * as graphService from "../services/graph.service"
 
 export const getMaioresPontuacoes = async (req: Request, res: Response) => {
-  const filter = req.query as unknown as IfilterGraph
+  const {bairro, cidade, dataFinal, dataInicio, limit, pontuacao, status} = req.query as IGraphFilter
+
+  const filter : IGraphFilter = {
+    bairro,
+    cidade,
+    dataFinal,
+    dataInicio,
+    limit,
+    pontuacao,
+    status
+  }
+
   const result = await graphService.getBigPoints(filter)
   res.json(result)
 }

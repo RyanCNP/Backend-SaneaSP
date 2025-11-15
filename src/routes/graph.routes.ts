@@ -1,8 +1,8 @@
 import express from "express"
-import { getMaioresPontuacoes } from "../controllers/graph.controller"
+import * as graphController from "../controllers/graph.controller"
 
 export const router = express.Router()
 
-router.get("/maioresPontuacoes", getMaioresPontuacoes)
+router.get("/maioresPontuacoes", graphController.getMaioresPontuacoes)
 
 export default router
