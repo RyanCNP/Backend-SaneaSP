@@ -25,8 +25,10 @@ export const findComentarioById = async (idComentario: number): Promise<IComenta
             {
                 model: UserModel,
                 as: 'usuario', 
+                attributes: {exclude : ['id', 'senha', 'email']}
             }
-        ]
+        ],
+        attributes : {exclude : ['fk_usuario', 'fk_denuncia']}
     });
     if (!comentario) {
         throw new ApiError("Não foi possível encontrar Comentário com esse ID", HttpCode.NotFound);
@@ -43,9 +45,16 @@ export const findAllComentariosByDenuncia = async (idDenuncia :number):Promise<I
         include: [
             {
                 model: UserModel,
-                as: 'usuario'
+                as: 'usuario',
+                attributes: {exclude : ['id', 'senha', 'email']}
             },
-        ]
+            {
+                model: DenunciaModel,
+                as: 'denuncia',
+                attributes: ['idUsuario']
+            }
+        ],
+        attributes : {exclude : ['fk_usuario', 'fk_denuncia']}
     })
     if(comentarios.length === 0){
         throw new ApiError('Não foi possivel encontrar nenhum comentario relacionado a essa denuncia',HttpCode.NotFound)
@@ -65,13 +74,15 @@ export const findAllComentarios = async (idUsuario?:number):Promise<IComentario[
         include: [
             {
                 model: UserModel,
-                as: 'usuario'
+                as: 'usuario',
+                attributes: {exclude : ['id', 'senha', 'email']}
             },
             {
                 model:DenunciaModel,
                 as:'denuncia',
             }
-        ]
+        ],
+        attributes : {exclude : ['fk_usuario', 'fk_denuncia']}
     })
     if(!comentarios){
         throw new ApiError('Não foi possivel encontrar nenhum comentario relacionado a essa denuncia',HttpCode.NotFound)
