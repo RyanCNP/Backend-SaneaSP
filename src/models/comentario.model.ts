@@ -26,7 +26,7 @@ ComentarioModel.init(
         dataPublicacao: {
             type: DataTypes.DATE(),
             allowNull: false,
-            defaultValue: new Date()
+            defaultValue: DataTypes.NOW
         },
         idDenuncia: {
             allowNull: false,
