@@ -1,29 +1,61 @@
-import { Server } from "socket.io";
-import { IComentario, IComentarioInput } from "../interfaces/comentario";
-import { createComentario, findAllComententarios } from "../services/comentario.service";
-import { ComentarioModel } from "../models/comentario.model";
+import { Server, Socket } from "socket.io";
+import { IComentario, TComentarioCreate } from "../interfaces/comentario";
+import {
+  createComentario,
+  findAllComentariosByDenuncia,
+} from "../services/comentario.service";
 
 export function initSockets(server: any) {
-    const io = new Server(server, {
-        cors: {
-            origin: ["http://localhost:4200"],
-            methods: ["GET", "POST"]
-        }
+  const io = new Server(server, {
+    cors: {
+      origin: ["http://localhost:4200"],
+      methods: ["GET", "POST"],
+    },
+  });
+
+  io.on("connection", (socket) => {
+    console.log(`Cliente conectado: ${socket.id}`);
+
+    // Listener para buscar comentários
+    socket.on("complaintComments", async (idDenuncia: number) => {
+      try {
+        console.log(`Buscando comentários para denúncia: ${idDenuncia}`);
+        const comentarios: IComentario[] = await findAllComentariosByDenuncia(
+          idDenuncia
+        );
+        console.log("comentários encontrados:", comentarios);
+
+        // Envia apenas para o socket que solicitou
+        socket.emit("complaintComments", comentarios);
+      } catch (err) {
+        console.error("Erro ao buscar comentários:", err);
+        socket.emit("error-event", {
+          message: err instanceof Error ? err.message : String(err),
+        });
+      }
     });
 
-    io.on('connection', socket => {
-        console.log(`Cliente conectado: ${socket.id}`);
-        socket.on("allComentarios", async (idUsuario?:number)=>{
-            const comentarios:IComentario[] = await findAllComententarios(idUsuario);
-            io.emit("allComentarios", comentarios);
-        })
+    socket.on("newComment", async (msg: TComentarioCreate) => {
+      try {
+        console.log("Novo comentário recebido:", msg);
+        await createComentario(msg);
+        console.log("Comentário criado no banco");
 
-        socket.on("newComentario", async(msg : IComentarioInput) => {
-            const newComentario = await createComentario(msg)
-            io.emit('comentario',newComentario);
+        const comentarios = await findAllComentariosByDenuncia(msg.idDenuncia);
+        console.log("Emitindo lista atualizada de comentários");
+
+        // Envia para TODOS os sockets conectados
+        io.emit("complaintComments", comentarios);
+      } catch (err) {
+        console.error("Erro ao criar comentário:", err);
+        socket.emit("error-event", {
+          message: err instanceof Error ? err.message : String(err),
         });
-        socket.on("disconnect", () => {
-            console.log(`Cliente desconectado: ${socket.id}`);
-        });
+      }
     });
+
+    socket.on("disconnect", () => {
+      console.log(`Cliente desconectado: ${socket.id}`);
+    });
+  });
 }

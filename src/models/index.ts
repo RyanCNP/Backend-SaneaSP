@@ -44,12 +44,12 @@ ImagemDenunciaModel.belongsTo(DenunciaModel, {
 
 //COMENTARIOS E DENUNCIAS
 ComentarioModel.belongsTo(UserModel, {
-  foreignKey: "fkUsuario",
+  foreignKey: "fk_usuario",
   as: "usuario",
 });
 
 ComentarioModel.belongsTo(DenunciaModel, {
-  foreignKey: "fkDenuncia",
+  foreignKey: "fk_denuncia",
   as: "denuncia",
 });
 

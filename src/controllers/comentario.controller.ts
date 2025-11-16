@@ -1,4 +1,4 @@
-import { findAllComententarios, findAllComentariosByDenuncia } from '../services/comentario.service';
+import { findAllComentarios, findAllComentariosByDenuncia } from '../services/comentario.service';
 import { IComentario } from './../interfaces/comentario';
 import { Request, Response } from "express";
 
