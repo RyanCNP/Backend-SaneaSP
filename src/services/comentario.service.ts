@@ -2,18 +2,17 @@ import { DenunciaModel } from './../models/denuncia.model';
 import { HttpCode } from './../enums/HttpCode.enum';
 import { ApiError } from '../errors/ApiError.error';
 import { ComentarioModel } from '../models/comentario.model';
-import { IComentario, IComentarioInput, ICreateComentario } from './../interfaces/comentario';
+import { IComentario, TComentarioCreate } from './../interfaces/comentario';
 import { UserModel } from '../models/user.model';
 
 
-export const createComentario = async (mensage: IComentarioInput): Promise<IComentario> => {
-    const { usuario, denuncia } = mensage;
+export const createComentario = async (mensagem: TComentarioCreate): Promise<IComentario> => {
+    const { idUsuario, idDenuncia, descricao } = mensagem;
     
-    const newComentario: ICreateComentario = {
-        fkDenuncia: denuncia.id,
-        fkUsuario: usuario.idUsuario,
-        dataPublicacao: new Date(),
-        descricao: mensage.descricao,
+    const newComentario: TComentarioCreate = {
+        idDenuncia,
+        idUsuario,
+        descricao
     };
     const result = await ComentarioModel.create(newComentario);
 
@@ -25,7 +24,7 @@ export const findComentarioById = async (idComentario: number): Promise<IComenta
         include: [
             {
                 model: UserModel,
-                as: 'usuario', // use o alias correto da sua associação
+                as: 'usuario', 
             }
         ]
     });
@@ -35,12 +34,12 @@ export const findComentarioById = async (idComentario: number): Promise<IComenta
     return comentario
 }
 
-export const findAllComentariosByDenuncia = async (id:number):Promise<IComentario[]> =>{
+export const findAllComentariosByDenuncia = async (idDenuncia :number):Promise<IComentario[]> =>{
     const comentarios = await ComentarioModel.findAll({
         where: {
-            fkDenuncia: id
+            idDenuncia: idDenuncia
         },
-        order: [['dataPublicacao','DESC']],
+        order: [['dataPublicacao','ASC']],
         include: [
             {
                 model: UserModel,
@@ -54,15 +53,15 @@ export const findAllComentariosByDenuncia = async (id:number):Promise<IComentari
     return comentarios
 }
 
-export const findAllComententarios = async (idUsuario?:number):Promise<IComentario[]> =>{
+export const findAllComentarios = async (idUsuario?:number):Promise<IComentario[]> =>{
     let where = {};
     if(idUsuario){
-        where = {fkUsuario:idUsuario};
+        where = {idUsuario};
     }
     const comentarios = await ComentarioModel.findAll({
         where,
         order: ['dataPublicacao'],
-        group:['fkDenuncia'],
+        group:['idDenuncia'],
         include: [
             {
                 model: UserModel,

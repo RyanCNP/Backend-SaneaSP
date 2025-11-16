@@ -1,7 +1,6 @@
 import { Server } from "socket.io";
-import { IComentario, IComentarioInput } from "../interfaces/comentario";
-import { createComentario, findAllComententarios } from "../services/comentario.service";
-import { ComentarioModel } from "../models/comentario.model";
+import { IComentario, TComentarioCreate } from "../interfaces/comentario";
+import { createComentario, findAllComentarios, findAllComentariosByDenuncia } from "../services/comentario.service";
 
 export function initSockets(server: any) {
     const io = new Server(server, {
@@ -13,14 +12,16 @@ export function initSockets(server: any) {
 
     io.on('connection', socket => {
         console.log(`Cliente conectado: ${socket.id}`);
-        socket.on("allComentarios", async (idUsuario?:number)=>{
-            const comentarios:IComentario[] = await findAllComententarios(idUsuario);
-            io.emit("allComentarios", comentarios);
+        socket.on("allComments", async (idDenuncia:number)=>{
+            const comentarios:IComentario[] = await findAllComentariosByDenuncia(idDenuncia);
+            io.emit("allComments", comentarios);
         })
 
-        socket.on("newComentario", async(msg : IComentarioInput) => {
-            const newComentario = await createComentario(msg)
-            io.emit('comentario',newComentario);
+        socket.on("newComment", async(msg : TComentarioCreate) => {
+              const newComentario = await createComentario(msg)
+              // Busca todos os comentários da denúncia após adicionar o novo
+              const comentarios = await findAllComentariosByDenuncia(msg.idDenuncia);
+              io.emit('allComments', comentarios);
         });
         socket.on("disconnect", () => {
             console.log(`Cliente desconectado: ${socket.id}`);
