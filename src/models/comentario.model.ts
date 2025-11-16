@@ -1,18 +1,14 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { IComentario } from "../interfaces/comentario";
+import { DataTypes, Model } from "sequelize";
+import { IComentario, TComentarioCreate } from "../interfaces/comentario";
 import { DataType } from "sequelize-typescript";
 import sequelize from "../config/database.config";
-import { IUser } from "../interfaces/usuario";
 
-type ComentarioCreateAttributes = Optional<IComentario, "id">
-
-export class ComentarioModel extends Model<IComentario | ComentarioCreateAttributes> {
-    public id !: number;
-    public descricao !: string;
-    public dataPublicacao !: Date;
-    public fkDenuncia !: number;
-    public fkUsuario !: number;
-    public usuario ?: IUser;
+export class ComentarioModel extends Model<IComentario, TComentarioCreate> {
+    public id!: number;
+    public descricao!: string;
+    public dataPublicacao!: Date;
+    public idDenuncia!: number;
+    public idUsuario!: number;
 }
 
 ComentarioModel.init(
@@ -22,26 +18,24 @@ ComentarioModel.init(
             autoIncrement: true,
             allowNull: false,
             type: DataType.INTEGER,
-            field:"id"
         },
         descricao: {
             type: DataType.STRING(500),
             allowNull: false,
-            field:"descricao"
         },
         dataPublicacao: {
             type: DataTypes.DATE(),
             allowNull: false,
-            field:"dataPublicacao"
+            defaultValue: DataTypes.NOW
         },
-        fkDenuncia: {
+        idDenuncia: {
             allowNull: false,
             type: DataType.INTEGER,
             references: { model: 'denuncia', key: 'id' },
             onDelete: 'CASCADE',
             field:"fk_denuncia"
         },
-        fkUsuario: { // depois trocar para fk_cidadao e fk_funcionario
+        idUsuario: {
             allowNull: false,
             type: DataType.INTEGER,
             references: { model: 'usuario', key: 'id' },
