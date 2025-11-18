@@ -12,11 +12,12 @@ import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
 import feedbackRoutes from "./src/routes/feedback.routes";
 import registroRoutes from "./src/routes/registro.routes";
-
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
 import http from 'http'
 import { initSockets } from "./src/sockets";
+import bodyParser from "body-parser";
+import stripeRoutes from "./src/routes/stripe.routes";
 export const app = express();
 
 // Swagger
@@ -24,6 +25,9 @@ setupSwagger(app);
 
 // Middlewares
 app.use(cors());
+
+app.use('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
+
 app.use(express.json());
 
 // Rotas da API
@@ -38,6 +42,8 @@ app.use("/location",locationRoutes);
 app.use("/feedback", feedbackRoutes);
 app.use("/comentario", comentarioRoutes);
 app.use("/registro", registroRoutes);
+
+app.use('/api/stripe', stripeRoutes);
 
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));
