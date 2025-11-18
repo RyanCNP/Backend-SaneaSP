@@ -11,14 +11,6 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      motivo: {
-        type: Sequelize.STRING(250),
-        allowNull: false,
-      },
-      conclusao: {
-        type: Sequelize.STRING(250),
-        allowNull: true,
-      },
       data_inicio: {
         type: Sequelize.DATE,
         allowNull: false,

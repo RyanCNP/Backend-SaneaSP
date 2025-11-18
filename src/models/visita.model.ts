@@ -1,22 +1,13 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database.config';
+import { IVisita } from '../interfaces/visita';
 
 
-interface VisitaAttributes {
-    id: number;
-    motivo: string;
-    conclusao?: string;
-    data_inicio: Date;
-    data_final: Date;
-    fk_registro: number; 
-}
+interface VisitaCreationAttributes extends Optional<IVisita, 'id'> {}
 
 
-interface VisitaCreationAttributes extends Optional<VisitaAttributes, 'id'> {}
-
-
-export class VisitaModel extends Model<VisitaAttributes, VisitaCreationAttributes>
-    implements VisitaAttributes {
+export class VisitaModel extends Model<IVisita, VisitaCreationAttributes>
+    implements IVisita {
     public id!: number;
     public motivo!: string;
     public conclusao!: string;
@@ -33,14 +24,6 @@ VisitaModel.init(
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true
-        },
-        motivo: {
-            type: DataTypes.STRING(250),
-            allowNull: false
-        },
-        conclusao: {
-            type: DataTypes.STRING(250),
-            allowNull: true
         },
         data_inicio: {
             type: DataTypes.DATE,
