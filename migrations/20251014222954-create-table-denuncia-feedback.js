@@ -20,24 +20,11 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING(2048)
       },
-      fk_funcionario: {
-        allowNull: false,
-        type: DataTypes.INTEGER
-      },
       fk_denuncia: {
           allowNull: false,
           type: DataTypes.INTEGER,
           references: {
             model: 'denuncia',
-            key: 'id'
-          },
-          onDelete: 'CASCADE'
-        },
-        fk_cidadao: {
-          allowNull: false,
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'usuario',
             key: 'id'
           },
           onDelete: 'CASCADE'
