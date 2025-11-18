@@ -5,7 +5,7 @@ import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 
 export const getAllDenunciaFeedbacks = async (req: Request, res: Response) => {
-    const feedbacks = await feedbackService.findAllFeedbacks()
+    const feedbacks = await feedbackService.findAllDenunciaFeedbacks()
     res.status(200).json(feedbacks)
 }
 
@@ -26,8 +26,14 @@ export const postInterfaceFeedback = async (req: Request, res: Response) => {
     res.status(201).json(newFeedback)
 }
 
-export const deleteFeedback = async (req: Request, res: Response) => {
+export const deleteDenunciaFeedback = async (req: Request, res: Response) => {
     const { id } = req.params
-    const deletedFeedback = await feedbackService.deleteFeedback(Number(id))
+    const deletedFeedback = await feedbackService.deleteDenunciaFeedback(Number(id))
+    res.status(200).json(deletedFeedback)
+}
+
+export const deleteInterfaceFeedback = async (req: Request, res: Response) => {
+    const { id } = req.params
+    const deletedFeedback = await feedbackService.deleteInterfaceFeedback(Number(id))
     res.status(200).json(deletedFeedback)
 }
