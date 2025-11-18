@@ -39,12 +39,6 @@ export const postInterfaceFeedback = async (req: Request, res: Response) => {
     res.status(201).json(newFeedback)
 }
 
-export const deleteDenunciaFeedback = async (req: Request, res: Response) => {
-    const { id } = req.params
-    const deletedFeedback = await feedbackService.deleteDenunciaFeedback(Number(id))
-    res.status(200).json(deletedFeedback)
-}
-
 export const deleteInterfaceFeedback = async (req: Request, res: Response) => {
     const { id } = req.params
     const deletedFeedback = await feedbackService.deleteInterfaceFeedback(Number(id))
