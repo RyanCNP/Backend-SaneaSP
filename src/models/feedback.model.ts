@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database.config";
 import { IDenunciaFeedback, IInterfaceFeedback } from "../interfaces/feedback";
 import { FeedbackInterface } from "../enums/FeedbackInterface.enum";
+import { DenunciaModel } from "./denuncia.model";
 
 type DenunciaFeedbackCreationalAttributes = Optional<IDenunciaFeedback, "id">
 type InterfaceFeedbackCreationalAttributes = Optional<IInterfaceFeedback, "id">
@@ -41,13 +42,24 @@ DenunciaFeedbackModel.init({
     fk_denuncia: {
         allowNull: false,
         type: DataTypes.INTEGER,
-        field: "fk_denuncia"
+        field: "fk_denuncia",
+        references: {
+            model: 'denuncia',
+            key: 'id'
+        },
+        onDelete: 'CASCADE',
+        unique: true
     }
 },{
     tableName: "denuncia-feedback",
     sequelize,
     timestamps: false
 })
+
+DenunciaFeedbackModel.belongsTo(DenunciaModel, {
+  foreignKey: "fk_denuncia",
+  as: "denuncia"
+});
 
 InterfaceFeedbackModel.init({
     id: {

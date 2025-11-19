@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { IDenuncia } from "../interfaces/denuncia";
+import { DenunciaFeedbackModel } from "./feedback.model";
 import { StatusDenuncia } from "../enums/statusDenuncia.enum";
 import sequelize from "../config/database.config";
 
@@ -98,3 +99,7 @@ DenunciaModel.init(
     }
 );
 
+DenunciaModel.hasOne(DenunciaFeedbackModel, {
+  foreignKey: "fk_denuncia",
+  as: "feedback"
+});

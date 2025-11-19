@@ -6,9 +6,14 @@ import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 
 export const getAllDenunciaFeedbacks = async (req: Request, res: Response) => {
-    const feedbacks = await feedbackService.findAllDenunciaFeedbacks()
-    res.status(200).json(feedbacks)
-}
+  try {
+    const feedbacks = await feedbackService.findAllDenunciaFeedbacks();
+    return res.status(200).json(feedbacks);
+  } catch (error) {
+    console.error("Erro ao buscar feedbacks de denúncia:", error);
+    return res.status(500).json({ message: "Erro interno no servidor." });
+  }
+};
 
 export const getDenunciaFeedbackById = async (req: Request, res: Response) => {
     const { id } = req.params

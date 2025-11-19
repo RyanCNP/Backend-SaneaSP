@@ -1,17 +1,30 @@
-import type { IDenunciaFeedback, ICreateDenunciaFeedback, IInterfaceFeedback, ICreateInterfaceFeedback } from "../interfaces/feedback"
+import { IDenunciaFeedback, ICreateDenunciaFeedback, IInterfaceFeedback, ICreateInterfaceFeedback } from "../interfaces/feedback"
 import { DenunciaFeedbackModel, InterfaceFeedbackModel } from "../models/feedback.model"
+import { DenunciaModel } from "../models/denuncia.model"
 import { FeedbackInterface } from "../enums/FeedbackInterface.enum"
 import { Op } from "sequelize"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 
 export const findAllDenunciaFeedbacks = async (): Promise<IDenunciaFeedback[]> => {
-    const feedbacks = await DenunciaFeedbackModel.findAll()
+  const feedbacks = await DenunciaFeedbackModel.findAll({
+    include: [
+      {
+        model: DenunciaModel,
+        as: "denuncia",
+        attributes: ["titulo"]
+      }
+    ],
+    order: [["createdAt", "DESC"]]
+  });
 
-    if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+  if (feedbacks.length === 0) {
+    throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound);
+  }
 
-    return feedbacks
-}
+  return feedbacks;
+};
+
 
 export const findDenunciaFeedbackById = async (id: number): Promise<IDenunciaFeedback> => {
     const feedback = await DenunciaFeedbackModel.findByPk(id)
