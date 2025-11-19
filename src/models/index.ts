@@ -92,11 +92,13 @@ FuncionarioModel.belongsTo(PrefeituraModel, {
 });
 
 //Registros
+//Adicionando associação entre Registro, Denuncia e Usuario
 RegistroModel.belongsTo(DenunciaModel,{foreignKey:'id_denuncia',as:'denuncia'})
 RegistroModel.belongsTo(UserModel,{foreignKey:'id_usuario',as:'usuario'})
 
 RegistroModel.hasMany(ImagemRegistroModel,
     { foreignKey: 'id_registro', as: 'arquivos', onDelete: 'CASCADE' })
+    
 ImagemRegistroModel.belongsTo(RegistroModel,
     { foreignKey: 'id_registro', as: 'registro' })
 

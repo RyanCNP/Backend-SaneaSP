@@ -1,16 +1,26 @@
 import { DenunciaModel, RegistroModel } from "../models";
 import { UserModel } from "../models/user.model";
 
+
 const includeRegistro = [
-    {
-      model: DenunciaModel,
-      as: "denuncia"
-    },
-    {
-      model: UserModel,
-      as: "usuario"
-    },
-]
+  {
+    model: DenunciaModel,
+    as: "denuncia",
+    attributes: { exclude: ["id"] }
+  },
+  {
+    model: UserModel,
+    as: "usuario",
+    attributes: ['nome', 'verified']
+  }
+];
+
+const excludeAttributes = ["fkDenuncia", "fkUsuario"];
+
+const registroQueryOptions = {
+  include : includeRegistro,
+  attributes: { exclude: excludeAttributes }
+}
 
 // Criar
 export const createRegistro = async (data: {
@@ -25,14 +35,14 @@ export const createRegistro = async (data: {
 
 // Buscar todos
 export const getAllRegistros = async () => {
-  return await RegistroModel.findAll({include:includeRegistro});
+  return await RegistroModel.findAll(registroQueryOptions);
 };
 
 // Buscar por ID
 export const getRegistroById = async (id: number) => {
   return await RegistroModel.findOne({
     where:{id},
-    include:includeRegistro
+    ...registroQueryOptions
   });
 };
 

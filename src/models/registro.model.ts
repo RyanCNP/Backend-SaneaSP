@@ -31,6 +31,7 @@ RegistroModel.init(
         dataPublicacao: {
             type: DataTypes.DATE(),
             allowNull: false,
+            defaultValue: DataTypes.NOW,
             field: "data_publicacao"
         },
         tipo: {
