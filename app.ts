@@ -10,7 +10,7 @@ import comentarioRoutes from "./src/routes/comentario.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
-import feedbackRoutes from "./src/routes/feedback.routes";
+//import feedbackRoutes from "./src/routes/feedback.routes";
 import registroRoutes from "./src/routes/registro.routes";
 
 import { setupSwagger } from "./src/swagger/swagger";
@@ -35,7 +35,7 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
-app.use("/feedback", feedbackRoutes);
+//app.use("/feedback", feedbackRoutes);
 app.use("/comentario", comentarioRoutes);
 app.use("/registro", registroRoutes);
 
