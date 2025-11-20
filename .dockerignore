@@ -23,6 +23,10 @@ logs/
 .env
 .env.local
 .env.*.local
-
+.env-example
 # Testes
 coverage
+#outros arquivos
+.docker-compose.yml
+github/
+database.sqlite
