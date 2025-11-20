@@ -1,5 +1,5 @@
-import { IDenuncia } from "./denuncia";
-import { IUser } from "./usuario";
+import { Optional } from "sequelize"
+import { StatusDenuncia } from "../enums/statusDenuncia.enum"
 
 export enum TipoRegistro{
     Relatorio = 'relatorio',
@@ -8,20 +8,24 @@ export enum TipoRegistro{
 
 export interface IRegistro{
     id:number,
-    descricao:string,
     dataPublicacao: Date,
-    tipo: number,
-    usuario?: IUser,
-    denuncia?: IDenuncia,
-    fkUsuario: number,
-    fkDenuncia: number,
+    tipo: TipoRegistro,
+    statusAnterior: StatusDenuncia
+    statusPosterior: StatusDenuncia
+    idUsuario: number,
+    idDenuncia: number,
 }
 
-export interface ICreateRegistro{
-    descricao:string,
-    dataPublicacao: Date,
-    tipo: number,
-    arquivo ?: string[],
-    fkUsuario: number,
-    fkDenuncia: number,
-}
+export type TRegistroAgendamentoPayload = Pick<
+  IRegistro,
+  'idUsuario' | 'idDenuncia'
+> 
+
+export type TRegistroRelatorioPayload = Pick<
+  IRegistro,
+  'idUsuario' | 'idDenuncia' | 'statusPosterior'
+>
+
+export type TRegistroCreate = Optional<IRegistro, 
+    'id' 
+    | 'dataPublicacao'>

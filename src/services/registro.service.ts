@@ -1,6 +1,7 @@
+import { Transaction } from "sequelize";
+import { TRegistroCreate } from "../interfaces/registro";
 import { DenunciaModel, RegistroModel } from "../models";
 import { UserModel } from "../models/user.model";
-
 
 const includeRegistro = [
   {
@@ -23,14 +24,8 @@ const registroQueryOptions = {
 }
 
 // Criar
-export const createRegistro = async (data: {
-  descricao: string;
-  dataPublicacao: Date;
-  tipo: number;
-  fkDenuncia: number;
-  fkUsuario: number;
-}) => {
-  return await RegistroModel.create(data);
+export const createRegistro = async (newRegister : TRegistroCreate, transaction : Transaction) => {
+  return await RegistroModel.create(newRegister, { transaction });
 };
 
 // Buscar todos
@@ -47,22 +42,22 @@ export const getRegistroById = async (id: number) => {
 };
 
 // Atualizar
-export const updateRegistro = async (
-  id: number,
-  data: {
-    descricao?: string;
-    dataPublicacao?: Date;
-    tipo?: number;
-    fkDenuncia?: number;
-    fkUsuario?: number;
-  }
-) => {
-  const registro = await RegistroModel.findByPk(id);
-  if (!registro) return null;
+// export const updateRegistro = async (
+//   id: number,
+//   data: {
+//     descricao?: string;
+//     dataPublicacao?: Date;
+//     tipo?: number;
+//     fkDenuncia?: number;
+//     fkUsuario?: number;
+//   }
+// ) => {
+//   const registro = await RegistroModel.findByPk(id);
+//   if (!registro) return null;
 
-  await registro.update(data);
-  return registro;
-};
+//   await registro.update(data);
+//   return registro;
+// };
 
 // Deletar
 export const deleteRegistro = async (id: number) => {

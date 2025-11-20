@@ -1,11 +1,18 @@
 
 import { Router } from 'express';
 import * as visitaController from '../controllers/visita.controller';
+import { registerCreateMid } from '../middlewares/register-create.middleware';
+import { TipoRegistro } from '../interfaces/registro';
+import { withTransaction } from '../middlewares/transaction.middleware';
 
 const router = Router();
 
 
-router.post('/', visitaController.criarVisita);
+router.post('/', 
+    withTransaction, 
+    registerCreateMid(TipoRegistro.Agendamento), 
+    visitaController.criarVisita
+);
 
 
 router.get('/', visitaController.listarVisitas);

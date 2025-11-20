@@ -4,8 +4,6 @@ import * as visitaService from '../services/visita.service';
 
 export const criarVisita = async (req: Request, res: Response): Promise<void> => {
     try {
-        console.log(req.body);
-        
         if (!req.body.fk_registro) {
             res.status(400).json({ error: 'É necessário informar o fk_registro.' });
             return;
