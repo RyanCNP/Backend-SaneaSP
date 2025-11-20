@@ -1,0 +1,32 @@
+# Dependências (serão instaladas dentro do container)
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Builds / Compilados
+dist
+build
+
+# Configuração local do editor/IDE
+.vscode
+.idea
+
+# Arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+.env-example
+# Testes
+coverage
+#outros arquivos
+.docker-compose.yml
+github/
+database.sqlite

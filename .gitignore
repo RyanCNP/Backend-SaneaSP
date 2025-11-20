@@ -136,8 +136,9 @@ dist
 .pnp.*
 
 # Node
-node_modules
+node_modules/
 
+.dockerfile
 database.sqlite
 
 # Multer
