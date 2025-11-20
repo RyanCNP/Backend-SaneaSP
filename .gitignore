@@ -140,6 +140,3 @@ node_modules/
 
 .dockerfile
 database.sqlite
-
-# Multer
-public
