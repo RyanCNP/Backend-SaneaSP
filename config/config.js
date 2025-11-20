@@ -6,7 +6,7 @@ let config;
 
 if (env === "development") {
   config = {
-      url: `postgresql://postgres:1234@${process.env.DB}:5423/postgres`,
+      url: process.env.DEV_DATABASE_URL,
       dialect: "postgres",
       protocol: "postgres",
       dialectOptions: {}

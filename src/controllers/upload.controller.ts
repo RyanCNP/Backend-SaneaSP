@@ -4,7 +4,7 @@ import { UploadSubfolder } from "../enums/UploadSubFolder.enum";
 
 export const uploadFiles = (req:Request,res:Response)=>{
     const files = req.files as Express.Multer.File[];
-    let fileNames!:string[]
+    let fileNames!:string[];
     if( files && files.length > 0){
         fileNames = files.map(file => file.filename);
     }

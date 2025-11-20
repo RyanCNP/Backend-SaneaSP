@@ -1,16 +1,15 @@
-import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 dotenv.config();
+import { Sequelize } from "sequelize";
 
 const env = process.env.NODE_ENV || "development";
 
 let sequelize: Sequelize;
 
 if (env === "development") {
-  sequelize = new Sequelize(`//postgres:1234@${process.env.DB}:5423/postgres`, {
+  const url = process.env.DEV_DATABASE_URL || "postgresql://postgres:1234@localhost:5423/postgres";
+  sequelize = new Sequelize(url, {
     dialect: "postgres",
-    protocol: "postgres",
-    dialectOptions: {},
     logging: false,
   });
 }
