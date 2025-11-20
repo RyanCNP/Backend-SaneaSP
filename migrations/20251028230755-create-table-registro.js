@@ -12,10 +12,6 @@ module.exports = {
         allowNull: false,
         type: DataTypes.INTEGER,
       },
-      descricao: {
-        allowNull: false,
-        type: DataTypes.STRING(500),
-      },
       data_publicacao: {
         allowNull: false,
         type: DataTypes.DATE(),
@@ -23,6 +19,14 @@ module.exports = {
       tipo: {
         allowNull: false,
         type: DataTypes.INTEGER
+      },
+      statusAnterior: {
+        allowNull: false,
+        type: DataTypes.STRING(50)
+      },
+      statusPosterior: {
+        allowNull: false,
+        type: DataTypes.STRING(50)
       },
       id_denuncia: {
         allowNull: false,

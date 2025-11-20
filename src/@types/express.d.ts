@@ -1,3 +1,4 @@
+import { IRegistro } from '../interfaces/registro';
 import { IUser, TSafeUser } from '../interfaces/usuario';
 import { Transaction } from 'sequelize';
 declare global {
@@ -5,6 +6,7 @@ declare global {
         export interface Request {
             user: Partial<TSafeUser>
             newCommonUser: TSafeUser
+            newRegisterId: IRegistro['id']
             transaction?: Transaction; 
         }
     }
