@@ -1,20 +1,28 @@
 import { Request, Response } from 'express';
 import * as visitaService from '../services/visita.service';
+import { TVisitaCreate } from '../interfaces/visita';
+import { TransactionNotProvided } from '../errors/TransactionNotProvided.error';
+import { HttpCode } from '../enums/HttpCode.enum';
+import { ApiError } from '../errors/ApiError.error';
 
 
 export const criarVisita = async (req: Request, res: Response): Promise<void> => {
-    try {
-        if (!req.body.fk_registro) {
-            res.status(400).json({ error: 'É necessário informar o fk_registro.' });
-            return;
+    const transaction = req.transaction;
+    if(!transaction) throw new TransactionNotProvided('Ocorreu um problema ao criar o seu usuário')
+    try{
+        const idRegistro = req.newRegisterId
+        const { motivo, dataFinal, dataInicio } = req.body as TVisitaCreate
+        const newVisit : TVisitaCreate = {
+            motivo, dataFinal, dataInicio, idRegistro
         }
-        const novaVisita = await visitaService.criarVisita(req.body);
-        res.status(201).json(novaVisita);
-    } catch (error: any) {
-        res.status(500).json({ error: 'Erro ao criar visita: ' + error.message });
+        const novaVisita = await visitaService.criarVisita(newVisit, transaction);
+        await transaction.commit()
+        res.status(201).json(novaVisita); 
+    } catch (error) {
+        await transaction.rollback();
+        throw error;
     }
 };
-
 
 export const listarVisitas = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -27,61 +35,25 @@ export const listarVisitas = async (req: Request, res: Response): Promise<void> 
 
 
 export const obterVisitaPorId = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            res.status(400).json({ error: 'ID inválido.' });
-            return;
-        }
-        const visita = await visitaService.obterVisitaPorId(id);
+    const { id } = req.params
 
-        if (!visita) {
-            res.status(404).json({ error: 'Visita não encontrada' });
-            return;
-        }
+    const visita = await visitaService.obterVisitaPorId(id);
 
-        res.json(visita);
-    } catch (error: any) {
-        res.status(500).json({ error: 'Erro ao buscar visita: ' + error.message });
+    if (!visita) {
+        throw new ApiError('Nenhuma visita encontrada', HttpCode.NotFound)
     }
+
+    res.json(visita);
 };
 
 
 export const atualizarVisita = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            res.status(400).json({ error: 'ID inválido.' });
-            return;
-        }
-        const visita = await visitaService.atualizarVisita(id, req.body);
-
-        if (!visita) {
-            res.status(404).json({ error: 'Visita não encontrada para atualização' });
-            return;
-        }
-
-        res.json(visita);
-    } catch (error: any) {
-        res.status(500).json({ error: 'Erro ao atualizar visita: ' + error.message });
-    }
+  
 };
 
 export const excluirVisita = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const id = parseInt(req.params.id, 10);
-        if (isNaN(id)) {
-            res.status(400).json({ error: 'ID inválido.' });
-            return;
-        }
-        
-        await visitaService.excluirVisita(id);
-        res.status(204).end();
-    } catch (error: any) {
-        if (error.message.includes('não encontrada')) {
-            res.status(404).json({ error: error.message });
-            return;
-        }
-        res.status(500).json({ error: 'Erro ao excluir visita: ' + error.message });
-    }
+    const { id } = req.params
+    
+    await visitaService.excluirVisita(id);
+    res.status(204).end();
 };

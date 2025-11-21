@@ -4,24 +4,27 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
 
-    await queryInterface.bulkInsert('visitas', [
+    await queryInterface.bulkInsert('visita', [
       {
         id:1,
+        motivo: 'Nenhum',
         data_inicio: new Date('2025-11-01T10:00:00Z'),
         data_final: new Date('2025-11-01T12:00:00Z'),
-        fk_registro: 1
+        id_registro: 1
       },
       {
         id:2,
+        motivo: 'Nenhum',
         data_inicio: new Date('2025-11-15T14:00:00Z'),
         data_final: new Date('2025-11-20T16:00:00Z'),
-        fk_registro: 2
+        id_registro: 2
       },
       {
         id:3,
+        motivo: 'Nenhum',
         data_inicio: new Date('2025-11-01T09:00:00Z'),
         data_final: new Date('2025-11-27T11:00:00Z'),
-        fk_registro: 3
+        id_registro: 3
       }
   ]);
     
@@ -29,6 +32,6 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
 
-    await queryInterface.bulkDelete('visitas', null, {});
+    await queryInterface.bulkDelete('visita', null, {});
   }
 };

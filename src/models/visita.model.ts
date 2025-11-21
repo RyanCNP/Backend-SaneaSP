@@ -2,46 +2,50 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/database.config';
 import { IVisita } from '../interfaces/visita';
 
-
-interface VisitaCreationAttributes extends Optional<IVisita, 'id'> {}
-
-
+type VisitaCreationAttributes = Optional<IVisita, 'id'>
 export class VisitaModel extends Model<IVisita, VisitaCreationAttributes>
     implements IVisita {
     public id!: number;
     public motivo!: string;
-    public conclusao!: string;
-    public data_inicio!: Date;
-    public data_final!: Date;
-    public fk_registro!: number; 
-   
+    public dataInicio!: Date;
+    public dataFinal!: Date;
+    public idRegistro!: number; 
 }
-
 
 VisitaModel.init(
     {
         id: {
-            type: DataTypes.INTEGER,
+            primaryKey: true,
             autoIncrement: true,
-            primaryKey: true
+            allowNull: false,
+            type: DataTypes.INTEGER,
         },
-        data_inicio: {
-            type: DataTypes.DATE,
-            allowNull: false
+        motivo: {
+            allowNull: false,
+            type: DataTypes.STRING(150)
         },
-        data_final: {
+        dataInicio: {
             type: DataTypes.DATE,
-            allowNull: false
+            allowNull: false,
+            field: 'data_inicio'
+        },
+        dataFinal: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            field: 'data_final'
         },
         
-        fk_registro: {
+        idRegistro: {
             type: DataTypes.INTEGER,
             allowNull: false, 
+            references: { model: 'denuncia', key: 'id' },
+            onDelete: 'CASCADE',
+            field: "id_registro"
         }
     },
     {
         sequelize,
-        tableName: 'visitas',
+        tableName: 'visita',
         timestamps: false
     }
 );

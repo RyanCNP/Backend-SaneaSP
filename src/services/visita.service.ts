@@ -1,68 +1,45 @@
 
 import { VisitaModel } from '../models/visita.model';
-import { IVisita } from '../interfaces/visita';
+import { IVisita, TVisitaCreate } from '../interfaces/visita';
+import { ApiError } from '../errors/ApiError.error';
+import { HttpCode } from '../enums/HttpCode.enum';
+import { Transaction } from 'sequelize';
+import { RegistroModel } from '../models';
 
-import { ValidationError } from 'sequelize'; 
-
-type VisitaReturnType = VisitaModel | null;
-
-
-export const criarVisita = async (dados: IVisita): Promise<VisitaModel> => {
-    try {
-        
-        const novaVisita = await VisitaModel.create(dados as any);
-        return novaVisita;
-    } catch (error: any) {
-        
-        if (error instanceof ValidationError) {
-            console.error('--- Erro de Validação do Sequelize ao criar Visita ---');
-            error.errors.forEach(e => {
-                
-                console.error(`Campo: ${e.path}, Mensagem: ${e.message}, Tipo: ${e.type}`);
-            });
-            console.error('-------------------------------------------------------');
+const where = { 
+    attributes: { exclude: ['id_registro'] },
+    include: [
+        {
+            model: RegistroModel,
+            as: 'registro',
+            attributes: { exclude: ['id', 'id_usuario', 'id_denuncia'] }
         }
-        
-        
-        throw error;
-    }
+    ]
 };
 
+export const criarVisita = async (newVisit: TVisitaCreate, transaction : Transaction): Promise<VisitaModel> => {
+    const novaVisita = await VisitaModel.create(newVisit, {transaction});
+    return novaVisita;
+}
 
 export const listarVisitas = async (): Promise<VisitaModel[]> => {
-    
-    return VisitaModel.findAll();
+    return VisitaModel.findAll(where);
+};
+export const obterVisitaPorId = async (id: string): Promise<IVisita | null> => {
+    return VisitaModel.findByPk(id, where);
+};
+
+export const atualizarVisita = async (id: number, dados: Partial<IVisita>) => {
+   
 };
 
 
-export const obterVisitaPorId = async (id: number): Promise<VisitaReturnType> => {
-    
-    return VisitaModel.findByPk(id);
-};
-
-
-export const atualizarVisita = async (id: number, dados: Partial<IVisita>): Promise<VisitaReturnType> => {
-    const [affectedCount] = await VisitaModel.update(dados, {
-        where: { id: id },
-    });
-
-    if (affectedCount === 0) {
-        return null; 
-    }
-
-    
-    const visitaAtualizada = await VisitaModel.findByPk(id);
-    return visitaAtualizada;
-};
-
-
-export const excluirVisita = async (id: number): Promise<void> => {
+export const excluirVisita = async (id: string): Promise<void> => {
     const result = await VisitaModel.destroy({
-        where: { id: id },
+        where: { id },
     });
 
     if (result === 0) {
-        throw new Error('Visita não encontrada para exclusão.');
+        throw new ApiError('Visita não encontrada para exclusão.', HttpCode.NotFound);
     }
-    
 };

@@ -11,15 +11,14 @@ export const registerCreateMid = (tipo: TipoRegistro) => async (req: Request, re
   const { statusPosterior, idDenuncia, idUsuario } = req.body;
   const transaction = req.transaction;
   
-  if (!Object.values(StatusDenuncia).includes(statusPosterior)) {
-    throw new ApiError('Novo status para a denúncia inválido', HttpCode.BadRequest)
-  }
-
   if (!transaction) throw new TransactionNotProvided("Ocorreu um problema ao criar o seu registro");
   
   const denuncia = await findDenunciaById(idDenuncia)
 
-  if(!denuncia) throw new ApiError('Nenhuma denúncia encontrada', HttpCode.NotFound)
+  if(!denuncia) {
+    transaction.rollback();
+    throw new ApiError('Nenhuma denúncia encontrada', HttpCode.NotFound)
+  }
 
   const newRegister: TRegistroCreate = {
     idDenuncia,
@@ -30,6 +29,10 @@ export const registerCreateMid = (tipo: TipoRegistro) => async (req: Request, re
     : statusPosterior,
     statusAnterior : denuncia.status
   };
+
+  if (!Object.values(StatusDenuncia).includes(newRegister.statusPosterior)) {
+    throw new ApiError('Novo status para a denúncia inválido', HttpCode.BadRequest)
+  }
 
   req.newRegisterId = (await createRegistro(newRegister, transaction)).id;
   next();

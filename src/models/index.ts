@@ -102,9 +102,9 @@ RegistroModel.hasMany(ImagemRegistroModel,
 ImagemRegistroModel.belongsTo(RegistroModel,
     { foreignKey: 'id_registro', as: 'registro' })
 
-  
 //Visita
-VisitaModel.belongsTo(RegistroModel,{foreignKey:'fk_registro',as:'registro'})
+VisitaModel.belongsTo(RegistroModel,{ foreignKey: 'id_registro', as: 'registro', onDelete: 'CASCADE' })
+RegistroModel.hasOne(VisitaModel, {foreignKey: 'id_registro', as: 'visita', onDelete: 'CASCADE'})
 
 //Fazendo o export dos models com as modificações
 export {
