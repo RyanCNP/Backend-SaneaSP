@@ -50,10 +50,10 @@ export const findAllDenuncias = async (filtros: IFilterListDenuncia): Promise<ID
       query.where.cidade = { [Op.like]: `%${filtros.cidade}%` }
     }
     if (filtros.status) {
-      query.where.status = { [Op.like]: `%${filtros.status}%` }
+      query.where.status = { [Op.eq]: filtros.status }
     }
     if (filtros.pontuacao) {
-      query.where.pontuacao = { [Op.like]: `${filtros.pontuacao}` }
+      query.where.pontuacao = { [Op.eq]: filtros.pontuacao }
     }
   }
 
