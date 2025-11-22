@@ -5,7 +5,7 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     // Alterar status para string e default 'aberto'
     await queryInterface.changeColumn('denuncia', 'status', {
-      type: Sequelize.STRING(20),
+      type: Sequelize.STRING(50),
       allowNull: false,
       defaultValue: 'aberto'
     });

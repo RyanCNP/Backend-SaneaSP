@@ -1,10 +1,6 @@
-
-
 import express from "express";
 import cors from "cors";
 import path from "path";
-
-
 import categoriaRoutes from "./src/routes/categoria.routes";
 import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
@@ -21,11 +17,9 @@ import http from 'http'
 import { initSockets } from "./src/sockets";
 import bodyParser from "body-parser";
 import stripeRoutes from "./src/routes/stripe.routes";
-export const app = express();
 import RegistroRoutes from './src/routes/registro.routes';
 import VisitasRoutes from './src/routes/visita.routes';
-import { setupSwagger } from "./src/swagger/swagger";
-import { errorHandler } from "./src/middlewares/errorHandler.middleware";
+
 const app = express();
 
 app.use(cors());
@@ -55,7 +49,10 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use(errorHandler);
 
+const server = http.createServer(app);
+initSockets(server);
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Backend do SaneaSP está rodando na porta ${PORT}`);
 });

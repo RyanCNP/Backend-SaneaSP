@@ -5,6 +5,7 @@ import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import ExcelJS from "exceljs";
 import { Buffer } from "buffer";
+import { StatusDenuncia } from "../enums/statusDenuncia.enum"
 
 const denunciaFindIncludes = [
   {
@@ -75,6 +76,7 @@ export const findUserComplaint = async (fkUsuario: number, filter ?: IFilterList
   const query: any = {
     where: {idUsuario: fkUsuario},
     include: denunciaFindIncludes,
+    order : [['dataPublicacao', "DESC"]]
   }
   if (filter && filter.status) {
     query.where.status = { [Op.like]: `%${filter.status}%` }
@@ -121,7 +123,7 @@ export const createNewDenuncia = async (body: ICreateDenuncia): Promise<IDenunci
   const { pontuacao, ...denunciaBodyWithoutPontuacao } = denunciaBody
 
   const newDenuncia = {
-    status: 0,
+    status: StatusDenuncia.Aberto,
     dataPublicacao: new Date(),
     pontuacao: body.pontuacao,
     ...denunciaBodyWithoutPontuacao,
