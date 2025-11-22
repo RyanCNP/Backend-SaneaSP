@@ -24,7 +24,14 @@
         }
 
         .header {
-            background-image: url('background.svg');
+            background: linear-gradient(45deg,
+                    #0a1a3f 0%,
+                    #0f244f 16.7%,
+                    #1a3e7a 33.4%,
+                    #2f65c1 50.1%,
+                    #1a3e7a 66.8%,
+                    #112b5c 83.5%,
+                    #0a1a3f 100%);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -68,7 +75,7 @@
         .button {
             display: inline-block;
             padding: 15px 30px;
-            background-color: #28a745;
+            background-color: #008000;
             color: #ffffff !important;
             text-decoration: none;
             border-radius: 5px;
@@ -80,7 +87,7 @@
 
         .info-box {
             background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
+            border-left: 4px solid #2f65c1;
             padding: 20px;
             margin: 30px 0;
             border-radius: 4px;
@@ -88,7 +95,7 @@
 
         .info-box h3 {
             margin: 0 0 10px 0;
-            color: #007bff;
+            color: #2f65c1;
             font-size: 18px;
         }
 
@@ -101,7 +108,7 @@
         }
 
         .content a.link {
-            color: #007bff;
+            color: #2f65c1;
             word-break: break-all;
         }
 
@@ -122,7 +129,7 @@
         .footer .social a {
             display: inline-block;
             margin: 0 10px;
-            color: #007bff;
+            color: #2f65c1;
             text-decoration: none;
             font-size: 14px;
         }
@@ -166,7 +173,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="content">
+                        <td class="content" style="border-left: 2px solid #333333; border-right: 2px solid #333333;">
                             <h2>Olá, {{nome}}!</h2>
 
                             <p>Obrigado por se cadastrar em nossa plataforma. Para ativar sua conta e começar a

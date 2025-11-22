@@ -1,6 +1,6 @@
 import type { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia"
 import { Op } from "sequelize"
-import { CategoriaModel, ImagemDenunciaModel, DenunciaModel } from "../models"
+import { CategoriaModel, ImagemDenunciaModel, DenunciaModel, GrupoCategoriaModel } from "../models"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import ExcelJS from "exceljs";
@@ -11,6 +11,13 @@ const denunciaFindIncludes = [
     model: CategoriaModel,
     as: "categorias",
     through: { attributes: [] },
+    include: [
+      {
+        model: GrupoCategoriaModel,
+        as: "grupo",
+        attributes: { exclude: ['id'] },
+      }
+    ]
   },
   {
     model: ImagemDenunciaModel,
@@ -23,6 +30,7 @@ export const findAllDenuncias = async (filtros: IFilterListDenuncia): Promise<ID
   const query: any = {
     where: {},
     include: denunciaFindIncludes,
+    order : [['dataPublicacao', "DESC"]]
   }
 
   if (filtros) {
@@ -42,10 +50,10 @@ export const findAllDenuncias = async (filtros: IFilterListDenuncia): Promise<ID
       query.where.cidade = { [Op.like]: `%${filtros.cidade}%` }
     }
     if (filtros.status) {
-      query.where.status = { [Op.like]: `%${filtros.status}%` }
+      query.where.status = { [Op.eq]: filtros.status }
     }
     if (filtros.pontuacao) {
-      query.where.pontuacao = { [Op.like]: `${filtros.pontuacao}` }
+      query.where.pontuacao = { [Op.eq]: filtros.pontuacao }
     }
   }
 

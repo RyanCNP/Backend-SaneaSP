@@ -1,11 +1,23 @@
 import { UserModel } from "../models/user.model"
 import { Op } from "sequelize"
-import type { IUserListFilters, IUser, IUserExists } from "../interfaces/usuario"
+import type { IUserListFilters, IUser } from "../interfaces/usuario"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
+import { CidadaoModel } from "../models"
+import { TCidadaoUpdate } from "../interfaces/cidadao"
+import { TFuncionarioUpdate } from "../interfaces/funcionario"
+import { FuncionarioModel } from "../models/funcionario.model"
+
+const userCitizenIncludes = [
+  {
+    model: CidadaoModel,
+    as: "cidadao",
+    attributes: {exclude : ["idUsuario"]}
+  },
+]
 
 export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]> => {
-  const query: any = { where: {} }
+  const query: any = { where: {}, include : userCitizenIncludes}
 
   if (userFilter.nome) {
     query.where.nome = { [Op.like]: `%${userFilter.nome}%` }
@@ -13,10 +25,6 @@ export const getUserList = async (userFilter: IUserListFilters): Promise<IUser[]
 
   if (userFilter.email) {
     query.where.email = { [Op.like]: `%${userFilter.email}%` }
-  }
-
-  if (userFilter.cpf) {
-    query.where.cpf = { [Op.like]: `%${userFilter.cpf}%` }
   }
 
   const users = await UserModel.findAll(query)
@@ -43,29 +51,48 @@ export const getUserNameById = async (userId: number): Promise<string> => {
   return foundUser.nome
 }
 
-export const getUserByName = async (userName: string): Promise<IUser> => {
-  const foundUser = await UserModel.findOne({ where: { nome: userName } })
+export const atualizaCidadao = async (
+  idUsuario : IUser['id'],
+  cidadaoUpdate: Partial<TCidadaoUpdate>
+) => {
 
-  if (!foundUser) {
-    throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
-  }
+  const foundCitizen = await CidadaoModel.findOne({where : {idUsuario}})
+  const foundUser = await UserModel.findByPk(idUsuario)
 
-  return foundUser
+  if(!foundCitizen || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  
+  const payload = Object.fromEntries(
+    Object.entries(cidadaoUpdate).filter(([_, v]) => v !== undefined)
+  );
+
+  await CidadaoModel.update(payload, { where: { idUsuario } });
+  
+  const updatedCitizen = await CidadaoModel.findOne({where : {idUsuario}})
+
+  return updatedCitizen;
 }
 
-export const updateUser = async (updatedUser: IUser): Promise<IUser> => {
-  const userFound = await UserModel.findOne({ where: { id: updatedUser.id } })
+export const atualizaFuncionario = async (
+  idUsuario : IUser['id'],
+  funcionarioUpdate: Partial<TFuncionarioUpdate>
+) => {
 
-  if (!userFound) {
-    throw new ApiError("Nenhum usuário encontrado", HttpCode.NotFound)
-  }
+  const foundEmployee = await FuncionarioModel.findOne({where : {idUsuario}})
+  const foundUser = await UserModel.findByPk(idUsuario)
+  
+  if(!foundEmployee || !foundUser) throw new ApiError('Nenhum usuário encontrado', HttpCode.NotFound)
+  
+  const payload = Object.fromEntries(
+    Object.entries(funcionarioUpdate).filter(([_, v]) => v !== undefined)
+  );
 
-  await uniqueUserValidator(updatedUser)
-
-  return await userFound.update(updatedUser)
+  await FuncionarioModel.update(payload, { where: { idUsuario } });
+  
+  const updatedEmployee = await FuncionarioModel.findOne({where : {idUsuario}})
+  return updatedEmployee;
 }
 
-export const deleteUser = async (userId: number): Promise<IUser> => {
+export const deleteUser = async (userId: number): Promise<void> => {
   const userFound = await UserModel.findByPk(userId)
 
   if (!userFound) {
@@ -73,42 +100,4 @@ export const deleteUser = async (userId: number): Promise<IUser> => {
   }
 
   await userFound.destroy()
-
-  return userFound
-}
-
-export const uniqueUserValidator = async (user: IUser): Promise<void> => {
-  const query: IUserExists = {
-    where: {
-      [Op.or]: [],
-    },
-  }
-
-  if (user.nome)
-    query.where[Op.or].push({ nome: user.nome })
-
-  if (user.email)
-    query.where[Op.or].push({ email: user.email })
-
-  if (user.cpf) {
-    query.where[Op.or].push({ cpf: user.cpf })
-  }
-
-  const userFound = await UserModel.findOne(query)
-
-  if (!userFound) return
-
-  if (userFound.id != user.id) {
-    if (userFound.nome.trim() == user.nome.trim()) {
-      throw new ApiError("Já existe um usuário com esse nome", HttpCode.Conflict)
-    }
-
-    if (userFound.email.trim() == user.email.trim()) {
-      throw new ApiError("Esse email já está em uso", HttpCode.Conflict)
-    }
-
-    if (userFound.cpf && user.cpf && userFound.cpf.trim() == user.cpf.trim()) {
-      throw new ApiError("Esse CPF já está em uso", HttpCode.Conflict)
-    }
-  }
 }

@@ -1,8 +1,11 @@
-import { IUser } from '../interfaces/usuario';
+import { IUser, TSafeUser } from '../interfaces/usuario';
+import { Transaction } from 'sequelize';
 declare global {
     namespace Express {
         export interface Request {
-            user: Partial<IUser>
+            user: Partial<TSafeUser>
+            newCommonUser: TSafeUser
+            transaction?: Transaction; 
         }
     }
 }

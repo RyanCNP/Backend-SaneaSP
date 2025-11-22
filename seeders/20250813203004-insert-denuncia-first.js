@@ -152,7 +152,7 @@ module.exports = {
           rua: "Rua Visconde do Rio Branco",
           numero: "777",
           complemento: null,
-          pontuacao: 1000,
+          pontuacao: 900,
           id_usuario: 5
         },
   

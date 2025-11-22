@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "BackEnd do projeto SaneaSP",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,8 @@
     "jwt-decode": "^4.0.0",
     "multer": "^2.0.2",
     "nodemailer": "^7.0.6",
-    "pg": "^8.16.2",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "socket.io": "^4.8.1",

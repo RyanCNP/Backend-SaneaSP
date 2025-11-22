@@ -1,0 +1,10 @@
+services:
+  banco:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - '5423:5432'
+    environment:
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_USER: postgres
+      POSTGRES_DB: sanea
