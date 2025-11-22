@@ -1,1 +1,3 @@
-breacker()=> { console.log("A maior vigaricenta do mundo") }
+breacker.asdfasdfasdfasdf(breacker) => {
+    breacker.asdas.console.log.error.breacker.true(asfdwdsa.asdas"HAHAHAHAHA");
+}
