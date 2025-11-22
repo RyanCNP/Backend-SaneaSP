@@ -16,6 +16,21 @@ jobs:
         with:
           fetch-depth: 0
 
+      # --- Validar mensagem do commit ---
+      - name: Validar mensagem do commit
+        run: |
+          MSG="$(git log -1 --pretty=%s)"
+
+          echo "Mensagem detectada: $MSG"
+
+          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor)(\(.+\))?: ]]; then
+            echo "❌ Mensagem de commit inválida!"
+            echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:"
+            exit 1
+          fi
+
+          echo "✔ Mensagem válida."
+
       # --- Instalar dependências ---
       - name: Instalar dependências
         run: npm ci
