@@ -23,13 +23,14 @@ jobs:
 
           echo "Mensagem detectada: $MSG"
 
-          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor)(\(.+\))?: ]]; then
+          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor|docs)(\(.+\))?:|^Merge|^Revert ]]; then
             echo "❌ Mensagem de commit inválida!"
-            echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:"
+            echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:, docs:"
             exit 1
-          fi
+            fi
 
-          echo "✔ Mensagem válida."
+            echo "✔ Mensagem válida."
+
 
       # --- Instalar dependências ---
       - name: Instalar dependências
@@ -105,7 +106,17 @@ jobs:
       # --- Atualizar package.json ---
       - name: Atualizar versão no package.json
         if: steps.version.outputs.should_deploy == 'true'
-        run: npm version $NEW_VERSION --no-git-tag-version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 Versão atual no package.json: $CURRENT_VERSION"
+          echo "🆕 Nova versão calculada: $NEW_VERSION"
+
+          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+          echo "🔹 Atualizando package.json para $NEW_VERSION..."
+          npm version $NEW_VERSION --no-git-tag-version
+          else
+          echo "✅ A versão no package.json já está atualizada ($CURRENT_VERSION). Nenhuma alteração necessária."
+          fi
 
       # --- Commit e criar tag ---
       - name: Commit e criar tag

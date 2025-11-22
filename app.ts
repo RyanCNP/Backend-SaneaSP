@@ -13,7 +13,7 @@ import locationRoutes from "./src/routes/location.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
-import feedbackRoutes from "./src/routes/feedback.routes";
+//import feedbackRoutes from "./src/routes/feedback.routes";
 import registroRoutes from "./src/routes/registro.routes";
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
@@ -45,8 +45,10 @@ app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
 app.use('/visitas', VisitasRoutes); 
-app.use('/registro', RegistroRoutes ); 
 app.use('/api/stripe', stripeRoutes);
+//app.use("/feedback", feedbackRoutes);
+app.use("/comentario", comentarioRoutes);
+app.use("/registro", registroRoutes);
 
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));
