@@ -1,6 +1,6 @@
-import type { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia"
+import type { ICreateDenuncia, IFilterListDenuncia, IDenuncia, IDenunciaExcel } from "../interfaces/denuncia"
 import { Op } from "sequelize"
-import { CategoriaModel, ImagemDenunciaModel, DenunciaModel, GrupoCategoriaModel } from "../models"
+import { CategoriaModel, ImagemDenunciaModel, DenunciaModel, GrupoCategoriaModel, UserModel } from "../models"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import ExcelJS from "exceljs";
@@ -190,30 +190,93 @@ function calculatePontuacao(bodyRequest: ICreateDenuncia): number {
 }
 export const exportDenunciasExcel = async (): Promise<Buffer> => {
   const denuncias = await DenunciaModel.findAll({
-    include: denunciaFindIncludes
-  });
+    include: {
+      model: UserModel,
+      as: 'usuario',
+      attributes: ['nome']
+    },
+    attributes: 
+    ['id', 'titulo', 'dataPublicacao', 'status', 'pontuacao']
+  }) as unknown as any[]
+
+  const mapToExcel :IDenunciaExcel[] = denuncias.map(d => {
+    return {
+      dataPublicacao : d.dataPublicacao,
+      id: d.id,
+      pontuacao : d.pontuacao,
+      status : d.status,
+      titulo: d.titulo,
+      author: d.usuario?.nome
+    }
+  })
 
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet("Denúncias");
+  console.log(mapToExcel)
 
   sheet.columns = [
-    { header: "ID", key: "id", width: 10 },
-    { header: "Título", key: "titulo", width: 30 },
-    { header: "Descrição", key: "descricao", width: 40 },
-    { header: "Status", key: "status", width: 15 },
-    { header: "Pontuação", key: "pontuacao", width: 12 },
-    { header: "Data", key: "dataPublicacao", width: 20 },
+    { header: "ID", key: "id", width: 6 },
+    { header: "Título", key: "titulo", width: 50 },
+    { header: "Autor", key: "autor", width: 50 },
+    { header: "Status", key: "status", width: 12 },
+    { header: "Pontuação", key: "pontuacao", width: 15 },
+    { header: "Data", key: "dataPublicacao", width: 15 },
   ];
 
-  denuncias.forEach((d) => {
-    sheet.addRow({
+  mapToExcel.forEach((d, idx) => {
+    const row = sheet.addRow({
       id: d.id,
       titulo: d.titulo,
-      descricao: d.descricao,
+      autor: d.author,
       status: d.status,
       pontuacao: d.pontuacao,
       dataPublicacao : d.dataPublicacao
     });
+    const statusCell = sheet.getCell(`D${idx + 2}`);
+    switch (d.status) {
+      case 'aberto':
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFF0000' } // vermelho
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'visualizada':
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF2196F3' } // azul
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'analise':
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFFC107' } // amarelo
+        };
+        statusCell.font = { color: { argb: 'FF000000' } };
+        break;
+      case 'agendado':
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF9C27B0' } // roxo
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'resolvida':
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF4CAF50' } // verde
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      default:
+        break;
+    }
   });
 
   // Gera o arquivo em memória (Buffer | ArrayBuffer)
