@@ -1,0 +1,1 @@
+breacker()=> { console.log("A maior vigaricenta do mundo") }
