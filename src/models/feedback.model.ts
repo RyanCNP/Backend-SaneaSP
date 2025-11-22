@@ -1,19 +1,26 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../config/database.config";
-import { IFeedback } from "../interfaces/feedback";
+import { IDenunciaFeedback, IInterfaceFeedback } from "../interfaces/feedback";
+import { FeedbackInterface } from "../enums/FeedbackInterface.enum";
 
-export type IFeedbackCreationAttributes = Optional<IFeedback, "id">;
+type DenunciaFeedbackCreationalAttributes = Optional<IDenunciaFeedback, "id">
+type InterfaceFeedbackCreationalAttributes = Optional<IInterfaceFeedback, "id">
 
-export class FeedbackModel extends Model<IFeedback, IFeedbackCreationAttributes> {
+export class DenunciaFeedbackModel extends Model<IDenunciaFeedback, DenunciaFeedbackCreationalAttributes> implements IDenunciaFeedback {
     public id!: number;
     public data_publicacao!: Date;
     public descricao!: string;
-    public fk_funcionario!: number;
     public fk_denuncia!: number;
-    public fk_cidadao!: number;
 }
 
-FeedbackModel.init({
+export class InterfaceFeedbackModel extends Model<IInterfaceFeedback, InterfaceFeedbackCreationalAttributes> implements IInterfaceFeedback {
+    public id!: number;
+    public data_publicacao!: Date;
+    public descricao!: string;
+    public tela!: FeedbackInterface;
+}
+
+DenunciaFeedbackModel.init({
     id: {
         primaryKey: true,
         type: DataTypes.INTEGER,
@@ -31,23 +38,42 @@ FeedbackModel.init({
         type: DataTypes.STRING(2048),
         field: "descricao"
     },
-    fk_funcionario: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        field: "fk_funcionario"
-    },
     fk_denuncia: {
         allowNull: false,
         type: DataTypes.INTEGER,
         field: "fk_denuncia"
-    },
-    fk_cidadao: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        field: "fk_cidadao"
     }
 },{
-    tableName: "feedback",
+    tableName: "denuncia-feedback",
+    sequelize,
+    timestamps: false
+})
+
+InterfaceFeedbackModel.init({
+    id: {
+        primaryKey: true,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        field: "id",
+    },
+    data_publicacao: {
+        allowNull: false,
+        type: DataTypes.DATE,
+        field: "data_publicacao"
+    },
+    descricao: {
+        allowNull: false,
+        type: DataTypes.STRING(2048),
+        field: "descricao"
+    },
+    tela: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        field: "tela"
+    }
+},{
+    tableName: "interface-feedback",
     sequelize,
     timestamps: false
 })

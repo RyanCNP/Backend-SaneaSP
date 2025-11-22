@@ -5,7 +5,7 @@ const { DataTypes } = require('sequelize');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('feedback', {
+    await queryInterface.createTable('denuncia-feedback', {
       id: {
         primaryKey: true,
         autoIncrement: true,
@@ -20,10 +20,6 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING(2048)
       },
-      fk_funcionario: {
-        allowNull: false,
-        type: DataTypes.INTEGER
-      },
       fk_denuncia: {
           allowNull: false,
           type: DataTypes.INTEGER,
@@ -32,20 +28,11 @@ module.exports = {
             key: 'id'
           },
           onDelete: 'CASCADE'
-        },
-        fk_cidadao: {
-          allowNull: false,
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'usuario',
-            key: 'id'
-          },
-          onDelete: 'CASCADE'
         }
     })
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('feedback')
+    await queryInterface.dropTable('denuncia-feedback')
   }
 };

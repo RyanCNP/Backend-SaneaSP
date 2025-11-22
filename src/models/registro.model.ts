@@ -1,17 +1,16 @@
 import { DataTypes, Model, Optional } from "sequelize";
-import { DataType } from "sequelize-typescript";
 import sequelize from "../config/database.config";
-import { IRegistro } from "../interfaces/registro";
+import { IRegistro, TipoRegistro, TRegistroCreate } from "../interfaces/registro";
+import { StatusDenuncia } from "../enums/statusDenuncia.enum";
 
-type RegistroCreateAttributes = Optional<IRegistro, "id">
-
-export class RegistroModel extends Model<IRegistro | RegistroCreateAttributes> {
-    public id !: number;
-    public descricao !: string;
-    public tipo !: number;
-    public dataPublicacao !: Date;
-    public fkDenuncia !: number;
-    public fkUsuario !: number;
+export class RegistroModel extends Model<IRegistro, TRegistroCreate> {
+    public id!: number;
+    public dataPublicacao!: Date;
+    public tipo!: TipoRegistro;
+    public statusAnterior!: StatusDenuncia;
+    public statusPosterior!: StatusDenuncia;
+    public idUsuario!: number;
+    public idDenuncia!: number;
 }
 
 RegistroModel.init(
@@ -20,34 +19,38 @@ RegistroModel.init(
             primaryKey: true,
             autoIncrement: true,
             allowNull: false,
-            type: DataType.INTEGER,
+            type: DataTypes.INTEGER,
             field: "id"
-        },
-        descricao: {
-            type: DataType.STRING(500),
-            allowNull: false,
-            field: "descricao"
         },
         dataPublicacao: {
             type: DataTypes.DATE(),
             allowNull: false,
+            defaultValue: DataTypes.NOW,
             field: "data_publicacao"
         },
         tipo: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(50),
             allowNull: false,
             field: "tipo"
         },
-        fkDenuncia: {
+        statusAnterior: {
+            type: DataTypes.STRING(50),
             allowNull: false,
-            type: DataType.INTEGER,
+        },
+        statusPosterior: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+        },
+        idDenuncia: {
+            allowNull: false,
+            type: DataTypes.INTEGER,
             references: { model: 'denuncia', key: 'id' },
             onDelete: 'CASCADE',
             field: "id_denuncia"
         },
-        fkUsuario: {
+        idUsuario: {
             allowNull: false,
-            type: DataType.INTEGER,
+            type: DataTypes.INTEGER,
             references: { model: 'usuario', key: 'id' },
             onDelete: 'CASCADE',
             field: 'id_usuario'
