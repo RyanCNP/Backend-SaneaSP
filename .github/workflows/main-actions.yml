@@ -175,6 +175,12 @@ jobs:
     if: failure()
 
     steps:
+
+      # --- Checkout do código ---
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # --- Capturar informações ---
       - name: Capturar informações
         id: info
         run: |
