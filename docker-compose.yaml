@@ -8,3 +8,25 @@ services:
       POSTGRES_PASSWORD: "1234"
       POSTGRES_USER: postgres
       POSTGRES_DB: sanea
+    networks:
+      - production-network
+
+  back-end:
+    container_name: back-sanea
+    build: ./ 
+    ports:
+      - '3000:3000'
+    depends_on:
+      - banco
+    env_file:
+      - ./.env
+    environment:
+      - DEV_DATABASE_URL=postgresql://postgres:1234@banco:5432/sanea
+    networks:
+      - production-network
+    restart : "always"
+    command: /bin/sh -c "sleep 5 && npm run migrate && npm run seed"
+
+networks:
+  production-network:
+    driver: bridge

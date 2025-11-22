@@ -13,7 +13,7 @@ import locationRoutes from "./src/routes/location.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
-import feedbackRoutes from "./src/routes/feedback.routes";
+//import feedbackRoutes from "./src/routes/feedback.routes";
 import registroRoutes from "./src/routes/registro.routes";
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
@@ -21,12 +21,11 @@ import http from 'http'
 import { initSockets } from "./src/sockets";
 import bodyParser from "body-parser";
 import stripeRoutes from "./src/routes/stripe.routes";
-export const app = express();
 import RegistroRoutes from './src/routes/registro.routes';
 import VisitasRoutes from './src/routes/visita.routes';
-import { setupSwagger } from "./src/swagger/swagger";
-import { errorHandler } from "./src/middlewares/errorHandler.middleware";
+
 const app = express();
+
 
 app.use(cors());
 

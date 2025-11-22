@@ -6,10 +6,12 @@ module.exports = {
     // Alterar status para string e default 'aberto'
     await queryInterface.changeColumn('denuncia', 'status', {
       type: Sequelize.STRING(20),
-      allowNull: false,
-      defaultValue: 'aberto'
+      allowNull: true,
     });
-
+    await queryInterface.changeColumn('denuncia', 'status', {
+      allowNull: false,
+      defaultValue: 'aberto',
+    });
     // Tornar campos obrigatórios
     await queryInterface.changeColumn('denuncia', 'cep', {
       type: Sequelize.STRING(30),
