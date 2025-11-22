@@ -161,3 +161,45 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  # --- Enviar e-mail em caso de falha ---
+  notify_failure:
+    name: Notificar Falha
+    needs: pipeline
+    runs-on: ubuntu-latest
+    if: failure()
+
+    steps:
+      - name: Capturar informações
+        id: info
+        run: |
+          echo "data=$(date '+%d/%m/%Y %H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "commit=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "branch=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          echo "url_logs=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> $GITHUB_OUTPUT
+
+      - name: Carregar e processar template
+        id: template
+        run: |
+          html=$(cat ./.github/email-templates/failure-pipeline.html)
+
+          html="${html//\{\{branch\}\}/${{ steps.info.outputs.branch }}}"
+          html="${html//\{\{data\}\}/${{ steps.info.outputs.data }}}"
+          html="${html//\{\{commit\}\}/${{ steps.info.outputs.commit }}}"
+          html="${html//\{\{url_logs\}\}/${{ steps.info.outputs.url_logs }}}"
+
+          echo "html<<EOF" >> $GITHUB_OUTPUT
+          echo "$html" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Enviar e-mail aos responsáveis
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_HOST }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USER }}
+          password: ${{ secrets.MAIL_PASS }}
+          subject: "🚨 Falha no Pipeline - ${{ github.ref_name }}"
+          to: "${{ secrets.TEAM_EMAILS }}"
+          from: "CI/CD SaneaSP <no-reply@saneasp.com>"
+          html_body: ${{ steps.template.outputs.html }}
