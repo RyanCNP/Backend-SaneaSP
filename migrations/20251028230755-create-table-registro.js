@@ -18,7 +18,7 @@ module.exports = {
       },
       tipo: {
         allowNull: false,
-        type: DataTypes.INTEGER
+        type: DataTypes.STRING(50)
       },
       statusAnterior: {
         allowNull: false,

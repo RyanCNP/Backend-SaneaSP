@@ -47,7 +47,7 @@ DenunciaModel.init(
         },
         status: {
             allowNull: false,
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(50),
             field: "status"
         },
         cep: {
