@@ -23,13 +23,14 @@ jobs:
 
           echo "Mensagem detectada: $MSG"
 
-          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor)(\(.+\))?: ]]; then
+          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor|docs)(\(.+\))?:|^Merge ]]; then
             echo "❌ Mensagem de commit inválida!"
-            echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:"
+            echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:, docs:"
             exit 1
-          fi
+            fi
 
-          echo "✔ Mensagem válida."
+            echo "✔ Mensagem válida."
+
 
       # --- Instalar dependências ---
       - name: Instalar dependências
