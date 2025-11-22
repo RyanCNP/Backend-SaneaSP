@@ -23,7 +23,7 @@ jobs:
 
           echo "Mensagem detectada: $MSG"
 
-          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor|docs)(\(.+\))?:|^Merge ]]; then
+          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor|docs)(\(.+\))?:|^Merge|^Revert ]]; then
             echo "❌ Mensagem de commit inválida!"
             echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:, docs:"
             exit 1
