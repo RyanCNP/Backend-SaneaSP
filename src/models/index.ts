@@ -13,6 +13,16 @@ import { ComentarioModel } from "./comentario.model";
 import { UserModel } from "./user.model";
 import { GrupoCategoriaModel } from "./grupo-categoria.model";
 
+DenunciaModel.belongsTo(UserModel, {
+  foreignKey: 'id_usuario',
+  as: 'usuario'
+})
+
+UserModel.hasMany(DenunciaModel, {
+  foreignKey: 'id_usuario',
+  as: 'denuncias'
+})
+
 //CATEGORIAS E DENUNCIAS
 DenunciaModel.belongsToMany(CategoriaModel, {
   through: CategoriaDenunciaModel,
