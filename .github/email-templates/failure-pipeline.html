@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falha no Pipeline</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        table[role="presentation"] {
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            padding: 40px 30px;
+            text-align: center;
+            background-color: #0e2417;
+
+            background-image:
+                /* grade suave */
+                linear-gradient(90deg, #d7d7d70f 1px, transparent 1px),
+                linear-gradient(0deg, #d7d7d70f 1px, transparent 1px),
+
+                /* manchas simulando commits */
+                radial-gradient(circle at 0% 20%, #2da04b59 0%, transparent 55%),
+                radial-gradient(circle at 20% 70%, #6eff8e4d 0%, transparent 50%),
+                radial-gradient(circle at 70% 100%, #00ff5547 0%, transparent 50%);
+
+            background-size:
+                18px 18px, 18px 18px,
+                /* grade */
+                auto, auto, auto;
+            /* manchas */
+        }
+
+
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            margin: 10px 0 0 0;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .content h2 {
+            margin: 0 0 20px 0;
+            color: #333333;
+            font-size: 24px;
+        }
+
+        .content p {
+            margin: 0 0 20px 0;
+            color: #666666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #27a84c;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+
+        .info-box h3 {
+            margin: 0 0 10px 0;
+            color: #1d7a38;
+            font-size: 18px;
+        }
+
+        .info-box ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #666666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-radius: 0 0 8px 8px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .footer p {
+            margin: 0 0 15px 0;
+            color: #666666;
+            font-size: 14px;
+        }
+
+        .footer .legal {
+            margin: 15px 0 0 0;
+            color: #999999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td align="center">
+                <table class="container" role="presentation" cellspacing="0" cellpadding="0" border="0" width="600">
+                    <tr>
+                        <td class="header">
+                            <h1>Falha na Pipeline - CI/CD - {{branch}}</h1>
+                            <p>Uma etapa do processo não foi concluída com sucesso</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="content" style="border-left: 2px solid #333333; border-right: 2px solid #333333;">
+                            <h2>Olá, equipe!</h2>
+
+                            <p>O pipeline executado na branch <strong>{{branch}}</strong> encontrou uma falha.
+                                É recomendado que um dos responsáveis verifique o problema o quanto antes.</p>
+
+                            <div class="info-box">
+                                <h3>Detalhes da Execução:</h3>
+                                <ul>
+                                    <li><strong>Workflow:</strong> CI/CD - {{branch}}</li>
+                                    <li><strong>Status:</strong> Falha ❌</li>
+                                    <li><strong>Data:</strong> {{data}}</li>
+                                    <li><strong>Commit:</strong> {{commit}}</li>
+                                </ul>
+                            </div>
+
+                            <p>Analise os logs diretamente pelo GitHub Actions:</p>
+                            <p>
+                                <a href="{{url_logs}}">{{url_logs}}</a>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="footer">
+                            <p><strong>SaneaSP - Sistema de Relatórios</strong></p>
+
+                            <p class="legal">
+                                Este é um aviso automático. Não responda este e-mail.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

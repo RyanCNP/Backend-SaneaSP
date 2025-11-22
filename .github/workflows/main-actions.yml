@@ -16,6 +16,22 @@ jobs:
         with:
           fetch-depth: 0
 
+      # --- Validar mensagem do commit ---
+      - name: Validar mensagem do commit
+        run: |
+          MSG="$(git log -1 --pretty=%s)"
+
+          echo "Mensagem detectada: $MSG"
+
+          if [[ ! "$MSG" =~ ^(feat|feat!|chore|fix|refactor|docs)(\(.+\))?:|^Merge|^Revert ]]; then
+            echo "❌ Mensagem de commit inválida!"
+            echo "Use um dos formatos: feat:, feat!:, chore:, fix:, refactor:, docs:"
+            exit 1
+            fi
+
+            echo "✔ Mensagem válida."
+
+
       # --- Instalar dependências ---
       - name: Instalar dependências
         run: npm ci
@@ -90,7 +106,17 @@ jobs:
       # --- Atualizar package.json ---
       - name: Atualizar versão no package.json
         if: steps.version.outputs.should_deploy == 'true'
-        run: npm version $NEW_VERSION --no-git-tag-version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 Versão atual no package.json: $CURRENT_VERSION"
+          echo "🆕 Nova versão calculada: $NEW_VERSION"
+
+          if [ "$CURRENT_VERSION" != "$NEW_VERSION" ]; then
+          echo "🔹 Atualizando package.json para $NEW_VERSION..."
+          npm version $NEW_VERSION --no-git-tag-version
+          else
+          echo "✅ A versão no package.json já está atualizada ($CURRENT_VERSION). Nenhuma alteração necessária."
+          fi
 
       # --- Commit e criar tag ---
       - name: Commit e criar tag
@@ -151,3 +177,51 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  # --- Enviar e-mail em caso de falha ---
+  notify_failure:
+    name: Notificar Falha
+    needs: pipeline
+    runs-on: ubuntu-latest
+    if: failure()
+
+    steps:
+
+      # --- Checkout do código ---
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # --- Capturar informações ---
+      - name: Capturar informações
+        id: info
+        run: |
+          echo "data=$(date '+%d/%m/%Y %H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "commit=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "branch=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          echo "url_logs=https://github.com/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" >> $GITHUB_OUTPUT
+
+      - name: Carregar e processar template
+        id: template
+        run: |
+          html=$(cat ./.github/email-templates/failure-pipeline.html)
+
+          html="${html//\{\{branch\}\}/${{ steps.info.outputs.branch }}}"
+          html="${html//\{\{data\}\}/${{ steps.info.outputs.data }}}"
+          html="${html//\{\{commit\}\}/${{ steps.info.outputs.commit }}}"
+          html="${html//\{\{url_logs\}\}/${{ steps.info.outputs.url_logs }}}"
+
+          echo "html<<EOF" >> $GITHUB_OUTPUT
+          echo "$html" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Enviar e-mail aos responsáveis
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.MAIL_HOST }}
+          server_port: ${{ secrets.MAIL_PORT }}
+          username: ${{ secrets.MAIL_USER }}
+          password: ${{ secrets.MAIL_PASS }}
+          subject: "🚨 Falha no Pipeline - ${{ github.ref_name }}"
+          to: "${{ secrets.TEAM_EMAILS }}"
+          from: "CI/CD SaneaSP <no-reply@saneasp.com>"
+          html_body: ${{ steps.template.outputs.html }}
