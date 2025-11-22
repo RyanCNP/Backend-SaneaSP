@@ -1,6 +1,7 @@
 export enum StatusDenuncia {
-    Aberto,
-    Visualizada,
-    Analise,
-    Resolvida
+    Aberto = 'aberto',
+    Visualizada = 'visualizada',
+    Analise = 'analise',
+    Agendado = 'agendado',
+    Resolvida = 'resolvida'
 }
