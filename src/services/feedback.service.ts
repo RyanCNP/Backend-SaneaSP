@@ -1,68 +1,104 @@
-// import type { IFeedback, ICreateFeedback } from "../interfaces/feedback"
-// import { FeedbackModel } from "../models/feedback.model"
-// import { Op } from "sequelize"
-// import { ApiError } from "../errors/ApiError.error"
-// import { HttpCode } from "../enums/HttpCode.enum"
+import { IDenunciaFeedback, IInterfaceFeedback, ICreateInterfaceFeedback, TDenunciaFeedbackCreate } from "../interfaces/feedback"
+import { DenunciaFeedbackModel, InterfaceFeedbackModel } from "../models/feedback.model"
+import { DenunciaModel } from "../models/denuncia.model"
+import { FeedbackInterface } from "../enums/FeedbackInterface.enum"
+import { Op } from "sequelize"
+import { ApiError } from "../errors/ApiError.error"
+import { HttpCode } from "../enums/HttpCode.enum"
 
-// export const findAllFeedbacks = async (): Promise<IFeedback[]> => {
-//     const feedbacks = await FeedbackModel.findAll()
+export const findAllDenunciaFeedbacks = async (): Promise<IDenunciaFeedback[]> => {
+  const feedbacks = await DenunciaFeedbackModel.findAll({
+    include: [
+      {
+        model: DenunciaModel,
+        as: "denuncia",
+        attributes: ["titulo"]
+      }
+    ],
+    order: [["data_publicacao", "DESC"]]
+  });
 
-//     if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+  if (feedbacks.length === 0) {
+    throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound);
+  }
 
-//     return feedbacks
-// }
+  return feedbacks;
+};
 
-// export const findFeedbackById = async (id: number): Promise<IFeedback> => {
-//     const feedback = await FeedbackModel.findByPk(id)
 
-//     if (!feedback) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+export const findDenunciaFeedbackById = async (id: number): Promise<IDenunciaFeedback> => {
+    const feedback = await DenunciaFeedbackModel.findByPk(id)
 
-//     return feedback
-// }
-// /*
-// export const findFeedbackByIdDenuncia = async (idDenuncia: number): Promise<IFeedback> => {
-//     if (isNaN(idDenuncia) || idDenuncia <= 0) {
-//         throw new ApiError("ID da denúncia inválido", HttpCode.BadRequest);
-//     }
+    if (!feedback) throw new ApiError("Feedback não encontrado", HttpCode.NotFound)
 
-//     const feedback = await FeedbackModel.findOne({
-//         where: { fk_denuncia: idDenuncia },
-//     });
+    return feedback
+}
 
-//     if (!feedback) {
-//         throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound);
-//     }
+export const findDenunciaFeedbackByDenunciaId = async (complaintId: number): Promise<IDenunciaFeedback> => {
+    const feedback = await DenunciaFeedbackModel.findOne({where : {fk_denuncia : complaintId}})
 
-//     return feedback;
-// };
+    if (!feedback) throw new ApiError("Feedback não encontrado", HttpCode.NotFound)
 
-// export const findFeedbacksByIdCidadao = async (idCidadao: number): Promise<IFeedback[]> => {
-//     const feedbacks = await FeedbackModel.findAll({ where: { fk_cidadao: idCidadao } })
+    return feedback
+}
 
-//     if (!feedbacks) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+export const findAllInterfaceFeedbacks = async (): Promise<IInterfaceFeedback[]> => {
+    const feedbacks = await InterfaceFeedbackModel.findAll()
 
-//     return feedbacks
-// }
-// */
-// export const createFeedback = async (body: ICreateFeedback): Promise<IFeedback> => {
-//     const {data_publicacao, ...fk_cidadao } = body;
+    if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
-//     const newFeedback = {
-//         data_publicacao: new Date(),
-//         ...fk_cidadao
-//     }
+    return feedbacks
+}
 
-//     const feedback = await FeedbackModel.create(newFeedback)
+export const findAllInterfaceFeedbacksByTela = async (tela: FeedbackInterface): Promise<IInterfaceFeedback[]> => {
+    const feedbacks = await InterfaceFeedbackModel.findAll({
+        where: {
+            tela: {
+                [Op.eq]: tela
+            }
+        }
+    })
 
-//     return feedback
-// }
+    if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
-// export const deleteFeedback = async (id: number): Promise<IFeedback> => {
-//     const feedbackFound = await FeedbackModel.findByPk(id)
+    return feedbacks
+}
 
-//     if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+export const createDenunciaFeedback = async (body: TDenunciaFeedbackCreate): Promise<IDenunciaFeedback> => {
+    const feedback = await DenunciaFeedbackModel.create(body)
 
-//     await feedbackFound.destroy()
+    return feedback
+}
 
-//     return feedbackFound
-// }
+export const createInterfaceFeedback = async (body: ICreateInterfaceFeedback): Promise<IInterfaceFeedback> => {
+    const { data_publicacao, ...tela } = body;
+
+    const newFeedback = {
+        data_publicacao: new Date(),
+        ...tela
+    }
+
+    const feedback = await InterfaceFeedbackModel.create(newFeedback)
+
+    return feedback
+}
+
+export const deleteDenunciaFeedback = async (idDenuncia: number): Promise<IDenunciaFeedback> => {
+    const feedbackFound = await DenunciaFeedbackModel.findByPk(idDenuncia)
+
+    if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+
+    await feedbackFound.destroy()
+
+    return feedbackFound
+}
+
+export const deleteInterfaceFeedback = async (id: number): Promise<IInterfaceFeedback> => {
+    const feedbackFound = await InterfaceFeedbackModel.findByPk(id)
+
+    if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+
+    await feedbackFound.destroy()
+
+    return feedbackFound
+}

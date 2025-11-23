@@ -99,4 +99,3 @@ DenunciaModel.init(
         timestamps: false
     }
 );
-
