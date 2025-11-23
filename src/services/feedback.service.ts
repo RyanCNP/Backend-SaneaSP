@@ -1,4 +1,4 @@
-import { IDenunciaFeedback, ICreateDenunciaFeedback, IInterfaceFeedback, ICreateInterfaceFeedback } from "../interfaces/feedback"
+import { IDenunciaFeedback, IInterfaceFeedback, ICreateInterfaceFeedback, TDenunciaFeedbackCreate } from "../interfaces/feedback"
 import { DenunciaFeedbackModel, InterfaceFeedbackModel } from "../models/feedback.model"
 import { DenunciaModel } from "../models/denuncia.model"
 import { FeedbackInterface } from "../enums/FeedbackInterface.enum"
@@ -15,7 +15,7 @@ export const findAllDenunciaFeedbacks = async (): Promise<IDenunciaFeedback[]> =
         attributes: ["titulo"]
       }
     ],
-    order: [["createdAt", "DESC"]]
+    order: [["data_publicacao", "DESC"]]
   });
 
   if (feedbacks.length === 0) {
@@ -37,10 +37,10 @@ export const findDenunciaFeedbackById = async (id: number): Promise<IDenunciaFee
 export const findAllInterfaceFeedbacks = async (): Promise<IInterfaceFeedback[]> => {
     const feedbacks = await InterfaceFeedbackModel.findAll()
 
-//     if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+    if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
-//     return feedbacks
-// }
+    return feedbacks
+}
 
 export const findAllInterfaceFeedbacksByTela = async (tela: FeedbackInterface): Promise<IInterfaceFeedback[]> => {
     const feedbacks = await InterfaceFeedbackModel.findAll({
@@ -56,15 +56,8 @@ export const findAllInterfaceFeedbacksByTela = async (tela: FeedbackInterface): 
     return feedbacks
 }
 
-export const createDenunciaFeedback = async (body: ICreateDenunciaFeedback): Promise<IDenunciaFeedback> => {
-    const { data_publicacao, ...fk_denuncia } = body;
-
-    const newFeedback = {
-        data_publicacao: new Date(),
-        ...fk_denuncia
-    }
-
-    const feedback = await DenunciaFeedbackModel.create(newFeedback)
+export const createDenunciaFeedback = async (body: TDenunciaFeedbackCreate): Promise<IDenunciaFeedback> => {
+    const feedback = await DenunciaFeedbackModel.create(body)
 
     return feedback
 }
@@ -79,8 +72,8 @@ export const createInterfaceFeedback = async (body: ICreateInterfaceFeedback): P
 
     const feedback = await InterfaceFeedbackModel.create(newFeedback)
 
-//     return feedback
-// }
+    return feedback
+}
 
 export const deleteDenunciaFeedback = async (idDenuncia: number): Promise<IDenunciaFeedback> => {
     const feedbackFound = await DenunciaFeedbackModel.findByPk(idDenuncia)
@@ -95,9 +88,9 @@ export const deleteDenunciaFeedback = async (idDenuncia: number): Promise<IDenun
 export const deleteInterfaceFeedback = async (id: number): Promise<IInterfaceFeedback> => {
     const feedbackFound = await InterfaceFeedbackModel.findByPk(id)
 
-//     if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+    if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
-//     await feedbackFound.destroy()
+    await feedbackFound.destroy()
 
-//     return feedbackFound
-// }
+    return feedbackFound
+}

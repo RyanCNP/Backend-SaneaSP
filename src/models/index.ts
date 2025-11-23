@@ -12,6 +12,7 @@ import { FuncionarioModel } from "./funcionario.model";
 import { ComentarioModel } from "./comentario.model";
 import { UserModel } from "./user.model";
 import { GrupoCategoriaModel } from "./grupo-categoria.model";
+import { DenunciaFeedbackModel } from "./feedback.model";
 
 DenunciaModel.belongsTo(UserModel, {
   foreignKey: 'id_usuario',
@@ -116,6 +117,17 @@ ImagemRegistroModel.belongsTo(RegistroModel,
 VisitaModel.belongsTo(RegistroModel,{ foreignKey: 'id_registro', as: 'registro', onDelete: 'CASCADE' })
 RegistroModel.hasOne(VisitaModel, {foreignKey: 'id_registro', as: 'visita', onDelete: 'CASCADE'})
 
+//Feedback
+DenunciaModel.hasOne(DenunciaFeedbackModel, {
+  foreignKey: "fk_denuncia",
+  as: "feedback"
+});
+
+DenunciaFeedbackModel.belongsTo(DenunciaModel, {
+  foreignKey: "fk_denuncia",
+  as: "denuncia"
+});
+
 //Fazendo o export dos models com as modificações
 export {
   DenunciaModel,
@@ -129,5 +141,6 @@ export {
   UserModel,
   CidadaoModel,
   FuncionarioModel,
-  PrefeituraModel
+  PrefeituraModel,
+  DenunciaFeedbackModel
 };
