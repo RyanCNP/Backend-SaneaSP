@@ -7,6 +7,7 @@ import { NivelFuncionario } from "../enums/NivelFuncionario.enum"
 const router = express.Router()
 
 router.get("/denuncia-feedback/:id", feedbackController.getDenunciaFeedbackById)
+router.get("/denuncia-feedback/denuncia/:id", feedbackController.getDenunciaFeedbackByDenunciaId)
 
 // router.use(validateToken)
 

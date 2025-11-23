@@ -19,6 +19,13 @@ export const getDenunciaFeedbackById = async (req: Request, res: Response) => {
     res.status(200).json(feedback)
 }
 
+export const getDenunciaFeedbackByDenunciaId = async (req: Request, res: Response) => {
+    const { id } = req.params
+    const feedback = await feedbackService.findDenunciaFeedbackByDenunciaId(Number(id))
+    res.status(200).json(feedback)
+}
+
+
 export const getAllInterfaceFeedbacks = async (req: Request, res: Response) => {
     const feedbacks = await feedbackService.findAllInterfaceFeedbacks()
     res.status(200).json(feedbacks)
