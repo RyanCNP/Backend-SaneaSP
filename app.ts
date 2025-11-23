@@ -6,27 +6,30 @@ import denunciaRoutes from "./src/routes/denuncia.routes";
 import userRoutes from "./src/routes/user.routes";
 import prefeituraRoutes from "./src/routes/prefeitura.routes";
 import locationRoutes from "./src/routes/location.routes"
-import comentarioRoutes from "./src/routes/comentario.routes"
 import { authRoutes } from "./src/routes/auth.routes";
 import graphRoutes from "./src/routes/graph.routes";
 import uploadRoutes from "./src/routes/upload.routes";
-import feedbackRoutes from "./src/routes/feedback.routes";
+//import feedbackRoutes from "./src/routes/feedback.routes";
 import registroRoutes from "./src/routes/registro.routes";
-
 import { setupSwagger } from "./src/swagger/swagger";
 import { errorHandler } from "./src/middlewares/errorHandler.middleware";
 import http from 'http'
 import { initSockets } from "./src/sockets";
-export const app = express();
+import bodyParser from "body-parser";
+import stripeRoutes from "./src/routes/stripe.routes";
+import RegistroRoutes from './src/routes/registro.routes';
+import VisitasRoutes from './src/routes/visita.routes';
 
-// Swagger
-setupSwagger(app);
+const app = express();
 
-// Middlewares
 app.use(cors());
+
+app.use('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
+
 app.use(express.json());
 
-// Rotas da API
+setupSwagger(app);
+
 app.use("/categoria", categoriaRoutes);
 app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes);
@@ -35,21 +38,21 @@ app.use("/auth", authRoutes);
 app.use("/graph", graphRoutes);
 app.use('/upload',uploadRoutes);
 app.use("/location",locationRoutes);
-app.use("/feedback", feedbackRoutes);
+app.use('/visitas', VisitasRoutes); 
+app.use('/api/stripe', stripeRoutes);
+//app.use("/feedback", feedbackRoutes);
 app.use("/comentario", comentarioRoutes);
 app.use("/registro", registroRoutes);
 
 // Acesso público às imagens
 app.use("/public", express.static(path.join(__dirname, "public")));
 
-// Middleware de erro
 app.use(errorHandler);
 
 const server = http.createServer(app);
 initSockets(server);
 
-const PORT = process.env.PORT;
-
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Backend do SaneaSP está rodando na porta ${PORT}`);
+    console.log(`Backend do SaneaSP está rodando na porta ${PORT}`);
 });

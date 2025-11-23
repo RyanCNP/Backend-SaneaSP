@@ -32,17 +32,17 @@ export const getInterfaceFeedbacksByTela = async (req: Request, res: Response) =
     res.status(200).json(feedback)
 }
 
-export const postDenunciaFeedback = async (req: Request, res: Response) => {
-    const feedback: ICreateDenunciaFeedback = req.body
-    const newFeedback = await feedbackService.createDenunciaFeedback(feedback)
-    res.status(201).json(newFeedback)
-}
+// export const postDenunciaFeedback = async (req: Request, res: Response) => {
+//     const feedback: ICreateDenunciaFeedback = req.body
+//     const newFeedback = await feedbackService.createDenunciaFeedback(feedback)
+//     res.status(201).json(newFeedback)
+// }
 
-export const postInterfaceFeedback = async (req: Request, res: Response) => {
-    const feedback: ICreateInterfaceFeedback = req.body
-    const newFeedback = await feedbackService.createInterfaceFeedback(feedback)
-    res.status(201).json(newFeedback)
-}
+// export const postInterfaceFeedback = async (req: Request, res: Response) => {
+//     const feedback: ICreateInterfaceFeedback = req.body
+//     const newFeedback = await feedbackService.createInterfaceFeedback(feedback)
+//     res.status(201).json(newFeedback)
+// }
 
 export const deleteInterfaceFeedback = async (req: Request, res: Response) => {
     const { id } = req.params

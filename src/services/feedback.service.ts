@@ -37,10 +37,10 @@ export const findDenunciaFeedbackById = async (id: number): Promise<IDenunciaFee
 export const findAllInterfaceFeedbacks = async (): Promise<IInterfaceFeedback[]> => {
     const feedbacks = await InterfaceFeedbackModel.findAll()
 
-    if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+//     if (feedbacks.length === 0) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
-    return feedbacks
-}
+//     return feedbacks
+// }
 
 export const findAllInterfaceFeedbacksByTela = async (tela: FeedbackInterface): Promise<IInterfaceFeedback[]> => {
     const feedbacks = await InterfaceFeedbackModel.findAll({
@@ -79,8 +79,8 @@ export const createInterfaceFeedback = async (body: ICreateInterfaceFeedback): P
 
     const feedback = await InterfaceFeedbackModel.create(newFeedback)
 
-    return feedback
-}
+//     return feedback
+// }
 
 export const deleteDenunciaFeedback = async (idDenuncia: number): Promise<IDenunciaFeedback> => {
     const feedbackFound = await DenunciaFeedbackModel.findByPk(idDenuncia)
@@ -95,9 +95,9 @@ export const deleteDenunciaFeedback = async (idDenuncia: number): Promise<IDenun
 export const deleteInterfaceFeedback = async (id: number): Promise<IInterfaceFeedback> => {
     const feedbackFound = await InterfaceFeedbackModel.findByPk(id)
 
-    if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
+//     if (!feedbackFound) throw new ApiError("Nenhum feedback encontrado", HttpCode.NotFound)
 
-    await feedbackFound.destroy()
+//     await feedbackFound.destroy()
 
-    return feedbackFound
-}
+//     return feedbackFound
+// }

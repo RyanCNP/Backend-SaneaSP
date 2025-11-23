@@ -1,15 +1,27 @@
+
 import { CategoriaModel } from "./categoria.model";
 import { DenunciaModel } from "./denuncia.model";
 import { CategoriaDenunciaModel } from "./categoria-denuncia.model";
 import { ImagemDenunciaModel } from "./imagem-denuncia.model";
-import { ComentarioModel } from "./comentario.model";
-import { UserModel } from "./user.model";
-import { GrupoCategoriaModel } from "./grupo-categoria.model";
+import { VisitaModel } from "./visita.model"; 
 import { RegistroModel } from "./registro.model";
 import { ImagemRegistroModel } from "./imagem-registro.model";
 import { CidadaoModel } from "./cidadao.model";
 import { PrefeituraModel } from "./prefeitura.model";
 import { FuncionarioModel } from "./funcionario.model";
+import { ComentarioModel } from "./comentario.model";
+import { UserModel } from "./user.model";
+import { GrupoCategoriaModel } from "./grupo-categoria.model";
+
+DenunciaModel.belongsTo(UserModel, {
+  foreignKey: 'id_usuario',
+  as: 'usuario'
+})
+
+UserModel.hasMany(DenunciaModel, {
+  foreignKey: 'id_usuario',
+  as: 'denuncias'
+})
 
 //CATEGORIAS E DENUNCIAS
 DenunciaModel.belongsToMany(CategoriaModel, {
@@ -90,13 +102,19 @@ FuncionarioModel.belongsTo(PrefeituraModel, {
 });
 
 //Registros
+//Adicionando associação entre Registro, Denuncia e Usuario
 RegistroModel.belongsTo(DenunciaModel,{foreignKey:'id_denuncia',as:'denuncia'})
 RegistroModel.belongsTo(UserModel,{foreignKey:'id_usuario',as:'usuario'})
 
 RegistroModel.hasMany(ImagemRegistroModel,
     { foreignKey: 'id_registro', as: 'arquivos', onDelete: 'CASCADE' })
+    
 ImagemRegistroModel.belongsTo(RegistroModel,
     { foreignKey: 'id_registro', as: 'registro' })
+
+//Visita
+VisitaModel.belongsTo(RegistroModel,{ foreignKey: 'id_registro', as: 'registro', onDelete: 'CASCADE' })
+RegistroModel.hasOne(VisitaModel, {foreignKey: 'id_registro', as: 'visita', onDelete: 'CASCADE'})
 
 //Fazendo o export dos models com as modificações
 export {

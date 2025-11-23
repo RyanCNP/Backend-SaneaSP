@@ -4,22 +4,22 @@ import { IDenunciaFeedback, IInterfaceFeedback } from "../interfaces/feedback";
 import { FeedbackInterface } from "../enums/FeedbackInterface.enum";
 import { DenunciaModel } from "./denuncia.model";
 
-type DenunciaFeedbackCreationalAttributes = Optional<IDenunciaFeedback, "id">
-type InterfaceFeedbackCreationalAttributes = Optional<IInterfaceFeedback, "id">
+// type DenunciaFeedbackCreationalAttributes = Optional<IDenunciaFeedback, "id">
+// type InterfaceFeedbackCreationalAttributes = Optional<IInterfaceFeedback, "id">
 
-export class DenunciaFeedbackModel extends Model<IDenunciaFeedback, DenunciaFeedbackCreationalAttributes> implements IDenunciaFeedback {
-    public id!: number;
-    public data_publicacao!: Date;
-    public descricao!: string;
-    public fk_denuncia!: number;
-}
+// export class DenunciaFeedbackModel extends Model<IDenunciaFeedback, DenunciaFeedbackCreationalAttributes> implements IDenunciaFeedback {
+//     public id!: number;
+//     public data_publicacao!: Date;
+//     public descricao!: string;
+//     public fk_denuncia!: number;
+// }
 
-export class InterfaceFeedbackModel extends Model<IInterfaceFeedback, InterfaceFeedbackCreationalAttributes> implements IInterfaceFeedback {
-    public id!: number;
-    public data_publicacao!: Date;
-    public descricao!: string;
-    public tela!: FeedbackInterface;
-}
+// export class InterfaceFeedbackModel extends Model<IInterfaceFeedback, InterfaceFeedbackCreationalAttributes> implements IInterfaceFeedback {
+//     public id!: number;
+//     public data_publicacao!: Date;
+//     public descricao!: string;
+//     public tela!: FeedbackInterface;
+// }
 
 DenunciaFeedbackModel.init({
     id: {
@@ -61,31 +61,31 @@ DenunciaFeedbackModel.belongsTo(DenunciaModel, {
   as: "denuncia"
 });
 
-InterfaceFeedbackModel.init({
-    id: {
-        primaryKey: true,
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        field: "id",
-    },
-    data_publicacao: {
-        allowNull: false,
-        type: DataTypes.DATE,
-        field: "data_publicacao"
-    },
-    descricao: {
-        allowNull: false,
-        type: DataTypes.STRING(2048),
-        field: "descricao"
-    },
-    tela: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        field: "tela"
-    }
-},{
-    tableName: "interface-feedback",
-    sequelize,
-    timestamps: false
-})
+// InterfaceFeedbackModel.init({
+//     id: {
+//         primaryKey: true,
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true,
+//         allowNull: false,
+//         field: "id",
+//     },
+//     data_publicacao: {
+//         allowNull: false,
+//         type: DataTypes.DATE,
+//         field: "data_publicacao"
+//     },
+//     descricao: {
+//         allowNull: false,
+//         type: DataTypes.STRING(2048),
+//         field: "descricao"
+//     },
+//     tela: {
+//         allowNull: false,
+//         type: DataTypes.INTEGER,
+//         field: "tela"
+//     }
+// },{
+//     tableName: "interface-feedback",
+//     sequelize,
+//     timestamps: false
+// })

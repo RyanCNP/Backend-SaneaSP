@@ -1,10 +1,11 @@
-import type { ICreateDenuncia, IFilterListDenuncia, IDenuncia } from "../interfaces/denuncia"
+import type { ICreateDenuncia, IFilterListDenuncia, IDenuncia, IDenunciaExcel } from "../interfaces/denuncia"
 import { Op } from "sequelize"
-import { CategoriaModel, ImagemDenunciaModel, DenunciaModel, GrupoCategoriaModel } from "../models"
+import { CategoriaModel, ImagemDenunciaModel, DenunciaModel, GrupoCategoriaModel, UserModel } from "../models"
 import { ApiError } from "../errors/ApiError.error"
 import { HttpCode } from "../enums/HttpCode.enum"
 import ExcelJS from "exceljs";
 import { Buffer } from "buffer";
+import { StatusDenuncia } from "../enums/statusDenuncia.enum"
 
 const denunciaFindIncludes = [
   {
@@ -50,10 +51,10 @@ export const findAllDenuncias = async (filtros: IFilterListDenuncia): Promise<ID
       query.where.cidade = { [Op.like]: `%${filtros.cidade}%` }
     }
     if (filtros.status) {
-      query.where.status = { [Op.like]: `%${filtros.status}%` }
+      query.where.status = { [Op.eq]: filtros.status }
     }
     if (filtros.pontuacao) {
-      query.where.pontuacao = { [Op.like]: `${filtros.pontuacao}` }
+      query.where.pontuacao = { [Op.eq]: filtros.pontuacao }
     }
   }
 
@@ -75,6 +76,7 @@ export const findUserComplaint = async (fkUsuario: number, filter ?: IFilterList
   const query: any = {
     where: {idUsuario: fkUsuario},
     include: denunciaFindIncludes,
+    order : [['dataPublicacao', "DESC"]]
   }
   if (filter && filter.status) {
     query.where.status = { [Op.like]: `%${filter.status}%` }
@@ -121,7 +123,7 @@ export const createNewDenuncia = async (body: ICreateDenuncia): Promise<IDenunci
   const { pontuacao, ...denunciaBodyWithoutPontuacao } = denunciaBody
 
   const newDenuncia = {
-    status: 0,
+    status: StatusDenuncia.Enviada,
     dataPublicacao: new Date(),
     pontuacao: body.pontuacao,
     ...denunciaBodyWithoutPontuacao,
@@ -188,30 +190,125 @@ function calculatePontuacao(bodyRequest: ICreateDenuncia): number {
 }
 export const exportDenunciasExcel = async (): Promise<Buffer> => {
   const denuncias = await DenunciaModel.findAll({
-    include: denunciaFindIncludes
-  });
+    include: {
+      model: UserModel,
+      as: 'usuario',
+      attributes: ['nome']
+    },
+    attributes: 
+    ['id', 'titulo', 'dataPublicacao', 'status', 'pontuacao']
+  }) as unknown as any[]
+
+  const mapToExcel :IDenunciaExcel[] = denuncias.map(d => {
+    return {
+      dataPublicacao : d.dataPublicacao,
+      id: d.id,
+      pontuacao : d.pontuacao,
+      status : d.status,
+      titulo: d.titulo,
+      author: d.usuario?.nome
+    }
+  })
 
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet("Denúncias");
+  console.log(mapToExcel)
 
   sheet.columns = [
-    { header: "ID", key: "id", width: 10 },
-    { header: "Título", key: "titulo", width: 30 },
-    { header: "Descrição", key: "descricao", width: 40 },
-    { header: "Status", key: "status", width: 15 },
-    { header: "Pontuação", key: "pontuacao", width: 12 },
-    { header: "Data", key: "dataPublicacao", width: 20 },
+    { header: "ID", key: "id", width: 6 },
+    { header: "Título", key: "titulo", width: 50 },
+    { header: "Autor", key: "autor", width: 50 },
+    { header: "Status", key: "status", width: 12 },
+    { header: "Pontuação", key: "pontuacao", width: 15 },
+    { header: "Data", key: "dataPublicacao", width: 15 },
   ];
 
-  denuncias.forEach((d) => {
-    sheet.addRow({
+  mapToExcel.forEach((d, idx) => {
+    const row = sheet.addRow({
       id: d.id,
       titulo: d.titulo,
-      descricao: d.descricao,
+      autor: d.author,
       status: d.status,
       pontuacao: d.pontuacao,
       dataPublicacao : d.dataPublicacao
     });
+    const statusCell = sheet.getCell(`D${idx + 2}`);
+    switch (d.status) {
+      case 'enviada': // Enviada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF1976D2' } // azul escuro
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'em_analise': // Em análise
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFFC107' } // amarelo
+        };
+        statusCell.font = { color: { argb: 'FF000000' } };
+        break;
+      case 'aguardando_informacoes': // Aguardando informações
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFBDBDBD' } // cinza
+        };
+        statusCell.font = { color: { argb: 'FF000000' } };
+        break;
+      case 'em_resolucao': // Em resolução
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF9C27B0' } // roxo
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'visita_agendada': // Visita agendada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF00BCD4' } // ciano
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'nao_procede': // Não procede
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF757575' } // cinza escuro
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'cancelada': // Cancelada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFF44336' } // vermelho
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'resolvida': // Resolvida
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF4CAF50' } // verde
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'finalizada': // Finalizada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF263238' } // azul quase preto
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      default:
+        break;
+    }
   });
 
   // Gera o arquivo em memória (Buffer | ArrayBuffer)
