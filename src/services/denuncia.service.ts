@@ -123,7 +123,7 @@ export const createNewDenuncia = async (body: ICreateDenuncia): Promise<IDenunci
   const { pontuacao, ...denunciaBodyWithoutPontuacao } = denunciaBody
 
   const newDenuncia = {
-    status: StatusDenuncia.Aberto,
+    status: StatusDenuncia.Enviada,
     dataPublicacao: new Date(),
     pontuacao: body.pontuacao,
     ...denunciaBodyWithoutPontuacao,
@@ -234,23 +234,15 @@ export const exportDenunciasExcel = async (): Promise<Buffer> => {
     });
     const statusCell = sheet.getCell(`D${idx + 2}`);
     switch (d.status) {
-      case 'aberto':
+      case 'enviada': // Enviada
         statusCell.fill = {
           type: 'pattern',
           pattern: 'solid',
-          fgColor: { argb: 'FFFF0000' } // vermelho
+          fgColor: { argb: 'FF1976D2' } // azul escuro
         };
         statusCell.font = { color: { argb: 'FFFFFFFF' } };
         break;
-      case 'visualizada':
-        statusCell.fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FF2196F3' } // azul
-        };
-        statusCell.font = { color: { argb: 'FFFFFFFF' } };
-        break;
-      case 'analise':
+      case 'em_analise': // Em análise
         statusCell.fill = {
           type: 'pattern',
           pattern: 'solid',
@@ -258,7 +250,15 @@ export const exportDenunciasExcel = async (): Promise<Buffer> => {
         };
         statusCell.font = { color: { argb: 'FF000000' } };
         break;
-      case 'agendado':
+      case 'aguardando_informacoes': // Aguardando informações
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFBDBDBD' } // cinza
+        };
+        statusCell.font = { color: { argb: 'FF000000' } };
+        break;
+      case 'em_resolucao': // Em resolução
         statusCell.fill = {
           type: 'pattern',
           pattern: 'solid',
@@ -266,11 +266,43 @@ export const exportDenunciasExcel = async (): Promise<Buffer> => {
         };
         statusCell.font = { color: { argb: 'FFFFFFFF' } };
         break;
-      case 'resolvida':
+      case 'visita_agendada': // Visita agendada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF00BCD4' } // ciano
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'nao_procede': // Não procede
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF757575' } // cinza escuro
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'cancelada': // Cancelada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFF44336' } // vermelho
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'resolvida': // Resolvida
         statusCell.fill = {
           type: 'pattern',
           pattern: 'solid',
           fgColor: { argb: 'FF4CAF50' } // verde
+        };
+        statusCell.font = { color: { argb: 'FFFFFFFF' } };
+        break;
+      case 'finalizada': // Finalizada
+        statusCell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF263238' } // azul quase preto
         };
         statusCell.font = { color: { argb: 'FFFFFFFF' } };
         break;
