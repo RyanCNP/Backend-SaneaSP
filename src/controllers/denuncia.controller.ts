@@ -15,6 +15,7 @@ import { createCategoryDenuncia, updateCategoryDenuncia } from "../services/cate
 import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
 import { removeFiles } from "../config/multer.config"
 import { UploadSubfolder } from "../enums/UploadSubFolder.enum"
+import { findDenunciaFeedbackById, deleteDenunciaFeedback } from "../services/feedback.service"
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
   const query: IFilterListDenuncia = req.query
@@ -30,7 +31,7 @@ export const getById = async (req: Request, res: Response) => {
 
 export const getUserComplaint = async (req: Request, res: Response) => {
   const idUsuario = req.user.id as number
-  const filter : IFilterListDenuncia = req.query
+  const filter: IFilterListDenuncia = req.query
   const denuncias = await findUserComplaint(idUsuario, filter)
   res.status(200).json(denuncias)
 }
@@ -97,7 +98,7 @@ export const putDenuncia = async (req: Request, res: Response) => {
   }
 
   if (body.imagens && body.imagens.length > 0) {
-    let files:string[] = body.imagens;
+    let files: string[] = body.imagens;
     const images = await getImagesByComplaintId(id)
     await removeFiles(images.map(img => img.nome), UploadSubfolder.Denuncias);
     await createImagemDenuncia(files, id)
@@ -112,14 +113,16 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
 
   const denuncia = await findDenunciaById(idDenuncia)
   const imagens = await getImagesByComplaintId(idDenuncia);
+  const feedback = await findDenunciaFeedbackById(idDenuncia);
   await removeFiles(imagens.map(img => img.nome), UploadSubfolder.Denuncias);
   await deleteDenunciaById(idDenuncia)
+  await deleteDenunciaFeedback(feedback.id)
 
   res.status(200).json(denuncia)
 }
 
-export const exportExcel = async (req : Request, res : Response) => {
-   try {
+export const exportExcel = async (req: Request, res: Response) => {
+  try {
     const buffer = await exportDenunciasExcel(); // chama a função do controller
 
     res.setHeader(

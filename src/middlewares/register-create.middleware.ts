@@ -25,7 +25,7 @@ export const registerCreateMid = (tipo: TipoRegistro) => async (req: Request, re
     idUsuario,
     tipo,
     statusPosterior: tipo === TipoRegistro.Agendamento
-    ? StatusDenuncia.Agendado
+    ? StatusDenuncia.VisitaAgendada
     : statusPosterior,
     statusAnterior : denuncia.status
   };

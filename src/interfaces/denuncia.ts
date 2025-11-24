@@ -1,4 +1,5 @@
 import { StatusDenuncia } from "../enums/statusDenuncia.enum";
+import { IUser } from "./usuario";
 
 export interface IDenuncia {
     id: number,
@@ -43,4 +44,13 @@ export interface ICreateDenuncia {
     idUsuario: number,
     imagens?: string[],
     categorias?: number[]
+}
+
+export interface IDenunciaExcel{
+    id: IDenuncia['id'],
+    titulo : IDenuncia['titulo'],
+    dataPublicacao : IDenuncia['dataPublicacao'],
+    status: IDenuncia['status'],
+    pontuacao: IDenuncia['pontuacao']
+    author: IUser['nome']
 }

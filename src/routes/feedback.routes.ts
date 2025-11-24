@@ -1,19 +1,25 @@
-// import express from "express"
-// import * as feedbackController from "../controllers/feedback.controller"
-// import { validateToken } from "../middlewares/auth.middleware"
+import express from "express"
+import * as feedbackController from "../controllers/feedback.controller"
+import { validateToken } from "../middlewares/auth.middleware"
+import { permissionMid } from "../middlewares/permission.middleware"
+import { NivelFuncionario } from "../enums/NivelFuncionario.enum"
 
-// const router = express.Router()
+const router = express.Router()
 
-// router.get("/", feedbackController.getAllFeedbacks)
-// router.get("/:id", feedbackController.getById)
+router.get("/denuncia-feedback/:id", feedbackController.getDenunciaFeedbackById)
+router.get("/denuncia-feedback/denuncia/:id", feedbackController.getDenunciaFeedbackByDenunciaId)
 
 // router.use(validateToken)
 
-// //router.get("/feedback-cidadao/:id", feedbackController.getByCidadao)
-// //router.get("/feedback-denuncia/:id", feedbackController.getByDenuncia)
+router.post("/denuncia-feedback", feedbackController.postDenunciaFeedback)
+router.post("/interface-feedback", feedbackController.postInterfaceFeedback)
 
-// router.post("/create-feedback", feedbackController.postFeedback)
-// //router.put("/:id", feedbackController.putFeedback)
-// router.delete("/:id", feedbackController.deleteFeedback)
+// router.use(permissionMid(NivelFuncionario.ADMINISTRADOR, NivelFuncionario.GESTOR))
 
-// export default router
+router.get("/denuncia-feedbacks",  feedbackController.getAllDenunciaFeedbacks)
+router.get("/interface-feedbacks", feedbackController.getAllInterfaceFeedbacks)
+router.get("/interface-feedbacks/tela/:tela", feedbackController.getInterfaceFeedbacksByTela)
+
+router.delete("/interface-feedback/:id", feedbackController.deleteInterfaceFeedback)
+
+export default router

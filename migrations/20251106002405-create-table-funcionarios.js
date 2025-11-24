@@ -19,8 +19,8 @@ module.exports = {
         onDelete: "CASCADE",
       },
       nivel: {
-        allowNull: true,
-        type: DataTypes.STRING(30),
+        allowNull: false,
+        type: DataTypes.STRING(30)
       },
     });
   },

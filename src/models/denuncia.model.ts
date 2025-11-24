@@ -1,7 +1,9 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, FindOptions, Model, Optional } from "sequelize";
 import { IDenuncia } from "../interfaces/denuncia";
+import { IUser } from "../interfaces/usuario";
 import { StatusDenuncia } from "../enums/statusDenuncia.enum";
 import sequelize from "../config/database.config";
+import { UserModel } from ".";
 
 type DenunciaCreationalAttributes = Optional<IDenuncia, "id">
 
@@ -47,7 +49,7 @@ DenunciaModel.init(
         },
         status: {
             allowNull: false,
-            type: DataTypes.INTEGER,
+            type: DataTypes.STRING(50),
             field: "status"
         },
         cep: {
@@ -97,4 +99,3 @@ DenunciaModel.init(
         timestamps: false
     }
 );
-
