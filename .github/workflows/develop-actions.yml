@@ -67,7 +67,43 @@ jobs:
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      
+
+      # --- Atualizar e commitar package.json ---
+      - name: Atualizar versão no package.json
+        id: update_package
+        run: |
+          # Versão atual
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 Versão atual no package.json: $CURRENT_VERSION"
+
+          # Incrementa patch
+          NEW_VERSION=$(npx semver -i patch "$CURRENT_VERSION")
+          echo "📦 Nova versão: $NEW_VERSION"
+
+          # Atualiza package.json com a nova versão
+          node -e "
+            const fs = require('fs');
+            const pkg = require('./package.json');
+            pkg.version = '$NEW_VERSION';
+            fs.writeFileSync('./package.json', JSON.stringify(pkg, null, 2));
+          "
+
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Commit da nova versão
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Ajusta o remote
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
+
+          git add package.json
+          git commit -m "chore(version): bump to ${{ steps.update_package.outputs.new_version }}" || echo "Sem alterações para commitar"
+          git push origin develop
+
       # ---- Imagem Docker -----
       - name: Login Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
