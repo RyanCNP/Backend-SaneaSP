@@ -118,8 +118,8 @@ jobs:
           echo "✅ A versão no package.json já está atualizada ($CURRENT_VERSION). Nenhuma alteração necessária."
           fi
 
-      # --- Commit e criar tag ---
-      - name: Commit e criar tag
+      # --- Criar tag ---
+      - name: Criar tag
         if: steps.version.outputs.should_deploy == 'true'
         env:
           NEW_VERSION: ${{ steps.version.outputs.new_version }}
@@ -131,11 +131,7 @@ jobs:
           # 🔑 Troca o remote ANTES de qualquer push
           git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
 
-          git add package.json
-          git commit -m "chore(release): v$NEW_VERSION" || echo "Sem alterações para commitar"
-
           git tag "v$NEW_VERSION"
-          git push origin main
           git push origin "v$NEW_VERSION"
 
       # --- Criar Release no GitHub ---
