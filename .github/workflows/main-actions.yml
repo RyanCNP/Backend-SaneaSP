@@ -144,7 +144,7 @@ jobs:
           prerelease: false
         env:
           GITHUB_TOKEN:
-            ${{ secrets.GH_TOKEN }}
+            ${{ secrets.GITHUB_TOKEN }}
 
             # Docker Login
       - name: Login Docker Hub
@@ -173,7 +173,7 @@ jobs:
           tags: ${{ steps.metaProd.outputs.tags }}
           labels: ${{ steps.metaProd.outputs.labels }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # Docker Image Back-DEV
 
@@ -196,7 +196,7 @@ jobs:
           tags: ${{ steps.metaDev.outputs.tags }}
           labels: ${{ steps.metaDev.outputs.labels }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # --- Enviar e-mail em caso de falha ---
   notify_failure:
