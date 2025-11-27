@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./app.ts",
     "start": "node dist/app.js",
-    "build": "tsc && npm run copy-public",
+    "build": "tsc && npm run copy-public && npm run copy-templates",
     "copy-public": "cp -r public dist/public",
-    
+    "copy-templates": "xcopy src\\templates dist\\src\\templates /E /I /Y",
     "migration-create": "npx sequelize-cli migration:generate --name",
     "migrate": "npx sequelize-cli db:migrate",
     "migrate:undo": "npx sequelize-cli db:migrate:undo",
