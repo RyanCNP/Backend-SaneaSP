@@ -11,7 +11,7 @@ if (env === "test") {
     logging: false,
   };
 }
-if (env === "development") {
+else if (env === "development") {
   config = {
       url: process.env.DEV_DATABASE_URL,
       dialect: "postgres",
