@@ -4,7 +4,8 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     // Alterar status para string e default 'aberto'
-    await queryInterface.changeColumn('denuncia', 'status', {
+    await queryInterface.removeColumn('denuncia','status');
+    await queryInterface.addColumn('denuncia', 'status', {
       type: Sequelize.STRING(50),
       allowNull: false,
       defaultValue: 'aberto'
@@ -31,6 +32,7 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     // Reverter status para integer e default 0
+    await queryInterface.removeColumn('denuncia','status');
     await queryInterface.changeColumn('denuncia', 'status', {
       type: Sequelize.INTEGER,
       allowNull: true,

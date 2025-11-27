@@ -14,7 +14,7 @@ if (env === "development") {
   });
 }
 else if (env === "production") {
-  const databaseUrl = process.env.PROD_DATABASE_URL;
+  const databaseUrl:string | undefined = process.env.PROD_DATABASE_URL;
 
   if (!databaseUrl) {
     throw new Error("PROD_DATABASE_URL é necessário para ambiente de produção");
@@ -25,7 +25,7 @@ else if (env === "production") {
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false,
+        rejectUnauthorized: true,
       },
     },
     logging: false,

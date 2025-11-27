@@ -8,3 +8,9 @@ services:
       POSTGRES_PASSWORD: "1234"
       POSTGRES_USER: postgres
       POSTGRES_DB: sanea
+  back:
+    image: saneasp/back-sanea-prod
+    ports:
+      - '3000:3000'
+    env_file:
+      - ./.env
