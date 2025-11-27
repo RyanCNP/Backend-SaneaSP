@@ -160,8 +160,5 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('categoria_denuncia', null, {});
-    await queryInterface.sequelize.query(
-      "DELETE FROM sqlite_sequence WHERE name='categoria_denuncia';"
-    );
   }
 };
