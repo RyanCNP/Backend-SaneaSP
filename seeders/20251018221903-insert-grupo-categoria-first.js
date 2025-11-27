@@ -7,22 +7,18 @@ module.exports = {
     try {
       await queryInterface.bulkInsert('grupo_categoria', [
         {
-          id: 1,
           nome : "Água",
           icone: "water.png"
         },
         {
-          id: 2,
           nome : "Drenagem",
           icone: "drainage.png"
         },
         {
-          id: 3,
           nome : "Esgoto",
           icone: "sewage.png"
         },
         {
-          id: 4,
           nome : "Limpeza",
           icone: "cleaning.png"
         }
@@ -37,8 +33,5 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.bulkDelete('grupo_categoria', null, {});
-    await queryInterface.sequelize.query(
-      "DELETE FROM sqlite_sequence WHERE name='grupo_categoria';"
-    );
   }
 };
