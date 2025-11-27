@@ -31,7 +31,6 @@ jobs:
 
             echo "✔ Mensagem válida."
 
-
       # --- Instalar dependências ---
       - name: Instalar dependências
         run: npm ci
@@ -144,33 +143,58 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN:
+            ${{ secrets.GITHUB_TOKEN }}
 
-      # ---- Imagem Docker -----
+            # Docker Login
       - name: Login Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extrai metadatas para o Docker
-        id: meta
+      # Docker Image Back-PROD
+      - name: Extrai metadatas para a Imagem Back-Prod
+        id: metaProd
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: saneasp/back-sanea
+          images: saneasp/back-sanea-prod
           tags: |
             type=raw,value=${{ steps.version.outputs.new_version }}
             type=raw,value=latest
 
-      - name: Build e publicação da imagem Docker
-        id: push
+      - name: Build e publicação da Imagem Back-Prod
+        id: pushProd
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.metaProd.outputs.tags }}
+          labels: ${{ steps.metaProd.outputs.labels }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Docker Image Back-DEV
+
+      - name: Extrai metadatas para a Imagem Back-Dev
+        id: metaDev
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: saneasp/front-back-dev
+          tags: |
+            type=raw,value=${{ steps.version.outputs.new_version }}
+            type=raw,value=latest
+
+      - name: Build e publicação da Imagem Back-Dev
+        id: pushDev
+        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
+        with:
+          context: .
+          file: ./Dockerfile.dev
+          push: true
+          tags: ${{ steps.metaDev.outputs.tags }}
+          labels: ${{ steps.metaDev.outputs.labels }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -182,7 +206,6 @@ jobs:
     if: failure()
 
     steps:
-
       # --- Checkout do código ---
       - name: Checkout code
         uses: actions/checkout@v3

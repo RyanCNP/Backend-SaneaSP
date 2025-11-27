@@ -38,7 +38,7 @@ module.exports = {
     await queryInterface.removeColumn("usuario", "cidade");
     await queryInterface.removeColumn("usuario", "bairro");
     await queryInterface.removeColumn("usuario", "cep");
-    await queryInterface.removeColumn("usuario", "complmento");
+    await queryInterface.removeColumn("usuario", "complemento");
     await queryInterface.removeColumn("usuario", "numero");
 
     await queryInterface.addColumn("usuario", "endereco", {

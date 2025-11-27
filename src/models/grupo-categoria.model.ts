@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from '../config/database.config'
 import { IGrupoCategoria } from "../interfaces/grupo-categoria";
 
-const IMAGE_BASE_URL = `${process.env.HOST}:${process.env.PORT}/public`;
+const IMAGE_BASE_URL = process.env.UPLOADED_IMAGES_BASE_URL;
 
 type GrupoCategoriaCricao = Optional<IGrupoCategoria, "id">
 
