@@ -32,12 +32,8 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     // Reverter status para integer e default 0
-    await queryInterface.removeColumn('denuncia','status');
-    await queryInterface.changeColumn('denuncia', 'status', {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      defaultValue: 0
-    });
+
+    //await queryInterface.removeColumn('denuncia','status');
 
     // Reverter campos para allowNull true
     await queryInterface.changeColumn('denuncia', 'cep', {

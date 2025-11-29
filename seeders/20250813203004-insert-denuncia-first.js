@@ -6,7 +6,6 @@ module.exports = {
     try {
       await queryInterface.bulkInsert('denuncia', [
         {
-          id: 1,
           titulo: "Esgoto a céu aberto",
           descricao: "O esgoto corre no meio da rua há semanas, espalhando mau cheiro e mosquitos. Crianças não conseguem brincar na calçada e todos temem doenças. Já tentei ligar na Prefeitura e abri protocolo na Sabesp, mas nada foi resolvido.",
           dataPublicacao: new Date("2025-09-01"),
@@ -21,7 +20,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 2,
           titulo: "Falta de abastecimento de água",
           descricao: "Estamos há três dias sem água nas torneiras. Precisei comprar galões e buscar em bairros vizinhos. Liguei várias vezes para o 0800 da Sabesp, mas só dizem que estão verificando.",
           dataPublicacao: new Date("2025-09-02"),
@@ -36,7 +34,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 3,
           titulo: "Vazamento em cano de rua",
           descricao: "Um cano estourou em frente à minha casa e a água escorre sem parar, formando buracos no asfalto e desperdiçando litros por dia. Já abri protocolo no aplicativo da Sabesp, mas ninguém apareceu.",
           dataPublicacao: new Date("2025-09-03"),
@@ -51,7 +48,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 4,
           titulo: "Enchente recorrente",
           descricao: "Basta chover forte que a rua fica completamente alagada. A água invade casas, destrói móveis e causa medo a cada tempestade.",
           dataPublicacao: new Date("2025-09-04"),
@@ -66,7 +62,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 5,
           titulo: "Coleta de lixo irregular",
           descricao: "O caminhão não passa há duas semanas. Sacolas acumuladas atraem ratos e baratas, além do cheiro insuportável. Já ligamos para a empresa responsável, mas nada foi feito.",
           dataPublicacao: new Date("2025-09-05"),
@@ -81,7 +76,6 @@ module.exports = {
           id_usuario: 5
         },
         {
-          id: 6,
           titulo: "Falta de tratamento de esgoto",
           descricao: "Os moradores despejam esgoto direto em um córrego próximo. O cheiro é insuportável no calor e todos têm medo de doenças transmitidas pela água.",
           dataPublicacao: new Date("2025-09-06"),
@@ -96,7 +90,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 7,
           titulo: "Água com coloração estranha",
           descricao: "A água das torneiras está amarelada, com gosto e cheiro fortes. Roupas lavadas ficam manchadas e ninguém se sente seguro para beber.",
           dataPublicacao: new Date("2025-09-07"),
@@ -111,7 +104,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 8,
           titulo: "Bueiros entupidos",
           descricao: "Bueiros estão entupidos e a rua alaga até em chuvas fracas. O cheiro toma conta. Fizemos abaixo-assinado e entregamos na Prefeitura, mas sem retorno.",
           dataPublicacao: new Date("2025-09-08"),
@@ -126,7 +118,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 9,
           titulo: "Falta de coleta de recicláveis",
           descricao: "Há meses não passa caminhão de coleta seletiva. O lixo reciclável se acumula e os moradores acabam jogando tudo no lixo comum.",
           dataPublicacao: new Date("2025-09-09"),
@@ -141,7 +132,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 10,
           titulo: "Poço artesiano irregular",
           descricao: "Moradores abriram poço clandestino e a água já apresenta gosto estranho. Há risco de contaminação no lençol freático, mas ninguém fiscaliza.",
           dataPublicacao: new Date("2025-09-10"),
@@ -158,7 +148,6 @@ module.exports = {
   
         // ================== 11 a 20 ==================
         {
-          id: 11,
           titulo: "Esgoto entupido em viela",
           descricao: "A viela atrás das casas está com esgoto transbordando. O cheiro é insuportável e a água suja corre até a porta de algumas casas. Já registrei ocorrência na Prefeitura, mas nada foi feito.",
           dataPublicacao: new Date("2025-09-11"),
@@ -173,7 +162,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 12,
           titulo: "Água com baixa pressão",
           descricao: "A água chega fraca nas torneiras, impossibilitando até tomar banho. Moradores precisam encher baldes de madrugada para ter água no dia seguinte.",
           dataPublicacao: new Date("2025-09-12"),
@@ -188,7 +176,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 13,
           titulo: "Coleta de lixo suspensa",
           descricao: "A coleta de lixo foi suspensa por mais de 10 dias. O lixo tomou as calçadas e animais começaram a rasgar os sacos. Já ligamos para a Prefeitura e disseram que não havia caminhões disponíveis.",
           dataPublicacao: new Date("2025-09-13"),
@@ -203,7 +190,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 14,
           titulo: "Infiltração por rede de esgoto",
           descricao: "Um prédio inteiro está sofrendo com infiltração causada por rede de esgoto antiga. Paredes estão mofadas e moradores temem por saúde respiratória.",
           dataPublicacao: new Date("2025-09-14"),
@@ -218,7 +204,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 15,
           titulo: "Contaminação em córrego",
           descricao: "O córrego que passa no bairro está cheio de espuma branca e cheiro químico. Crianças brincam perto e há medo de intoxicação.",
           dataPublicacao: new Date("2025-09-15"),
@@ -233,7 +218,6 @@ module.exports = {
           id_usuario: 5
         },
         {
-          id: 16,
           titulo: "Água intermitente",
           descricao: "A água só chega em determinados horários. Não é possível programar tarefas básicas como lavar roupa ou cozinhar.",
           dataPublicacao: new Date("2025-09-16"),
@@ -248,7 +232,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 17,
           titulo: "Lixo hospitalar descartado",
           descricao: "Foram encontrados seringas e resíduos hospitalares em um terreno baldio. A comunidade teme contaminação. Já acionamos a Vigilância Sanitária, mas não houve retorno.",
           dataPublicacao: new Date("2025-09-17"),
@@ -263,7 +246,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 18,
           titulo: "Poço de água irregular",
           descricao: "Um vizinho construiu poço clandestino. A água é usada para irrigação e pode estar contaminando o lençol freático. A fiscalização nunca apareceu, mesmo após denúncias anteriores.",
           dataPublicacao: new Date("2025-09-18"),
@@ -278,7 +260,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 19,
           titulo: "Cheiro forte na rede de água",
           descricao: "A água chega com cheiro de esgoto em várias casas. Moradores têm medo de cozinhar e beber, ficando obrigados a comprar galões.",
           dataPublicacao: new Date("2025-09-19"),
@@ -293,7 +274,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 20,
           titulo: "Cisterna contaminada",
           descricao: "A cisterna comunitária apresenta cheiro ruim. A água usada para banho causa coceiras e irritações na pele.",
           dataPublicacao: new Date("2025-09-20"),
@@ -308,7 +288,6 @@ module.exports = {
           id_usuario: 5
         },
         {
-          id: 21,
           titulo: "Córrego poluído",
           descricao: "Córrego local está recebendo despejo irregular de resíduos.",
           dataPublicacao: new Date("2025-09-21"),
@@ -323,7 +302,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 22,
           titulo: "Tubulação antiga rompida",
           descricao: "Tubulação não suportou pressão e se rompeu.",
           dataPublicacao: new Date("2025-09-22"),
@@ -338,7 +316,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 23,
           titulo: "Poço clandestino",
           descricao: "Moradores abriram poço sem autorização da prefeitura.",
           dataPublicacao: new Date("2025-09-23"),
@@ -353,7 +330,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 24,
           titulo: "Água parada atrai mosquitos",
           descricao: "Caixas d'água abertas servindo de criadouro de mosquitos.",
           dataPublicacao: new Date("2025-09-24"),
@@ -368,7 +344,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 25,
           titulo: "Esgoto clandestino em rio",
           descricao: "Empresas despejando resíduos diretamente no rio.",
           dataPublicacao: new Date("2025-09-25"),
@@ -383,7 +358,6 @@ module.exports = {
           id_usuario: 5
         },
         {
-          id: 26,
           titulo: "Buraco aberto com água suja",
           descricao: "Obra paralisada deixou buraco acumulando água suja.",
           dataPublicacao: new Date("2025-09-26"),
@@ -398,7 +372,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 27,
           titulo: "Coleta de esgoto insuficiente",
           descricao: "Rede de esgoto não suporta quantidade de residências.",
           dataPublicacao: new Date("2025-09-27"),
@@ -413,7 +386,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 28,
           titulo: "Infiltração em reservatório",
           descricao: "Reservatório municipal apresenta infiltrações nas paredes.",
           dataPublicacao: new Date("2025-09-28"),
@@ -428,7 +400,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 29,
           titulo: "Contaminação por lixo industrial",
           descricao: "Relatos de descarte irregular de resíduos industriais.",
           dataPublicacao: new Date("2025-09-29"),
@@ -443,7 +414,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 30,
           titulo: "Canalização quebrada",
           descricao: "Canalização de água do bairro quebrou em vários pontos.",
           dataPublicacao: new Date("2025-09-30"),
@@ -458,7 +428,6 @@ module.exports = {
           id_usuario: 5
         },
         {
-          id: 31,
           titulo: "Poço de visita aberto",
           descricao: "Poço de visita sem tampa coloca pedestres em risco.",
           dataPublicacao: new Date("2025-09-30"),
@@ -473,7 +442,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 32,
           titulo: "Falta de limpeza em valeta",
           descricao: "Valeta entupida acumula lixo e água parada.",
           dataPublicacao: new Date("2025-09-30"),
@@ -488,7 +456,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 33,
           titulo: "Água salobra",
           descricao: "Abastecimento com água de gosto e odor ruins.",
           dataPublicacao: new Date("2025-09-30"),
@@ -503,7 +470,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 34,
           titulo: "Tubulação mal dimensionada",
           descricao: "Rede não suporta alta demanda em horários de pico.",
           dataPublicacao: new Date("2025-09-30"),
@@ -518,7 +484,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 35,
           titulo: "Fossa transbordando",
           descricao: "Fossa residencial não recebe manutenção adequada.",
           dataPublicacao: new Date("2025-09-30"),
@@ -533,7 +498,6 @@ module.exports = {
           id_usuario: 5
         },
         {
-          id: 36,
           titulo: "Canal assoreado",
           descricao: "Canal precisa de dragagem urgente para evitar enchentes.",
           dataPublicacao: new Date("2025-09-30"),
@@ -548,7 +512,6 @@ module.exports = {
           id_usuario: 1
         },
         {
-          id: 37,
           titulo: "Rede de esgoto danificada",
           descricao: "Rede com rachaduras causando vazamento subterrâneo.",
           dataPublicacao: new Date("2025-09-30"),
@@ -563,7 +526,6 @@ module.exports = {
           id_usuario: 2
         },
         {
-          id: 38,
           titulo: "Descarte de óleo no esgoto",
           descricao: "Comércios descartando óleo de cozinha diretamente no esgoto.",
           dataPublicacao: new Date("2025-09-30"),
@@ -578,7 +540,6 @@ module.exports = {
           id_usuario: 3
         },
         {
-          id: 39,
           titulo: "Esgoto a céu aberto em escola",
           descricao: "Escola pública sofre com vazamento de esgoto no pátio.",
           dataPublicacao: new Date("2025-09-30"),
@@ -593,7 +554,6 @@ module.exports = {
           id_usuario: 4
         },
         {
-          id: 40,
           titulo: "Infiltração em caixa d’água",
           descricao: "Caixa d’água comunitária apresenta infiltrações e rachaduras.",
           dataPublicacao: new Date("2025-09-30"),
@@ -618,8 +578,5 @@ module.exports = {
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete('denuncia', null, {});
-    await queryInterface.sequelize.query(
-      "DELETE FROM sqlite_sequence WHERE name='denuncia';"
-    );
   }
 };
