@@ -3,7 +3,7 @@ name: Release Main
 on:
   push:
     branches:
-      - feature/deploy-render-workflow
+      - main
 
 jobs:
   pipeline:
