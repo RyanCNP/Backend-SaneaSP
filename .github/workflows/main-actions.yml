@@ -202,7 +202,7 @@ jobs:
         env:
           RENDER_API_KEY: ${{secrets.RENDER_API_KEY}}
           SERVICE_ID: ${{secrets.SERVICE_ID}}
-          REPO_NAME: ${{secrets.REPO_NAME}}
+          REPO_NAME: ${{secrets.REPO_NAME_PROD}}
         run: |
             echo "Criando payload para deploy da versão latest"
 
