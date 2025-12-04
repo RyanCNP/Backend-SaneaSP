@@ -20,6 +20,7 @@ import logger from "../../logger-winston"
 
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
+  logger.info('GetAll',{rota:`denuncias/`})
   const query: IFilterListDenuncia = req.query
   const foundDenuncias = await findAllDenuncias(query)
   res.status(200).json(foundDenuncias)
@@ -33,6 +34,7 @@ export const getById = async (req: Request, res: Response) => {
 }
 
 export const getUserComplaint = async (req: Request, res: Response) => {
+  logger.info('GetDenunciasUserComplaint',{rota:`denuncias/my`})
   const idUsuario = req.user.id as number
   const filter: IFilterListDenuncia = req.query
   const denuncias = await findUserComplaint(idUsuario, filter)
@@ -40,11 +42,13 @@ export const getUserComplaint = async (req: Request, res: Response) => {
 }
 
 export const getByCategoria = async (req: Request, res: Response) => {
+  logger.info('GetDenunciasByCategoria',{rota:`denuncias/categorias`})
   let listCategoriaId: number[] = []
   let listaQuery!: string[]
   let idUsuario: number | undefined
 
   if (!req.query.categorias) {
+    logger.error('Nenhuma Categoria Informada',{rota:'denuncias/categorias'})
     res.status(400).json({
       error: true,
       message: `Nenhuma categoria foi informada`,
@@ -129,7 +133,7 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
 
 export const exportExcel = async (req: Request, res: Response) => {
   try {
-    logger.info('ExcelDenuncias',{rota:'denuncias/'})
+    logger.info('ExcelDenuncias',{rota:'denuncias/export'})
     const buffer = await exportDenunciasExcel(); // chama a função do controller
 
     res.setHeader(
