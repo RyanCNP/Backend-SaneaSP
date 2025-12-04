@@ -16,6 +16,8 @@ import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
 import { removeFiles } from "../config/multer.config"
 import { UploadSubfolder } from "../enums/UploadSubFolder.enum"
 import { findDenunciaFeedbackById, deleteDenunciaFeedback } from "../services/feedback.service"
+import logger from "../../logger-winston"
+
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
   const query: IFilterListDenuncia = req.query
@@ -24,6 +26,7 @@ export const getAllDenuncias = async (req: Request, res: Response) => {
 }
 
 export const getById = async (req: Request, res: Response) => {
+  logger.info('GetDenunciasById',{rota:`denuncias/:id`})
   const id = Number(req.params.id)
   const denuncia = await findDenunciaById(id)
   res.status(200).json(denuncia)
@@ -65,6 +68,7 @@ export const getByCategoria = async (req: Request, res: Response) => {
 }
 
 export const postDenuncia = async (req: Request, res: Response) => {
+  logger.info('postDenuncias',{rota:'denuncias/'})
   const body: ICreateDenuncia = req.body;
   body.idUsuario = req.user.id as number;
   let denuncia = await createNewDenuncia(body)
@@ -86,6 +90,7 @@ export const postDenuncia = async (req: Request, res: Response) => {
 }
 
 export const putDenuncia = async (req: Request, res: Response) => {
+  logger.info('putDenuncias',{rota:'denuncias/'})
   const id = Number(req.params.id);
   const body = req.body as ICreateDenuncia;
 
@@ -109,6 +114,7 @@ export const putDenuncia = async (req: Request, res: Response) => {
 }
 
 export const deleteDenuncia = async (req: Request, res: Response) => {
+  logger.info('deleteDenuncias',{rota:'denuncias/'})
   const idDenuncia = Number(req.params.id)
 
   const denuncia = await findDenunciaById(idDenuncia)
@@ -123,6 +129,7 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
 
 export const exportExcel = async (req: Request, res: Response) => {
   try {
+    logger.info('ExcelDenuncias',{rota:'denuncias/'})
     const buffer = await exportDenunciasExcel(); // chama a função do controller
 
     res.setHeader(
@@ -132,6 +139,7 @@ export const exportExcel = async (req: Request, res: Response) => {
     res.setHeader("Content-Disposition", "attachment; filename=denuncias.xlsx");
     res.send(buffer);
   } catch (err) {
+    logger.error("Erro ao gerar planilha",{err})
     console.error(err);
     res.status(500).json({ error: "Erro ao gerar planilha Excel" });
   }
