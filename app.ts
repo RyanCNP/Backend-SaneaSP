@@ -19,17 +19,18 @@ import bodyParser from "body-parser";
 import stripeRoutes from "./src/routes/stripe.routes";
 import RegistroRoutes from './src/routes/registro.routes';
 import VisitasRoutes from './src/routes/visita.routes';
+import { logHandler } from "./src/middlewares/log.middleware";
 
 const app = express();
 
 app.use(cors());
-
 app.use('/api/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
 
 app.use(express.json());
 
 setupSwagger(app);
 
+app.use(logHandler);
 app.use("/categoria", categoriaRoutes);
 app.use("/denuncia", denunciaRoutes);
 app.use("/user", userRoutes);

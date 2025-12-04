@@ -6,6 +6,7 @@ import { HttpCode } from "../enums/HttpCode.enum"
 import ExcelJS from "exceljs";
 import { Buffer } from "buffer";
 import { StatusDenuncia } from "../enums/statusDenuncia.enum"
+import logger from "../../logger-winston"
 
 const denunciaFindIncludes = [
   {
@@ -135,7 +136,10 @@ export const createNewDenuncia = async (body: ICreateDenuncia): Promise<IDenunci
     include: denunciaFindIncludes,
   })
 
-  if (!response) throw new ApiError("Não foi possível cadastrar a reclamação", HttpCode.BadRequest)
+  if (!response){
+    logger.error('Não foi possível cadastrar a denúncia',{rota:'denuncias/'})
+    throw new ApiError("Não foi possível cadastrar a denúncia", HttpCode.BadRequest);
+  } 
 
   return response
 }
@@ -152,7 +156,8 @@ export const updateDenunciaById = async (idDenuncia: number, body: ICreateDenunc
   })
 
   if (!response) {
-    throw new ApiError("Não foi possível editar a reclamação", HttpCode.BadRequest)
+    logger.error('Não foi possível editar a denuncia',{rota:'denuncias/'})
+    throw new ApiError("Não foi possível editar a denuncia", HttpCode.BadRequest)
   }
 
   return response
@@ -164,6 +169,7 @@ export const deleteDenunciaById = async (idDenuncia: number): Promise<IDenuncia>
   })
 
   if (!denuncia) {
+    logger.error('Reclamação não encontrada',{meta:{rota:`denuncias/${idDenuncia}`}})
     throw new ApiError("Reclamação não encontrada", HttpCode.NotFound)
   }
 

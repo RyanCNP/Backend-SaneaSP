@@ -16,20 +16,25 @@ import { getImagesByComplaintId } from "../services/imagem-denuncia.service"
 import { removeFiles } from "../config/multer.config"
 import { UploadSubfolder } from "../enums/UploadSubFolder.enum"
 import { findDenunciaFeedbackById, deleteDenunciaFeedback } from "../services/feedback.service"
+import logger from "../../logger-winston"
+
 
 export const getAllDenuncias = async (req: Request, res: Response) => {
+  logger.info('GetAll',{rota:`denuncias/`})
   const query: IFilterListDenuncia = req.query
   const foundDenuncias = await findAllDenuncias(query)
   res.status(200).json(foundDenuncias)
 }
 
 export const getById = async (req: Request, res: Response) => {
+  logger.info('GetDenunciasById',{rota:`denuncias/:id`})
   const id = Number(req.params.id)
   const denuncia = await findDenunciaById(id)
   res.status(200).json(denuncia)
 }
 
 export const getUserComplaint = async (req: Request, res: Response) => {
+  logger.info('GetDenunciasUserComplaint',{rota:`denuncias/my`})
   const idUsuario = req.user.id as number
   const filter: IFilterListDenuncia = req.query
   const denuncias = await findUserComplaint(idUsuario, filter)
@@ -37,11 +42,13 @@ export const getUserComplaint = async (req: Request, res: Response) => {
 }
 
 export const getByCategoria = async (req: Request, res: Response) => {
+  logger.info('GetDenunciasByCategoria',{rota:`denuncias/categorias`})
   let listCategoriaId: number[] = []
   let listaQuery!: string[]
   let idUsuario: number | undefined
 
   if (!req.query.categorias) {
+    logger.error('Nenhuma Categoria Informada',{rota:'denuncias/categorias'})
     res.status(400).json({
       error: true,
       message: `Nenhuma categoria foi informada`,
@@ -65,6 +72,7 @@ export const getByCategoria = async (req: Request, res: Response) => {
 }
 
 export const postDenuncia = async (req: Request, res: Response) => {
+  logger.info('postDenuncias',{rota:'denuncias/'})
   const body: ICreateDenuncia = req.body;
   body.idUsuario = req.user.id as number;
   let denuncia = await createNewDenuncia(body)
@@ -86,6 +94,7 @@ export const postDenuncia = async (req: Request, res: Response) => {
 }
 
 export const putDenuncia = async (req: Request, res: Response) => {
+  logger.info('putDenuncias',{rota:'denuncias/'})
   const id = Number(req.params.id);
   const body = req.body as ICreateDenuncia;
 
@@ -109,6 +118,7 @@ export const putDenuncia = async (req: Request, res: Response) => {
 }
 
 export const deleteDenuncia = async (req: Request, res: Response) => {
+  logger.info('deleteDenuncias',{rota:'denuncias/'})
   const idDenuncia = Number(req.params.id)
 
   const denuncia = await findDenunciaById(idDenuncia)
@@ -123,6 +133,7 @@ export const deleteDenuncia = async (req: Request, res: Response) => {
 
 export const exportExcel = async (req: Request, res: Response) => {
   try {
+    logger.info('ExcelDenuncias',{rota:'denuncias/export'})
     const buffer = await exportDenunciasExcel(); // chama a função do controller
 
     res.setHeader(
@@ -132,6 +143,7 @@ export const exportExcel = async (req: Request, res: Response) => {
     res.setHeader("Content-Disposition", "attachment; filename=denuncias.xlsx");
     res.send(buffer);
   } catch (err) {
+    logger.error("Erro ao gerar planilha",{err})
     console.error(err);
     res.status(500).json({ error: "Erro ao gerar planilha Excel" });
   }
