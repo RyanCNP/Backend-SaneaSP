@@ -45,6 +45,7 @@ export const cadastroCidadao = async(req: Request, res: Response) => {
 }
 
 export const cadastroFuncionario = async(req: Request, res: Response) => {
+  
   const transaction = req.transaction;
   if(!transaction) throw new TransactionNotProvided('Ocorreu um problema ao criar o seu usuário')
   try {

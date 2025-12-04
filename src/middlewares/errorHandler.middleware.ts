@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../errors/ApiError.error";
 import { TransactionNotProvided } from "../errors/TransactionNotProvided.error";
 import { HttpCode } from "../enums/HttpCode.enum";
+import logger from "../../logger-winston";
 
 export const errorHandler = (error: Error, req: Request, res: Response, next: NextFunction) => {
+    logger.error(error.toString(),{metodo:req.method,path:req.path});
     if (error instanceof ApiError) {
         res.status(error.httpCode).json({
             error: true,

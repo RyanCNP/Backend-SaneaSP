@@ -1,20 +1,13 @@
-# Usar a imagem do Node.js
-FROM node:16-alpine
-
-# Criar diretório de trabalho
+# Etapa 1: Build Angular
+FROM node:20 AS build
 WORKDIR /app
 
-# Copiar apenas package.json para instalar dependências
 COPY package*.json ./
-
-# Instalar dependências
 RUN npm install
 
-# Copiar restante do código
 COPY . .
+RUN npm run build
 
-# Expor a porta da API
 EXPOSE 3000
 
-# Rodar em modo desenvolvimento
-CMD ["npm", "run", "dev"]
+CMD [ "npm","run","start" ]

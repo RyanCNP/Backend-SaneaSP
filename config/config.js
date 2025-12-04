@@ -4,7 +4,14 @@ const env = process.env.NODE_ENV || "development";
 
 let config;
 
-if (env === "development") {
+if (env === "test") {
+  config = {
+    dialect: "sqlite",
+    storage: "database.sqlite",
+    logging: false,
+  };
+}
+else if (env === "development") {
   config = {
       url: process.env.DEV_DATABASE_URL,
       dialect: "postgres",

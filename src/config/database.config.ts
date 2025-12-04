@@ -6,7 +6,14 @@ const env = process.env.NODE_ENV || "development";
 
 let sequelize: Sequelize;
 
-if (env === "development") {
+if (env === "test") {
+  sequelize = new Sequelize({
+    dialect: "sqlite",
+    storage: "database.sqlite",
+    logging: false,
+  });
+}
+else if (env === "development") {
   const url = process.env.DEV_DATABASE_URL || "postgresql://postgres:1234@localhost:5423/postgres";
   sequelize = new Sequelize(url, {
     dialect: "postgres",
@@ -14,7 +21,7 @@ if (env === "development") {
   });
 }
 else if (env === "production") {
-  const databaseUrl = process.env.PROD_DATABASE_URL;
+  const databaseUrl:string | undefined = process.env.PROD_DATABASE_URL;
 
   if (!databaseUrl) {
     throw new Error("PROD_DATABASE_URL é necessário para ambiente de produção");
@@ -25,7 +32,7 @@ else if (env === "production") {
     dialectOptions: {
       ssl: {
         require: true,
-        rejectUnauthorized: false,
+        rejectUnauthorized: true,
       },
     },
     logging: false,
